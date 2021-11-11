@@ -7,7 +7,7 @@ import os
 import math
 from plato.config import Config
 from plato.datasources import base
-from nnrt_datasource_yolo_utils import LoadImagesAndLabels
+from examples.nnrt.nnrt_datasource_yolo_utils import LoadImagesAndLabels
 
 
 def make_divisible(x, divisor):
