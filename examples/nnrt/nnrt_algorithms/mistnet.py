@@ -12,7 +12,7 @@ import time
 import cv2
 
 import numpy as np
-from nnrt_algorithms import fedavg
+from examples.nnrt.nnrt_algorithms import fedavg
 from plato.config import Config
 from plato.utils import unary_encoding
 

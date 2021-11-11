@@ -8,9 +8,9 @@ import struct
 import numpy as np
 import acl
 
-from nnrt_models.constant import ACL_MEM_MALLOC_NORMAL_ONLY, \
+from examples.nnrt.nnrt_models.constant import ACL_MEM_MALLOC_NORMAL_ONLY, \
     ACL_MEMCPY_DEVICE_TO_HOST, NPY_BYTE
-from nnrt_models.acl_util import check_ret
+from examples.nnrt.nnrt_models.acl_util import check_ret
 
 
 class Model(object):

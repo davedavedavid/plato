@@ -1,7 +1,7 @@
 """
 Helper function to check the error status of pyACL API
 """
-from nnrt_models.constant import ACL_ERROR_NONE
+from examples.nnrt.nnrt_models.constant import ACL_ERROR_NONE
 
 
 def check_ret(message, ret):

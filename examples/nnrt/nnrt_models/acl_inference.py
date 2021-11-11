@@ -4,9 +4,10 @@ The inference class for NNRT model.
 
 import acl
 
-from nnrt_models.constant import ACL_MEMCPY_HOST_TO_DEVICE
-from nnrt_models.acl_model import Model
-from nnrt_models.acl_util import check_ret
+from examples.nnrt.nnrt_models.constant import ACL_MEMCPY_HOST_TO_DEVICE
+from examples.nnrt.nnrt_models.acl_model import Model
+from examples.nnrt.nnrt_models.acl_util import check_ret
+
 
 
 class Inference(object):
