@@ -8,10 +8,13 @@ from dataclasses import dataclass
 
 from plato.algorithms import registry as algorithms_registry
 from plato.config import Config
-from plato.datasources import registry as datasources_registry
-from plato.samplers import registry as samplers_registry
-from plato.trainers import registry as trainers_registry
 
+try:
+    from plato.datasources import registry as datasources_registry
+    from plato.samplers import registry as samplers_registry
+    from plato.trainers import registry as trainers_registry
+except ImportError:
+    pass
 from plato.clients import base
 
 
@@ -60,7 +63,7 @@ class Client(base.Client):
         logging.info("[Client #%d] Loading its data source...", self.client_id)
 
         if self.datasource is None:
-            self.datasource = datasources_registry.get()
+            self.datasource = datasources_registry.get(client_id=self.client_id)
 
         self.data_loaded = True
 

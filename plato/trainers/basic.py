@@ -15,6 +15,8 @@ from plato.models import registry as models_registry
 from plato.trainers import base
 from plato.utils import optimizers
 
+from yolov5.utils.torch_utils import select_device
+
 
 class Trainer(base.Trainer):
     """A basic federated learning trainer, used by both the client and the server."""
@@ -83,7 +85,11 @@ class Trainer(base.Trainer):
             logging.info("[Client #%d] Loading a model from %s.",
                          self.client_id, model_path)
 
-        self.model.load_state_dict(torch.load(model_path))
+        # select mapping location for pretrained tensor
+        # TODO: Add flag in yaml file to sepcify NPU device
+        npu = 0
+        device = torch.device("npu:%d" % npu)
+        self.model.load_state_dict(torch.load(model_path, map_location=device))
 
     def train_process(self, config, trainset, sampler, cut_layer=None):
         """The main training loop in a federated learning workload, run in
