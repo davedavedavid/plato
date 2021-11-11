@@ -22,17 +22,19 @@ elif hasattr(Config().trainer, 'use_tensorflow'):
         ('basic', basic_tensorflow.Trainer),
     ])
 else:
-	try£º    
-	    from plato.trainers import (
-	        basic,
-	        pascal_voc,
-	    )
-	    registered_trainers = OrderedDict([
-	        ('basic', basic.Trainer),
-	        ('pascal_voc', pascal_voc.Trainer),
-	    ])
-	except:
-		pass
+    try:
+        from plato.trainers import (
+            basic,
+            pascal_voc,
+        )
+
+        registered_trainers = OrderedDict([
+            ('basic', basic.Trainer),
+            ('pascal_voc', pascal_voc.Trainer),
+        ])
+    except:
+        pass
+
 
 def get(model=None):
     """Get the trainer with the provided name."""
