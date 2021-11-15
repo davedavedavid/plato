@@ -119,6 +119,9 @@ class Config:
             # A run ID is unique to each client in an experiment
             Config.params['run_id'] = os.getpid()
 
+            # grid size only for yolo
+            Config.params['grid_size'] = 32
+
             # Pretrained models
             Config.params['model_dir'] = "./models/pretrained/"
             Config.params['pretrained_model_dir'] = "./models/pretrained/"
