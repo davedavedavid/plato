@@ -27,13 +27,24 @@ elif hasattr(Config().trainer, 'use_tensorflow'):
         ('mixed', base.Sampler),
     ])
 else:
-    from plato.samplers import (iid, dirichlet, mixed)
+    try:
+        from plato.samplers import (iid, dirichlet, mixed, orthogonal,
+                                    all_inclusive)
 
-    registered_samplers = OrderedDict([
-        ('iid', iid.Sampler),
-        ('noniid', dirichlet.Sampler),
-        ('mixed', mixed.Sampler),
-    ])
+        registered_samplers = OrderedDict([
+            ('iid', iid.Sampler),
+            ('noniid', dirichlet.Sampler),
+            ('mixed', mixed.Sampler),
+            ('orthogonal', orthogonal.Sampler),
+            ('all_inclusive', all_inclusive.Sampler),
+        ])
+    except:
+        from plato.samplers.nnrt import base 
+        registered_samplers = OrderedDict([
+            ('iid', base.Sampler),
+            ('noniid', base.Sampler),
+            ('mixed', base.Sampler),
+        ])
 
 
 def get(datasource, client_id):
