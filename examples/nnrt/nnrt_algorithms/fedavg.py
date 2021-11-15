@@ -12,4 +12,5 @@ class Algorithm(base.Algorithm):
 
     def load_weights(self, weights):
         """Load the model weights passed in as a parameter."""
-        self.model.load_state_dict(weights, strict=True)
+        # self.model.load_state_dict(weights, strict=True)
+        pass
