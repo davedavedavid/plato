@@ -244,6 +244,9 @@ class Server:
                 payload = self.algorithm.extract_weights()
                 payload = self.customize_server_payload(payload)
 
+                # In nnrt demo, we do not need to send model state from server to clients
+                payload = " "
+
                 # Sending the server payload to the client
                 logging.info(
                     "[Server #%d] Sending the current model to client #%d.",
