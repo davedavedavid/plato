@@ -12,6 +12,7 @@ from itertools import chain
 from plato.config import Config
 from plato.samplers import all_inclusive
 from plato.servers import fedavg
+import torch
 
 
 class Server(fedavg.Server):
