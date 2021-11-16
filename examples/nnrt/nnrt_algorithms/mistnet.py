@@ -40,7 +40,7 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
-        check_features = []
+        count = 0
 
         for inputs, targets, *__ in dataset:
             # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
@@ -50,10 +50,12 @@ class Algorithm(fedavg.Algorithm):
             inputs = inputs / 255.0  # normalize image and convert image type at the same time
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            check_features.append(logits)
             targets = np.expand_dims(
                 targets, axis=0
             )  # add batch axis to make sure self.train.randomize correct
+            count += 1
+            logging.info("[Client #%d] Extracting %d features from %s examples.",
+                     self.client_id, count, len(dataset))
             if epsilon is not None:
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
