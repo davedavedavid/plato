@@ -35,6 +35,9 @@ class Server(fedavg.Server):
 
         # Faster way to deep flatten a list of lists compared to list comprehension
         feature_dataset = list(chain.from_iterable(features))
+		
+		# convert feature dataset from numpy to torch tensor
+        feature_dataset = list(map(torch.from_numpy, feature_dataset))
 
         # Training the model using all the features received from the client
         sampler = all_inclusive.Sampler(feature_dataset)
