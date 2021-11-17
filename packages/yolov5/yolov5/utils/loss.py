@@ -318,15 +318,12 @@ def build_targets(p, targets, model):
         nt_max *= 2
         print('**************** nt max=', nt_max)
     max_target = torch.zeros(6, nt_max, device=targets.device)   #  (6, 1024)
-    print("max_target type ", max_target.dtype)
-    print("target type ", target.dtype)
-    
-    max_target[0, :nt] = targets[0, :].dtype(torch.float32)
-    max_target[1, :nt] = targets[1, :].dtype(torch.float32)
-    max_target[2, :nt] = targets[2, :].dtype(torch.float32)
-    max_target[3, :nt] = targets[3, :].dtype(torch.float32)
-    max_target[4, :nt] = targets[4, :].dtype(torch.float32)
-    max_target[5, :nt] = targets[5, :].dtype(torch.float32)
+    max_target[0, :nt] = targets[0, :].dtype(max_target.dtype)
+    max_target[1, :nt] = targets[1, :].dtype(max_target.dtype)
+    max_target[2, :nt] = targets[2, :].dtype(max_target.dtype)
+    max_target[3, :nt] = targets[3, :].dtype(max_target.dtype)
+    max_target[4, :nt] = targets[4, :].dtype(max_target.dtype)
+    max_target[5, :nt] = targets[5, :].dtype(max_target.dtype)
     
     tcls, tbox, indices, anch, targets_mask, targets_sum_mask = [], [], [], [], [], []
     gain = torch.ones(6, device=targets.device)  # normalized to gridspace gain
