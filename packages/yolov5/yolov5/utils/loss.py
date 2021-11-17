@@ -231,6 +231,83 @@ class DeterministicIndex(torch.autograd.Function):
         tmp[ind0, ind1, :, ind2, ind3] = grad_output
         return tmp, None
 
+def compute_loss(p, targets, model):  # predictions, targets, model
+    device = targets.device
+    ft = torch.cuda.FloatTensor if p[0].is_cuda else torch.Tensor
+    lcls, lbox, lobj = ft([0]).to(device), ft([0]).to(device), ft([0]).to(device)
+    tcls, tbox, indices, anchors, targets_mask, targets_sum_mask = build_targets(p, targets, model)  # targets
+    h = model.hyp  # hyperparameters
+
+    # Define criteria
+    BCEcls = nn.BCEWithLogitsLoss(pos_weight=ft([h['cls_pw']]), reduction='sum').to(device)
+    BCEobj = nn.BCEWithLogitsLoss(pos_weight=ft([h['obj_pw']]), reduction='mean').to(device)
+
+    # class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
+    cp, cn = smooth_BCE(eps=0.0)
+
+    # focal loss
+    g = h['fl_gamma']  # focal loss gamma
+    if g > 0:
+        BCEcls, BCEobj = FocalLoss(BCEcls, g), FocalLoss(BCEobj, g)
+
+    # per output
+    nt = 0  # number of targets
+    np = len(p)  # number of outputs
+    balance = [4.0, 1.0, 0.4] if np == 3 else [4.0, 1.0, 0.4, 0.1]  # P3-5 or P3-6
+    for i, pi in enumerate(p):  # layer index, layer predictions
+        b, a, gj, gi = indices[i]  # image, anchor, gridy, gridx
+        allmask = targets_mask[i]
+        sum_mask = targets_sum_mask[i]
+        tobj = torch.zeros_like(pi[:, :, 0, :, :]).to(device)  # target obj
+
+        nb = b.shape[0]  # number of targets
+        if sum_mask.item() > 0:
+            nt += nb  # cumulative targets
+            #ps = pi[b, a, :, gj, gi].permute(1, 0).contiguous()  # prediction subset corresponding to targets
+            ps = DeterministicIndex.apply(pi, (b, a, gj, gi)).permute(1, 0).contiguous()
+            # GIoU
+            pxy = ps.index_select(0, torch.tensor([0, 1], device=targets.device))
+            pwh = ps.index_select(0, torch.tensor([2, 3], device=targets.device))
+
+            pxy = pxy.sigmoid() * 2. - 0.5
+            pwh = (pwh.sigmoid() * 2) ** 2 * (anchors[i].T)
+            pbox = torch.cat((pxy, pwh), 0)  # predicted box
+            # FIXME: 08/13 AttributeError: module 'torch' has no attribute 'npu_giou'
+            # FIXME: it needs FrameworkPTAdapter v2.0.3
+            # giou = torch.npu_giou(pbox, tbox[i], trans=True, is_cross=False).squeeze()
+            giou = bbox_iou(pbox, tbox[i], x1y1x2y2=False, GIoU=True)
+            giou = giou * (allmask) + (1. - allmask)
+            lbox += (1.0 - giou).sum() / (sum_mask) # giou loss
+            # Obj
+            giou = giou * (allmask)
+            tobj[b, a, gj, gi] = (1.0 - model.gr) + model.gr * giou.detach().clamp(0).type(tobj.dtype)  # giou ratio
+
+            # Class
+            if model.nc > 1:  # cls loss (only if multiple classes)
+                tmp = ps[5:, :]
+                tmp = tmp * (allmask) - (1.- allmask) * 50.
+                t = torch.full_like(tmp, cn).to(device)  # targets
+                range_nb = torch.arange(nb, device=device).long()
+                t[tcls[i], range_nb] = cp
+
+                t = t * (allmask)
+                lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
+            # Append targets to text file
+            # with open('targets.txt', 'a') as file:
+            #     [file.write('%11.5g ' * 4 % tuple(x) + '\n') for x in torch.cat((txy[i], twh[i]), 1)]
+
+        lobj += BCEobj(pi[:, :, 4, :, :], tobj) * balance[i]  # obj loss
+
+    s = 3 / np  # output count scaling
+    lbox *= h['giou'] * s
+    lobj *= h['obj'] * s * (1.4 if np == 4 else 1.)
+    lcls *= h['cls'] * s
+    bs = tobj.shape[0]  # batch size
+
+    loss = lbox + lobj + lcls
+    return loss * bs, torch.cat((lbox, lobj, lcls, loss)).detach()
+
+
 def build_targets(p, targets, model):
     # Build targets for compute_loss(), input targets(image,class,x,y,w,h)
     det = model.module.model[-1] if type(model) in (nn.parallel.DataParallel, nn.parallel.DistributedDataParallel) \
@@ -311,76 +388,3 @@ def build_targets(p, targets, model):
         targets_sum_mask.append(sum_mask)
 
     return tcls, tbox, indices, anch, targets_mask, targets_sum_mask
-
-def compute_loss(p, targets, model):  # predictions, targets, model
-    device = targets.device
-    ft = torch.cuda.FloatTensor if p[0].is_cuda else torch.Tensor
-    lcls, lbox, lobj = ft([0]).to(device), ft([0]).to(device), ft([0]).to(device)
-    tcls, tbox, indices, anchors, targets_mask, targets_sum_mask = build_targets(p, targets, model)  # targets
-    h = model.hyp  # hyperparameters
-
-    # Define criteria
-    BCEcls = nn.BCEWithLogitsLoss(pos_weight=ft([h['cls_pw']]), reduction='sum').to(device)
-    BCEobj = nn.BCEWithLogitsLoss(pos_weight=ft([h['obj_pw']]), reduction='mean').to(device)
-
-    # class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
-    cp, cn = smooth_BCE(eps=0.0)
-
-    # focal loss
-    g = h['fl_gamma']  # focal loss gamma
-    if g > 0:
-        BCEcls, BCEobj = FocalLoss(BCEcls, g), FocalLoss(BCEobj, g)
-
-    # per output
-    nt = 0  # number of targets
-    np = len(p)  # number of outputs
-    balance = [4.0, 1.0, 0.4] if np == 3 else [4.0, 1.0, 0.4, 0.1]  # P3-5 or P3-6
-    for i, pi in enumerate(p):  # layer index, layer predictions
-        b, a, gj, gi = indices[i]  # image, anchor, gridy, gridx
-        allmask = targets_mask[i]
-        sum_mask = targets_sum_mask[i]
-        tobj = torch.zeros_like(pi[:, :, 0, :, :]).to(device)  # target obj
-
-        nb = b.shape[0]  # number of targets
-        if sum_mask.item() > 0:
-            nt += nb  # cumulative targets
-            #ps = pi[b, a, :, gj, gi].permute(1, 0).contiguous()  # prediction subset corresponding to targets
-            ps = DeterministicIndex.apply(pi, (b, a, gj, gi)).permute(1, 0).contiguous()
-            # GIoU
-            pxy = ps.index_select(0, torch.tensor([0, 1], device=targets.device))
-            pwh = ps.index_select(0, torch.tensor([2, 3], device=targets.device))
-
-            pxy = pxy.sigmoid() * 2. - 0.5
-            pwh = (pwh.sigmoid() * 2) ** 2 * (anchors[i].T)
-            pbox = torch.cat((pxy, pwh), 0)  # predicted box
-            giou = torch.npu_giou(pbox, tbox[i], trans=True, is_cross=False).squeeze()
-            giou = giou * (allmask) + (1. - allmask)
-            lbox += (1.0 - giou).sum() / (sum_mask) # giou loss
-            # Obj
-            giou = giou * (allmask)
-            tobj[b, a, gj, gi] = (1.0 - model.gr) + model.gr * giou.detach().clamp(0).type(tobj.dtype)  # giou ratio
-
-            # Class
-            if model.nc > 1:  # cls loss (only if multiple classes)
-                tmp = ps[5:, :]
-                tmp = tmp * (allmask) - (1.- allmask) * 50.
-                t = torch.full_like(tmp, cn).to(device)  # targets
-                range_nb = torch.arange(nb, device=device).long()
-                t[tcls[i], range_nb] = cp
-
-                t = t * (allmask)
-                lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
-            # Append targets to text file
-            # with open('targets.txt', 'a') as file:
-            #     [file.write('%11.5g ' * 4 % tuple(x) + '\n') for x in torch.cat((txy[i], twh[i]), 1)]
-
-        lobj += BCEobj(pi[:, :, 4, :, :], tobj) * balance[i]  # obj loss
-
-    s = 3 / np  # output count scaling
-    lbox *= h['giou'] * s
-    lobj *= h['obj'] * s * (1.4 if np == 4 else 1.)
-    lcls *= h['cls'] * s
-    bs = tobj.shape[0]  # batch size
-
-    loss = lbox + lobj + lcls
-    return loss * bs, torch.cat((lbox, lobj, lcls, loss)).detach()
