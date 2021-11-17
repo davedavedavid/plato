@@ -231,7 +231,86 @@ class DeterministicIndex(torch.autograd.Function):
         tmp[ind0, ind1, :, ind2, ind3] = grad_output
         return tmp, None
 
+def build_targets(p, targets, model):
+    # Build targets for compute_loss(), input targets(image,class,x,y,w,h)
+    det = model.module.model[-1] if type(model) in (nn.parallel.DataParallel, nn.parallel.DistributedDataParallel) \
+        else model.model[-1]  # Detect() module
+    na, nt = det.na, targets.shape[1]  # number of anchors, targets
+    batch_size = p[0].shape[0]
+    nt_max = 32 * batch_size
+    while nt > nt_max:
+        nt_max *= 2
+        print('**************** nt max=', nt_max)
+    max_target = torch.zeros(6, nt_max, device=targets.device)   #  (6, 1024)
+    max_target[0, :nt] = targets[0, :]
+    max_target[1, :nt] = targets[1, :]
+    max_target[2, :nt] = targets[2, :]
+    max_target[3, :nt] = targets[3, :]
+    max_target[4, :nt] = targets[4, :]
+    max_target[5, :nt] = targets[5, :]
+    
+    tcls, tbox, indices, anch, targets_mask, targets_sum_mask = [], [], [], [], [], []
+    gain = torch.ones(6, device=targets.device)  # normalized to gridspace gain
+    off_list = [
+        torch.tensor([[1.], [0.]], device=targets.device),
+        torch.tensor([[0.], [1.]], device=targets.device),
+        torch.tensor([[-1.], [0.]], device=targets.device),
+        torch.tensor([[0.], [-1.]], device=targets.device)
+    ]
+    at = torch.arange(na).view(na, 1).repeat(1, nt_max)  # anchor tensor, same as .repeat_interleave(nt)  (1024, 3)
+    a = at.view(-1)
+    a = torch.cat((a, a, a, a, a), 0)
 
+    g = 0.5  # offset
+    style = 'rect4'
+    for i in range(det.nl):
+        anchors = det.anchors[i].float()
+        gain[2:] = torch.tensor(p[i].shape)[[4, 3, 4, 3]].float()  # xyxy gain
+
+        # Match targets to anchors
+        t, offsets = max_target * gain[:, None], 0
+        allmask = torch.zeros((15 * nt_max)).to(targets.device)
+        sum_mask = torch.zeros((1)).to(targets.device)
+        if nt:
+            r = t[None, 4:6, :] / anchors[..., None]  # wh ratio
+            fmask = torch.max(r, 1. / r).max(1)[0] < model.hyp['anchor_t']  # compare
+            fmask = fmask.view(1, -1)
+            # j = wh_iou(anchors, t[:, 4:6]) > model.hyp['iou_t']  # iou(3,n) = wh_iou(anchors(3,2), gwh(n,2))
+            t = t.repeat(1, 1, na).view(6, -1)  # filter
+
+            # overlaps
+            gxy = t.index_select(0, torch.tensor([2, 3], device=targets.device)) # (3072, 2)
+            z = torch.zeros_like(gxy)
+
+            jk = (gxy % 1. < g) & (gxy > 1.)
+            lm = (gxy % 1. > (1 - g)) & (gxy < (gain[[2, 3]][:, None] - 1.))
+            jk, lm = jk&fmask, lm&fmask
+            allmask = torch.cat((fmask, jk, lm), 0).view(1, -1).float()
+            t = torch.cat((t, t, t, t, t), 1)
+            offsets = torch.cat((z, z + off_list[0], z + off_list[1], z + off_list[2], z + off_list[3]), 1) * g
+
+            sum_mask = allmask.sum()
+            t = t * allmask
+
+        # Define
+        b = t.index_select(0, torch.tensor([0], device=targets.device)).long().view(-1)   #(3072 * 5)
+        c = t.index_select(0, torch.tensor([1], device=targets.device)).long().view(-1)   #(3072 * 5)
+        gxy = t.index_select(0, torch.tensor([2, 3], device=targets.device)) #(2, 3072 * 5)
+        gwh = t.index_select(0, torch.tensor([4, 5], device=targets.device)) #(2, 3072 * 5)
+        gij = gxy - offsets
+        gij2 = gij.long()
+        gi = gij2.index_select(0, torch.tensor([0], device=targets.device)).view(-1) #(2, 3072 * 5)
+        gj = gij2.index_select(0, torch.tensor([1], device=targets.device)).view(-1) #(2, 3072 * 5)
+
+        # Append
+        indices.append((b, a, gj, gi))  # image, anchor, grid indices
+        tbox.append(torch.cat((gxy - gij2.float(), gwh), 0))  # box
+        anch.append(anchors[a])  # anchors
+        tcls.append(c)  # class
+        targets_mask.append(allmask)
+        targets_sum_mask.append(sum_mask)
+
+    return tcls, tbox, indices, anch, targets_mask, targets_sum_mask
 
 def compute_loss(p, targets, model):  # predictions, targets, model
     device = targets.device
