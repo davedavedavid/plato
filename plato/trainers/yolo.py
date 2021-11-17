@@ -16,8 +16,16 @@ from torch.cuda import amp
 from tqdm import tqdm
 from yolov5.utils.general import (box_iou, check_dataset, one_cycle,
                                   non_max_suppression, scale_coords, xywh2xyxy)
-from yolov5.utils.loss import ComputeLoss
+from yolov5.utils.loss import compute_loss
 from yolov5.utils.metrics import ap_per_class
+
+mixed_precision = True
+try:
+    import apex
+    from apex import amp 
+except:
+    print("Unable to load mixed precision training library.")
+    mixed_precision = False
 
 
 class Trainer(basic.Trainer):
@@ -73,6 +81,7 @@ class Trainer(basic.Trainer):
                          1)  # accumulate loss before optimizing
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
 
+
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -107,6 +116,10 @@ class Trainer(basic.Trainer):
             self.client_id, len(pg2), len(pg1), len(pg0))
         del pg0, pg1, pg2
 
+
+        # Mixed precision training
+        if mixed_precision:
+            model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
         if Config().trainer.linear_lr:
             lf = lambda x: (1 - x / (epochs - 1)) * (1.0 - hyp['lrf']) + hyp[
                 'lrf']  # linear
@@ -175,29 +188,31 @@ class Trainer(basic.Trainer):
                                 [hyp['warmup_momentum'], hyp['momentum']])
 
                 # Forward
-                with amp.autocast(enabled=cuda):
-                    if cut_layer is None:
-                        pred = self.model(imgs)
-                    else:
-                        pred = self.model.forward_from(imgs, cut_layer)
+                if cut_layer is None:
+                    pred = self.model(imgs)
+                else:
+                    pred = self.model.forward_from(imgs, cut_layer)
 
-                    loss, loss_items = compute_loss(
-                        pred, targets)  # loss scaled by batch_size
+                loss, loss_items = compute_loss(
+                        pred, targets, self.model)  # loss scaled by batch_size
 
                 # Backward
-                scaler.scale(loss).backward()
+                if mixed_precision:
+                    with amp.scale_loss(loss, optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                else:
+                    loss.backward()
 
                 # Optimize
                 if ni % accumulate == 0:
-                    scaler.step(optimizer)  # optimizer.step
-                    scaler.update()
+                    optimizer.step()
                     optimizer.zero_grad()
 
                 # Print
                 mloss = (mloss * i + loss_items) / (i + 1
                                                     )  # update mean losses
-                mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9
-                                 if torch.cuda.is_available() else 0)  # (GB)
+                mem = '%.3gG' % (torch.npu.memory_reserved() / 1E9
+                                 if torch.npu.is_available() else 0)  # (GB)
                 s = ('%10s' * 2 +
                      '%10.4g' * 6) % ('%g/%g' % (epoch, epochs), mem, *mloss,
                                       targets.shape[0], imgs.shape[-1])
