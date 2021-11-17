@@ -12,7 +12,7 @@ from plato.config import Config
 from plato.datasources import yolo
 from plato.trainers import basic
 from plato.utils import unary_encoding
-from torch.cuda import amp
+#from torch.cuda import amp
 from tqdm import tqdm
 from yolov5.utils.general import (box_iou, check_dataset, one_cycle,
                                   non_max_suppression, scale_coords, xywh2xyxy)
@@ -153,8 +153,8 @@ class Trainer(basic.Trainer):
         nw = max(
             round(hyp['warmup_epochs'] * nb),
             1000)  # number of warmup iterations, max(3 epochs, 1k iterations)
-        scaler = amp.GradScaler(enabled=cuda)
-        compute_loss = ComputeLoss(self.model)
+        #scaler = amp.GradScaler(enabled=cuda)
+        #compute_loss = ComputeLoss(self.model)
 
         for epoch in range(1, epochs + 1):
             self.model.train()

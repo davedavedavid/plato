@@ -38,11 +38,14 @@ class Server(fedavg.Server):
         feature_dataset = list(chain.from_iterable(features))
 		
 		# convert feature dataset from numpy to torch tensor
-        feature_dataset = list(map(torch.from_numpy, feature_dataset))
+        feature_dataset_tensor = []
+        for feature in feature_dataset:
+            feature_dataset_tensor.append((torch.from_numpy(elem) for elem in feature))
+
 
         # Training the model using all the features received from the client
-        sampler = all_inclusive.Sampler(feature_dataset)
-        self.algorithm.train(feature_dataset, sampler,
+        sampler = all_inclusive.Sampler(feature_dataset_tensor)
+        self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
 
         # Test the updated model
