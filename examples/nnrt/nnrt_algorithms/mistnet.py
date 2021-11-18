@@ -58,10 +58,10 @@ class Algorithm(fedavg.Algorithm):
                      self.client_id, count, len(dataset))
             if epsilon is not None:
                 logits = unary_encoding.encode(logits)
-                if callable(_randomize):
-                    logits = self.trainer.randomize(logits, targets, epsilon)
-                else:
-                    logits = unary_encoding.randomize(logits, epsilon)
+                # if callable(_randomize):
+                #     logits = self.trainer.randomize(logits, targets, epsilon)
+                # else:
+                logits = unary_encoding.randomize(logits, epsilon)
                 # Pytorch is currently not supported on A500 and we cannot convert
                 # numpy array to tensor
                 if self.trainer.device != 'cpu':
