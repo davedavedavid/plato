@@ -169,6 +169,10 @@ class Trainer(basic.Trainer):
 
             for i, (imgs, targets, *__) in pbar:
                 ni = i + nb * epoch  # number integrated batches (since train start)
+
+                # save targets
+                targets = targets.numpy()
+                np.save("./targets_array", targets)
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
                 # Warmup
