@@ -71,9 +71,9 @@ class Algorithm(fedavg.Algorithm):
                 else:
                     logits = logits.astype('float32')
 
-            np.save("./targets_array", np.array(targets[0]))
             for i in np.arange(logits.shape[0]):  # each sample in the batch
                 feature_dataset.append((logits[i], targets[i]))
+                logging.info("Targets size", targets[i].shape)
 
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
