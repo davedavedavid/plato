@@ -40,6 +40,8 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
+        targets_list = []
+
         count = 0
 
         for inputs, targets, *__ in dataset:
@@ -69,6 +71,7 @@ class Algorithm(fedavg.Algorithm):
                 else:
                     logits = logits.astype('float32')
 
+            np.save("./targets_array", np.array(targets[0]))
             for i in np.arange(logits.shape[0]):  # each sample in the batch
                 feature_dataset.append((logits[i], targets[i]))
 
