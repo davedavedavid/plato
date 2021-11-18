@@ -196,6 +196,9 @@ class Trainer(basic.Trainer):
                 print("Targets shape info ", targets.shape, flush=True)
                 print("Targets dtype info ", targets.dtype, flush=True)
                 print("Targets device info ", targets.device, flush=True)
+                print("Targets tensor info ", targets, flush=True)
+
+                targets = targets.type(torch.float32)
 
                 loss, loss_items = compute_loss(
                         pred, targets, self.model)  # loss scaled by batch_size

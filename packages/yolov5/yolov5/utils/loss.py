@@ -318,12 +318,12 @@ def build_targets(p, targets, model):
         nt_max *= 2
         print('**************** nt max=', nt_max)
     max_target = torch.zeros(6, nt_max, device=targets.device)   #  (6, 1024)
-    max_target[0, :nt] = targets[0, :].type(max_target.dtype)
-    max_target[1, :nt] = targets[1, :].type(max_target.dtype)
-    max_target[2, :nt] = targets[2, :].type(max_target.dtype)
-    max_target[3, :nt] = targets[3, :].type(max_target.dtype)
-    max_target[4, :nt] = targets[4, :].type(max_target.dtype)
-    max_target[5, :nt] = targets[5, :].type(max_target.dtype)
+    max_target[0, :nt] = targets[0, :]
+    max_target[1, :nt] = targets[1, :]
+    max_target[2, :nt] = targets[2, :]
+    max_target[3, :nt] = targets[3, :]
+    max_target[4, :nt] = targets[4, :]
+    max_target[5, :nt] = targets[5, :]
     
     tcls, tbox, indices, anch, targets_mask, targets_sum_mask = [], [], [], [], [], []
     gain = torch.ones(6, device=targets.device)  # normalized to gridspace gain
