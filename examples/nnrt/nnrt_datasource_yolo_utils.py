@@ -480,7 +480,7 @@ class LoadImagesAndLabels(object):  # for training/testing
         # Check cache
         cache_path = str(Path(self.label_files[0]).parent) + '.cache'  # cached labels
         if os.path.isfile(cache_path):
-            cache = torch.load(cache_path)  # load
+            cache = np.load(cache_path)  # load
             if cache['hash'] != get_hash(self.label_files + self.img_files):  # dataset changed
                 cache = self.cache_labels(cache_path)  # re-cache
         else:
@@ -711,7 +711,7 @@ class LoadImagesAndLabels(object):  # for training/testing
         img, label, path, shapes = zip(*batch)  # transposed
         for i, l in enumerate(label):
             l[0, :] = i  # add target image index for build_targets()
-        return torch.stack(img, 0), torch.cat(label, 1), path, shapes
+        return np.stack(img, 0), np.cat(label, 1), path, shapes
 
 
 # Ancillary functions --------------------------------------------------------------------------------------------------

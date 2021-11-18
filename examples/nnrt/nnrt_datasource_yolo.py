@@ -76,8 +76,7 @@ class DataSource(base.DataSource):
                 single_cls=single_class,
                 stride=int(self.grid_size),
                 pad=0.0,
-                image_weights=False,
-                prefix='')
+                image_weights=False)
 
         return self.train_set
 
@@ -96,7 +95,6 @@ class DataSource(base.DataSource):
                 single_cls=single_class,
                 stride=int(self.grid_size),
                 pad=0.0,
-                image_weights=False,
-                prefix='')
+                image_weights=False)
 
         return self.test_set
