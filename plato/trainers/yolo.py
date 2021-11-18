@@ -195,13 +195,6 @@ class Trainer(basic.Trainer):
                 else:
                     pred = self.model.forward_from(imgs, cut_layer)
 
-                print("Targets shape info ", targets.shape, flush=True)
-                print("Targets dtype info ", targets.dtype, flush=True)
-                print("Targets device info ", targets.device, flush=True)
-                print("Targets tensor info ", targets, flush=True)
-
-                targets = targets.to(torch.float32)
-
                 loss, loss_items = compute_loss(
                         pred, targets, self.model)  # loss scaled by batch_size
 

@@ -238,8 +238,8 @@ def compute_loss(p, targets, model):  # predictions, targets, model
     h = model.hyp  # hyperparameters
 
     # Define criteria
-    BCEcls = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([h['cls_pw']], device=device), reduction='sum')
-    BCEobj = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([h['obj_pw']], device=device), reduction='mean')
+    BCEcls = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([h['cls_pw']]), reduction='sum').to(device)
+    BCEobj = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([h['obj_pw']]), reduction='mean').to(device)
 
     # class label smoothing https://arxiv.org/pdf/1902.04103.pdf eqn 3
     cp, cn = smooth_BCE(eps=0.0)
