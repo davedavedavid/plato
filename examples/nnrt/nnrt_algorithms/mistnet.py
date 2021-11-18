@@ -40,8 +40,6 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
-        targets_list = []
-
         count = 0
 
         for inputs, targets, *__ in dataset:

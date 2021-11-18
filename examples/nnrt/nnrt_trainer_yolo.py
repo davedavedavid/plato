@@ -38,6 +38,7 @@ class Trainer(base.Trainer):
         img = unary_encoding.symmetric_unary_encoding(bit_array, 1)
         label = unary_encoding.symmetric_unary_encoding(bit_array, epsilon)
         targets_new = copy.deepcopy(targets)
+        print("Shape is ", targets_new.shape, flush=True)
         for i in range(targets_new.shape[1]):
             box = self.convert(bit_array.shape[2:], targets_new[0][i][2:])
             img[:, :, box[0]:box[2],
