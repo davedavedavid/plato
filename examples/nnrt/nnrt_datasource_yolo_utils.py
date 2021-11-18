@@ -616,7 +616,7 @@ class LoadImagesAndLabels(object):  # for training/testing
                 gb += self.imgs[i].nbytes
                 pbar.desc = 'Caching images (%.1fGB)' % (gb / 1E9)
 
-    def cache_labels(self, path='labels.cache'):
+    def cache_labels(self, path='labels.cache', prefix=''):
         # Cache dataset labels, check images and read shapes
         x = {}  # dict
         pbar = tqdm(zip(self.img_files, self.label_files), desc='Scanning images', total=len(self.img_files))
