@@ -62,7 +62,7 @@ class Trainer(basic.Trainer):
         total_batch_size = batch_size
         epochs = config['epochs']
 
-        cuda = (self.device != 'cpu')
+        # cuda = (self.device != 'cpu')
         nc = Config().data.num_classes  # number of classes
         names = Config().data.classes  # class names
 
@@ -119,7 +119,7 @@ class Trainer(basic.Trainer):
 
         # Mixed precision training
         if mixed_precision:
-            model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
+            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
         if Config().trainer.linear_lr:
             lf = lambda x: (1 - x / (epochs - 1)) * (1.0 - hyp['lrf']) + hyp[
                 'lrf']  # linear
