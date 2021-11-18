@@ -443,30 +443,19 @@ class LoadImagesAndLabels(object):  # for training/testing
         try:
             f = []  # image files
             for p in path if isinstance(path, list) else [path]:
-                p = Path(p)  # os-agnostic
-                if p.is_dir():  # dir
-                    f += glob.glob(str(p / '**' / '*.*'), recursive=True)
-                    # f = list(p.rglob('**/*.*'))  # pathlib
-                elif p.is_file():  # file
+                p = str(Path(p))  # os-agnostic
+                parent = str(Path(p).parent) + os.sep
+                if os.path.isfile(p):  # file
                     with open(p, 'r') as t:
-                        t = t.read().strip().splitlines()
-                        parent = str(p.parent) + os.sep
-                        f += [
-                            x.replace('./', parent)
-                            if x.startswith('./') else x for x in t
-                        ]  # local to global path
-                        # f += [p.parent / x.lstrip(os.sep) for x in t]  # local to global path (pathlib)
+                        t = t.read().splitlines()
+                        f += [x.replace('./', parent) if x.startswith('./') else x for x in t]  # local to global path
+                elif os.path.isdir(p):  # folder
+                    f += glob.iglob(p + os.sep + '*.*')
                 else:
-                    raise Exception(f'{p} does not exist')
-            self.img_files = sorted([
-                x.replace('/', os.sep) for x in f
-                if x.split('.')[-1].lower() in img_formats
-            ])
-            # self.img_files = sorted([x for x in f if x.suffix[1:].lower() in img_formats])  # pathlib
-            assert self.img_files, f'No images found'
+                    raise Exception('%s does not exist' % p)
+            self.img_files = sorted([x.replace('/', os.sep) for x in f if os.path.splitext(x)[-1].lower() in img_formats])
         except Exception as e:
-            raise Exception(
-                f'Error loading data from {path}: {e}\nSee {help_url}')
+            raise Exception('Error loading data from %s: %s\nSee %s' % (path, e, help_url))
 
         n = len(self.img_files)
         assert n > 0, 'No images found in %s. See %s' % (path, help_url)
@@ -485,49 +474,22 @@ class LoadImagesAndLabels(object):  # for training/testing
         self.stride = stride
 
         # Define labels
-        prefix = ' '
-        self.label_files = img2label_paths(self.img_files)  # labels
-        cache_path = (p if p.is_file() else Path(
-            self.label_files[0]).parent).with_suffix('.cache')  # cached labels
-        if cache_path.is_file():
-            # TODO: check numpy load whether work here
-            cache, exists = np.load(cache_path), True  # load
-            if cache['hash'] != get_hash(
-                    self.label_files +
-                    self.img_files) or 'version' not in cache:  # changed
-                cache, exists = self.cache_labels(cache_path,
-                                                  prefix), False  # re-cache
+        self.label_files = [x.replace('images', 'labels').replace(os.path.splitext(x)[-1], '.txt') for x in
+                            self.img_files]
+
+        # Check cache
+        cache_path = str(Path(self.label_files[0]).parent) + '.cache'  # cached labels
+        if os.path.isfile(cache_path):
+            cache = np.load(cache_path)  # load
+            if cache['hash'] != get_hash(self.label_files + self.img_files):  # dataset changed
+                cache = self.cache_labels(cache_path)  # re-cache
         else:
-            cache, exists = self.cache_labels(cache_path,
-                                              prefix), False  # cache
+            cache = self.cache_labels(cache_path)  # cache
 
-        # Display cache
-        nf, nm, ne, nc, n = cache.pop(
-            'results')  # found, missing, empty, corrupted, total
-        if exists:
-            d = f"Scanning '{cache_path}' images and labels... {nf} found, {nm} missing, {ne} empty, {nc} corrupted"
-            tqdm(None, desc=prefix + d, total=n,
-                 initial=n)  # display cache results
-        assert nf > 0 or not augment, f'{prefix}No labels in {cache_path}. Can not train without labels. See {help_url}'
-
-        # Read cache
-        cache.pop('hash')  # remove hash
-        cache.pop('version')  # remove version
-        labels, shapes, self.segments = zip(*cache.values())
-        self.labels = list(labels)
+        # Get labels
+        labels, shapes = zip(*[cache[x] for x in self.img_files])
         self.shapes = np.array(shapes, dtype=np.float64)
-        self.img_files = list(cache.keys())  # update
-        self.label_files = img2label_paths(cache.keys())  # update
-        if single_cls:
-            for x in self.labels:
-                x[:, 0] = 0
-
-        n = len(shapes)  # number of images
-        bi = np.floor(np.arange(n) / batch_size).astype(np.int)  # batch index
-        nb = bi[-1] + 1  # number of batches
-        self.batch = bi  # batch index of image
-        self.n = n
-        self.indices = range(n)
+        self.labels = list(labels)
 
         # Rectangular Training  https://github.com/ultralytics/yolov3/issues/232
         if self.rect:
