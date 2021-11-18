@@ -193,6 +193,10 @@ class Trainer(basic.Trainer):
                 else:
                     pred = self.model.forward_from(imgs, cut_layer)
 
+                print("Targets shape info ", targets.shape)
+                print("Targets dtype info ", targets.dtype)
+                print("Targets device info ", targets.device)
+
                 loss, loss_items = compute_loss(
                         pred, targets, self.model)  # loss scaled by batch_size
 
