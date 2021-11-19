@@ -40,7 +40,7 @@ class Server(fedavg.Server):
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         for feature in feature_dataset:
-            feature_dataset_tensor.append((torch.from_numpy(elem) for elem in feature))
+            feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
 
         # Training the model using all the features received from the client
