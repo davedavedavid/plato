@@ -264,8 +264,8 @@ def compute_loss(p, targets, model):  # predictions, targets, model
             nt += nb  # cumulative targets
             #ps = pi[b, a, :, gj, gi].permute(1, 0).contiguous()  # prediction subset corresponding to targets
             ps = DeterministicIndex.apply(pi, (b, a, gj, gi)).permute(1, 0).contiguous()
-            print("Ps type ", ps.dtype)
-            print("Ps shape ", ps.shape)
+            print("Ps type ", ps.dtype, flush=True)
+            print("Ps shape ", ps.shape, flush=True)
             # GIoU
             pxy = ps.index_select(0, torch.tensor([0, 1], device=targets.device))
             pwh = ps.index_select(0, torch.tensor([2, 3], device=targets.device))
