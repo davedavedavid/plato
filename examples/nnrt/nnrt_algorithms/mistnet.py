@@ -40,7 +40,6 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
-        count = 0
 
         for inputs, targets, *__ in dataset:
             # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
@@ -53,15 +52,15 @@ class Algorithm(fedavg.Algorithm):
             targets = np.expand_dims(
                 targets, axis=0
             )  # add batch axis to make sure self.train.randomize correct
-            count += 1
-            logging.info("[Client #%d] Extracting %d features from %s examples.",
-                     self.client_id, count, len(dataset))
+            # count += 1
+            # logging.info("[Client #%d] Extracting %d features from %s examples.",
+            #          self.client_id, count, len(dataset))
             if epsilon is not None:
                 logits = unary_encoding.encode(logits)
-                # if callable(_randomize):
-                #     logits = self.trainer.randomize(logits, targets, epsilon)
-                # else:
-                logits = unary_encoding.randomize(logits, epsilon)
+                if callable(_randomize):
+                    logits = self.trainer.randomize(logits, targets, epsilon)
+                else:
+                    logits = unary_encoding.randomize(logits, epsilon)
                 # Pytorch is currently not supported on A500 and we cannot convert
                 # numpy array to tensor
                 if self.trainer.device != 'cpu':
@@ -71,7 +70,7 @@ class Algorithm(fedavg.Algorithm):
 
             for i in np.arange(logits.shape[0]):  # each sample in the batch
                 feature_dataset.append((logits[i], targets[i]))
-                logging.info("Targets size", targets[i].shape)
+
 
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
