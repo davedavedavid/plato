@@ -155,6 +155,8 @@ class Trainer(basic.Trainer):
                                          trainset,
                                          sampler,
                                          cut_layer=cut_layer)
+        
+        logging.info("[Client #%d] Finish loading the dataset. ", self.client_id)
         nb = len(train_loader)
 
         # Model parameters
