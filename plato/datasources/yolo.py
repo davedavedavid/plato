@@ -132,8 +132,7 @@ class DataSource(base.DataSource):
             # MistNet server: training from the cut layer forwards using
             # the features extracted on the client
             return torch.utils.data.DataLoader(dataset=trainset,
-                                               #batch_size=batch_size,
-                                               batch_size=1,
+                                               batch_size=batch_size,
                                                shuffle=True,
                                                drop_last=True,
                                                collate_fn=collate_fn)
