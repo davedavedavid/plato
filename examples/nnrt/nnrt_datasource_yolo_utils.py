@@ -208,6 +208,9 @@ class LoadImagesAndLabels(object):  # for training/testing
         cache.pop('version')  # remove version
         labels, shapes, self.segments = zip(*cache.values())
         self.labels = list(labels)
+        print("Print label size ......", flush=True)
+        for label in self.labels:
+            print("Shape is ", label.shape)
         self.shapes = np.array(shapes, dtype=np.float64)
         self.img_files = list(cache.keys())  # update
         self.label_files = img2label_paths(cache.keys())  # update
@@ -378,6 +381,7 @@ class LoadImagesAndLabels(object):  # for training/testing
                 (h / h0, w / w0), pad)  # for COCO mAP rescaling
 
             labels = self.labels[index].copy()
+            print("Ouptut label size is ", labels.shape)
             if labels.size:  # normalized xywh to pixel xyxy format
                 labels[:, 1:] = xywhn2xyxy(labels[:, 1:],
                                            ratio[0] * w,
