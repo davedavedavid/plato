@@ -150,6 +150,7 @@ class LoadImagesAndLabels(object):  # for training/testing
         self.stride = stride
         self.path = path
 
+        print("Initializing yolov data loader.....", flush=True)
         try:
             f = []  # image files
             for p in path if isinstance(path, list) else [path]:
@@ -191,6 +192,7 @@ class LoadImagesAndLabels(object):  # for training/testing
                 cache, exists = self.cache_labels(cache_path,
                                                   prefix), False  # re-cache
         else:
+            print("Creating new cache....", flush=True)
             cache, exists = self.cache_labels(cache_path,
                                               prefix), False  # cache
 
@@ -208,6 +210,7 @@ class LoadImagesAndLabels(object):  # for training/testing
         cache.pop('version')  # remove version
         labels, shapes, self.segments = zip(*cache.values())
         self.labels = list(labels)
+        logging.info(f'Print label size')
         print("Print label size ......", flush=True)
         for label in self.labels:
             print("Shape is ", label.shape)
@@ -381,7 +384,7 @@ class LoadImagesAndLabels(object):  # for training/testing
                 (h / h0, w / w0), pad)  # for COCO mAP rescaling
 
             labels = self.labels[index].copy()
-            print("Ouptut label size is ", labels.shape)
+            print("Ouptut label size is ", labels.shape, flush=True)
             if labels.size:  # normalized xywh to pixel xyxy format
                 labels[:, 1:] = xywhn2xyxy(labels[:, 1:],
                                            ratio[0] * w,
