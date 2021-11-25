@@ -189,7 +189,10 @@ class Trainer(basic.Trainer):
 
             for i, (imgs, targets, *__) in pbar:
                 ni = i + nb * epoch  # number integrated batches (since train start)
-                targets = targets.to(torch.float32)
+                targets = targets.to(torch.float32).cpu().numpy()
+                targets = np.moveaxis(targets, -1, -2)
+                targets = torch.from_numpy(targets).to(torch.float32)
+                
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
