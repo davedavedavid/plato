@@ -51,10 +51,10 @@ class DataSource(base.DataSource):
             logging.info(
                 "Downloading the YOLO dataset. This may take a while.")
 
-            urls = Config().data.download_urls
-            for url in urls:
-                if not os.path.exists(_path + url.split('/')[-1]):
-                    DataSource.download(url, _path)
+            # urls = Config().data.download_urls
+            # for url in urls:
+            #     if not os.path.exists(_path + url.split('/')[-1]):
+            #         DataSource.download(url, _path)
 
         assert 'grid_size' in Config().params
 
