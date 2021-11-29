@@ -79,6 +79,7 @@ class DataSource(base.DataSource):
         single_class = (Config().data.num_classes == 1)
 
         if self.train_set is None:
+            print("Geting train set.....", flush=True)
             self.train_set = LoadImagesAndLabels(
                 Config().data.train_path,
                 self.image_size,
@@ -150,4 +151,5 @@ class DataSource(base.DataSource):
             testset,
             batch_size=batch_size,
             shuffle=False,
-            collate_fn=LoadImagesAndLabels.collate_fn)
+            drop_last=True,
+            collate_fn=collate_fn)

@@ -137,6 +137,9 @@ def profile(x, ops, n=100, device=None):
         p = sum(list(x.numel() for x in m.parameters())) if isinstance(m, nn.Module) else 0  # parameters
         print(f'{p:12}{flops:12.4g}{dtf:16.4g}{dtb:16.4g}{str(s_in):>24s}{str(s_out):>24s}')
 
+def time_synchronized():
+    torch.npu.synchronize() if torch.npu.is_available() else None
+    return time.time()
 
 def is_parallel(model):
     # Returns True if model is of type DP or DDP

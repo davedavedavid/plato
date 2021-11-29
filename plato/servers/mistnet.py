@@ -8,6 +8,7 @@ Differential Privacy," found in docs/papers.
 import logging
 import os
 from itertools import chain
+from plato.algorithms.mistnet import FeatureDataset
 
 from plato.config import Config
 from plato.samplers import all_inclusive
@@ -50,8 +51,9 @@ class Server(fedavg.Server):
 
         # Test the updated model
         if not Config().clients.do_test:
-            self.accuracy = self.trainer.test(self.testset)
-            logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
-                os.getpid(), 100 * self.accuracy))
+            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
+            logging.info('[Server #{:d}}] Finish testing model.'.format(os.getpid()))
+            # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
+            #     os.getpid(), 100 * self.accuracy))
 
         await self.wrap_up_processing_reports()
