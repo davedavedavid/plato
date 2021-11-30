@@ -293,7 +293,7 @@ class Trainer(basic.Trainer):
             with torch.no_grad():
                 # Run model
                 t = time_synchronized()
-                inf_out, train_out = self.model(img)  # inference and training outputs
+                inf_out, train_out = self.model.forward_from(img)  # inference and training outputs
                 t0 += time_synchronized() - t
 
                 # Run NMS
