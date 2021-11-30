@@ -73,7 +73,8 @@ class Server(base.Server):
 
         if not Config().clients.do_test:
             dataset = datasources_registry.get()
-            self.testset = dataset.get_test_set()
+            # self.testset = dataset.get_test_set()
+            # Here we do not get testset from disk. We directly use feature dataset
 
         # Initialize the csv file which will record results
         if hasattr(Config(), 'results'):
