@@ -256,11 +256,13 @@ class Trainer(basic.Trainer):
             testset: The test dataset.
         """
         assert Config().data.datasource == 'YOLO'
+        logging.info("[Server] Loading the dataset.")
         test_loader = yolo.DataSource.get_test_loader(config['batch_size'],
                                                       testset)
 
         device = next(self.model.parameters()).device  # get model device
 
+        logging.info("[Server] Setting hyparameters.")
         # NPU yolov5 paramters
         conf_thres=0.001,
         iou_thres=0.6
@@ -278,6 +280,8 @@ class Trainer(basic.Trainer):
         p, r, f1, mp, mr, map50, map, t0, t1 = 0., 0., 0., 0., 0., 0., 0., 0., 0.
         loss = torch.zeros(3, device=device)
         jdict, stats, ap, ap_class = [], [], [], []
+
+        logging.info("[Server] Start testing model.")
 
         for __, (img, targets, *__) in enumerate(tqdm(test_loader, desc=s)):
             img = img.to(device, non_blocking=True)
@@ -301,6 +305,7 @@ class Trainer(basic.Trainer):
                 output = non_max_suppression(inf_out, conf_thres=conf_thres, iou_thres=iou_thres, merge=merge)
                 t1 += time_synchronized() - t
 
+            logging.info("[Server] Finish forwarding inference.")
             targets = targets.cpu().t()
             for si, pred in enumerate(output):
                 labels = targets[targets[:, 0] == si, 1:]
