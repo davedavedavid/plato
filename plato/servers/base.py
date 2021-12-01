@@ -380,7 +380,8 @@ class Server:
         # Break the loop when the target accuracy is achieved
         target_accuracy = Config().trainer.target_accuracy
 
-        if target_accuracy and self.accuracy >= target_accuracy:
+        # if target_accuracy and self.accuracy >= target_accuracy:
+        if target_accuracy:
             # logging.info("[Server #%d] Target accuracy reached.", os.getpid())
             logging.info("[Server #%d] Finish testing!", os.getpid())
             await self.close()

@@ -103,7 +103,6 @@ class Trainer(basic.Trainer):
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
 
-        print(self.model, flush=True)
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -363,12 +362,12 @@ class Trainer(basic.Trainer):
 
         # Print results
         pf = '%20s' + '%12.3g' * 6  # print format
-        print(pf % ('all', seen, nt.sum(), mp, mr, map50, map))
+        print(pf % ('all', seen, nt.sum(), mp, mr, map50, map), flush=True)
 
         # TODO: use config to provide imgsz arguments
         imgsz = 640
         t = tuple(x / seen * 1E3 for x in (t0, t1, t0 + t1)) + (imgsz, imgsz, config['batch_size'])  # tuple
-        print('Speed: %.1f/%.1f/%.1f ms inference/NMS/total per %gx%g image at batch-size %g' % t)
+        print('Speed: %.1f/%.1f/%.1f ms inference/NMS/total per %gx%g image at batch-size %g' % t, flush=True)
 
         maps = np.zeros(nc) + map
         for i, c in enumerate(ap_class):
