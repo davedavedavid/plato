@@ -119,6 +119,20 @@ class S3:
             raise ValueError('Error occurred sending data: request status code = {}'.format(
                 response.status_code))
     
+    def upload_to_s3(self, object_key, filename):
+        object_key = self.key_prefix + "/" + object_key
+        try:
+            response = self.s3_client.upload_file(filename, self.bucket, object_key)
+        except Exception as e:
+            pass
+    
+    def download_from_s3(self, object_key, filename):
+        object_key = self.key_prefix + "/" + object_key
+        try:
+            self.s3_client.download_file(self.bucket, object_key, filename)
+        except Exception as e:
+            pass
+    
     def delete_from_s3(self, object_key):
         response = self.s3_client.delete_object(
             Bucket=self.bucket, Key=object_key)
