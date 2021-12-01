@@ -9,7 +9,6 @@ from examples.nnrt.nnrt_models.acl_model import Model
 from examples.nnrt.nnrt_models.acl_util import check_ret
 
 
-
 class Inference(object):
     """This class provide resources management and complete inference procedure. """
     def __init__(self, device_id, model_path, model_input_height,

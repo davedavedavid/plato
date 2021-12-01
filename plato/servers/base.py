@@ -84,6 +84,18 @@ class Server:
                 Config().cursor.execute("DROP TABLE IF EXISTS trainers")
 
         self.client = client
+        
+        # setup s3 client before load model
+        if hasattr(Config().server, 's3_endpoint_url'):
+            self.s3_client = s3.S3()
+        
+        model_dir = Config().params['pretrained_model_dir']
+        model_name = Config().trainer.model_name
+        model_path = f'{model_dir}{model_name}.pth'
+        # download model file
+        if not os.path.exists(model_path):
+            self.s3_client.download_from_s3("model/pretrained_model/yolov5.pth", model_path)
+            
         self.configure()
 
         if Config().is_central_server():
@@ -120,12 +132,6 @@ class Server:
         self.sio.register_namespace(
             ServerEvents(namespace='/', plato_server=self))
         
-        self.s3_client = None
-        try:
-            self.s3_client = s3.S3()
-        except:
-            self.s3_client = None
-            
         app = web.Application()
         self.sio.attach(app)
         web.run_app(app, host=Config().server.address, port=port)
@@ -387,6 +393,14 @@ class Server:
         """Closing the server."""
         logging.info("[Server #%d] Training concluded.", os.getpid())
         self.trainer.save_model()
+        
+        model_dir = Config().params['model_dir']
+        model_name = Config().trainer.model_name
+        model_path = f'{model_dir}{model_name}.pth'
+        # download model file
+        if os.path.exists(model_path):
+            self.s3_client.upload_to_s3("model/deploy_model/yolov5.pth", model_path)
+            
         await self.close_connections()
         os._exit(0)
 
