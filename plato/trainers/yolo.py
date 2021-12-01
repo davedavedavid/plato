@@ -102,6 +102,8 @@ class Trainer(basic.Trainer):
             'shear': 0.0})  # image shear (+/- deg)
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
+
+        print(self.model, flush=True)
         # Sending the model to the device used for training
         self.model.to(self.device)
 
