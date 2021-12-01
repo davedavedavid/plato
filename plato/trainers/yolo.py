@@ -264,7 +264,7 @@ class Trainer(basic.Trainer):
 
         logging.info("[Server] Setting hyparameters.")
         # NPU yolov5 paramters
-        conf_thres=0.001,
+        conf_thres=0.001
         iou_thres=0.6
         merge=False
         # Configure
