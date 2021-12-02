@@ -27,7 +27,8 @@ class Server(fedavg.Server):
     def load_trainer(self):
         """Setting up a pre-trained model to be loaded on the server."""
         super().load_trainer()
-
+        
+        # check local model exist or not
         logging.info("[Server #%d] Loading a pre-trained model.", os.getpid())
         self.trainer.load_model()
 
@@ -52,7 +53,7 @@ class Server(fedavg.Server):
         # Test the updated model
         if not Config().clients.do_test:
             self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
-            logging.info('[Server #{:d}}] Finish testing model.'.format(os.getpid()))
+            logging.info('[Server #{:d}] Finish testing model.'.format(os.getpid()))
             # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
             #     os.getpid(), 100 * self.accuracy))
 

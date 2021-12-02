@@ -102,6 +102,7 @@ class Trainer(basic.Trainer):
             'shear': 0.0})  # image shear (+/- deg)
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
+
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -264,7 +265,7 @@ class Trainer(basic.Trainer):
 
         logging.info("[Server] Setting hyparameters.")
         # NPU yolov5 paramters
-        conf_thres=0.001,
+        conf_thres=0.001
         iou_thres=0.6
         merge=False
         # Configure
@@ -361,12 +362,12 @@ class Trainer(basic.Trainer):
 
         # Print results
         pf = '%20s' + '%12.3g' * 6  # print format
-        print(pf % ('all', seen, nt.sum(), mp, mr, map50, map))
+        print(pf % ('all', seen, nt.sum(), mp, mr, map50, map), flush=True)
 
         # TODO: use config to provide imgsz arguments
         imgsz = 640
         t = tuple(x / seen * 1E3 for x in (t0, t1, t0 + t1)) + (imgsz, imgsz, config['batch_size'])  # tuple
-        print('Speed: %.1f/%.1f/%.1f ms inference/NMS/total per %gx%g image at batch-size %g' % t)
+        print('Speed: %.1f/%.1f/%.1f ms inference/NMS/total per %gx%g image at batch-size %g' % t, flush=True)
 
         maps = np.zeros(nc) + map
         for i, c in enumerate(ap_class):
