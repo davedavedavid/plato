@@ -221,7 +221,7 @@ class Trainer(basic.Trainer):
                 else:
                     pred = self.model.forward_from(imgs, cut_layer)
                 
-                print("Training network output ", pred, flush=True)
+                print("Training network output len ", len(pred), flush=True)
                 loss, loss_items = compute_loss(
                         pred, targets, self.model)  # loss scaled by batch_size
 
@@ -300,6 +300,7 @@ class Trainer(basic.Trainer):
                 t = time_synchronized()
                 inf_out, train_out = self.model.forward_from(img)  # inference and training outputs
                 t0 += time_synchronized() - t
+                print("Inference output is ", inf_out, flush=True)
 
                 # Run NMS
                 t = time_synchronized()
