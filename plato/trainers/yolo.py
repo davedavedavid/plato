@@ -221,7 +221,7 @@ class Trainer(basic.Trainer):
                 else:
                     pred = self.model.forward_from(imgs, cut_layer)
                 
-                # print("Prediction dim ", pred.shape, flush=True)
+                print("Training network output ", pred, flush=True)
                 loss, loss_items = compute_loss(
                         pred, targets, self.model)  # loss scaled by batch_size
 
