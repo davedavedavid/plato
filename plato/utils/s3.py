@@ -73,7 +73,7 @@ class S3:
     
             Returns: A presigned URL for use later to retrieve the data.
         """
-        object_key = self.key_prefix + "/" + object_key
+        object_key = self.key_prefix + "feature_data/" + object_key
         try:
             # Does the object key exist already in S3?
             self.s3_client.head_object(Bucket=self.bucket, Key=object_key)
@@ -106,7 +106,7 @@ class S3:
 
             Returns: The object to be retrieved.
         """
-        object_key = self.key_prefix + "/" + object_key
+        object_key = self.key_prefix + "feature_data/" + object_key
         get_url = self.s3_client.generate_presigned_url(
             ClientMethod='get_object',
             Params={'Bucket': self.bucket, 'Key': object_key},
@@ -129,9 +129,10 @@ class S3:
     def download_from_s3(self, object_key, filename):
         object_key = self.key_prefix + "/" + object_key
         try:
+            print(object_key, filename)
             self.s3_client.download_file(self.bucket, object_key, filename)
         except Exception as e:
-            pass
+            raise ValueError("Failed to download file")
     
     def delete_from_s3(self, object_key):
         response = self.s3_client.delete_object(
