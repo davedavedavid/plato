@@ -129,9 +129,10 @@ class S3:
     def download_from_s3(self, object_key, filename):
         object_key = self.key_prefix + "/" + object_key
         try:
+            print(object_key, filename)
             self.s3_client.download_file(self.bucket, object_key, filename)
         except Exception as e:
-            pass
+            raise ValueError("Failed to download file")
     
     def delete_from_s3(self, object_key):
         response = self.s3_client.delete_object(
