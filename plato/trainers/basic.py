@@ -59,7 +59,6 @@ class Trainer(base.Trainer):
         else:
             model_path = f'{model_dir}{model_name}.pth'
 
-        print(self.model, flush=True)
         torch.save(self.model.state_dict(), model_path)
 
         if self.client_id == 0:
