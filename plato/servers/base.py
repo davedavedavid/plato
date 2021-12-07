@@ -75,6 +75,7 @@ class Server:
         self.updates = []
         self.client_payload = {}
         self.client_chunks = {}
+        self.s3_client = None
 
     def run(self, client=None, edge_server=None, edge_client=None):
         """Start a run loop for the server. """
