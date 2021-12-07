@@ -299,7 +299,6 @@ class Trainer(basic.Trainer):
                 t = time_synchronized()
                 inf_out, train_out = self.model.forward_from(img)  # inference and training outputs
                 t0 += time_synchronized() - t
-                print("Inference output is ", inf_out, flush=True)
 
                 # Run NMS
                 t = time_synchronized()

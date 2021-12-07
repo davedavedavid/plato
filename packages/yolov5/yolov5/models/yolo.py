@@ -35,12 +35,10 @@ class Detect(nn.Module):
                 if self.grid[i].shape[2:4] != x[i].shape[2:4]:
                     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
-                print("Start detection module.", flush=True)
                 y = x[i].sigmoid()
                 y[..., 0:2] = ((y[..., 0:2] * 2. - 0.5 + self.grid[i].to(x[i].device)) * self.stride[i]).type(y.dtype)  # xy
                 y[..., 2:4] = ((y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]).type(y.dtype)  # wh
                 z.append(y.view(bs, -1, self.no))
-                print("Finish detection module.", flush=True)
 
         return x if self.training else (torch.cat(z, 1), x)
 
