@@ -94,8 +94,8 @@ class Server:
         model_name = Config().trainer.model_name
         model_path = f'{model_dir}{model_name}.pth'
         # download model file
-        print(model_path)
-        if not os.path.exists(model_path):
+        # print(model_path)
+        if self.s3_client != None and not os.path.exists(model_path):
             self.s3_client.download_from_s3("model/pretrained_model/yolov5.pth", model_path)
 
         assert(os.path.exists(model_path))
@@ -404,7 +404,7 @@ class Server:
         model_name = Config().trainer.model_name
         model_path = f'{model_dir}{model_name}.pth'
         # download model file
-        if os.path.exists(model_path):
+        if self.s3_client != None and os.path.exists(model_path):
             self.s3_client.upload_to_s3("model/deploy_model/yolov5.pth", model_path)
             
         await self.close_connections()
