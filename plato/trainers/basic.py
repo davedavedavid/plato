@@ -94,7 +94,7 @@ class Trainer(base.Trainer):
         list_keys = list(ckpt.keys())
         for key in list_keys:
             for prefix in exclude_weight_prefix:
-                if key.startwith(prefix):
+                if key.startswith(prefix):
                     ckpt.pop(key)
         self.model.load_state_dict(ckpt, strict=False)
 
