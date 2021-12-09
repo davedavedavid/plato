@@ -290,6 +290,10 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 t[tcls[i], range_nb] = cp
 
                 t = t * (allmask)
+                print("BCECLS shape {} dtype {}".format(BCEcls(tmp, t).shape, BCEcls(tmp, t).dtype), flush=True)
+                print("SUM mask shape {} dtype {}".format(sum_mask.shape, sum_mask.dtype), flush=True)
+                print("T.shape ", t.shape[0], flush=True)
+                print("lcls shape {} dtype {}".format(lcls.shape, lcls.dtype), flush=True)
                 lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
             # Append targets to text file
             # with open('targets.txt', 'a') as file:
