@@ -294,7 +294,13 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 print("SUM mask shape {} dtype {}".format(sum_mask.shape, sum_mask.dtype), flush=True)
                 print("T.shape ", t.shape[0], flush=True)
                 print("lcls shape {} dtype {}".format(lcls.shape, lcls.dtype), flush=True)
-                lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
+                temp1 = BCEcls(tmp, t)
+                temp2 = sum_mask
+                temp3 = t.shape[0]
+                temp4 = (temp2 + temp3).float()
+                temp5 = temp1 / temp4
+                lcls += temp5
+                # lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
             # Append targets to text file
             # with open('targets.txt', 'a') as file:
             #     [file.write('%11.5g ' * 4 % tuple(x) + '\n') for x in torch.cat((txy[i], twh[i]), 1)]
