@@ -298,6 +298,8 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 temp2 = sum_mask
                 temp3 = t.shape[0]
                 temp4 = (temp2 + temp3).float()
+                print("temp shape {} dtype {} device{} ".format(tmp.shape, tmp.dtype, tmp.device), flush=True)
+                print("t shape {}, dtype {} device {}".format(t.shape, t.dtype, t.device), flush=True)
                 print("temp2 + temp3 shape {} dtype{} ".format(temp4.shape, temp4.dtype), flush=True)
                 print("temp1 ", temp1, flush=True)
                 print("temp4 ", temp4, flush=True)
