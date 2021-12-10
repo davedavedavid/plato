@@ -290,22 +290,7 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 t[tcls[i], range_nb] = cp
 
                 t = t * (allmask)
-                print("BCECLS shape {} dtype {}".format(BCEcls(tmp, t).shape, BCEcls(tmp, t).dtype), flush=True)
-                print("SUM mask shape {} dtype {}".format(sum_mask.shape, sum_mask.dtype), flush=True)
-                print("T.shape ", t.shape[0], flush=True)
-                print("lcls shape {} dtype {}".format(lcls.shape, lcls.dtype), flush=True)
-                temp1 = BCEcls(tmp, t)
-                temp2 = sum_mask
-                temp3 = t.shape[0]
-                temp4 = (temp2 + temp3).float()
-                print("temp shape {} dtype {} device{} ".format(tmp.shape, tmp.dtype, tmp.device), flush=True)
-                print("t shape {}, dtype {} device {}".format(t.shape, t.dtype, t.device), flush=True)
-                print("temp2 + temp3 shape {} dtype{} ".format(temp4.shape, temp4.dtype), flush=True)
-                print("temp1 ", temp1, flush=True)
-                print("temp4 ", temp4, flush=True)
-                temp5 = temp1 / temp4
-                lcls += temp5
-                # lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
+                lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
             # Append targets to text file
             # with open('targets.txt', 'a') as file:
             #     [file.write('%11.5g ' * 4 % tuple(x) + '\n') for x in torch.cat((txy[i], twh[i]), 1)]

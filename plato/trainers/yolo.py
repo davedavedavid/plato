@@ -103,9 +103,6 @@ class Trainer(basic.Trainer):
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
 
-        # Sending the model to the device used for training
-        self.model.to(self.device)
-
         pg0, pg1, pg2 = [], [], []  # optimizer parameter groups
         for k, v in self.model.named_modules():
             if hasattr(v, 'bias') and isinstance(v.bias, nn.Parameter):
@@ -159,7 +156,6 @@ class Trainer(basic.Trainer):
                                          sampler,
                                          cut_layer=cut_layer)
         
-        logging.info("[Client #%d] Finish loading the dataset. ", self.client_id)
         nb = len(train_loader)
 
         # Model parameters
@@ -305,7 +301,6 @@ class Trainer(basic.Trainer):
                 output = non_max_suppression(inf_out, conf_thres=conf_thres, iou_thres=iou_thres, merge=merge)
                 t1 += time_synchronized() - t
 
-            logging.info("[Server] Finish forwarding inference.")
             targets = targets.cpu().t()
             for si, pred in enumerate(output):
                 labels = targets[targets[:, 0] == si, 1:]
