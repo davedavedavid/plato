@@ -245,6 +245,7 @@ class Trainer(basic.Trainer):
                 pbar.set_description(s)
 
             lr_schedule.step()
+            torch.save(self.model.state_dict(),  '/home/data/model/yolov5.pth')
 
     def test_model(self, config, testset):  # pylint: disable=unused-argument
         """The testing loop for YOLOv5.
