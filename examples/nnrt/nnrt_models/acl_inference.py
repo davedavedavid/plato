@@ -75,4 +75,6 @@ class Inference(object):
 
         output = self.model_process.run(img_device, img_buffer_size)
 
+        acl.rt.free(img_device)
+
         return output
