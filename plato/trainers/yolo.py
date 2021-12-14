@@ -102,6 +102,8 @@ class Trainer(basic.Trainer):
             'shear': 0.0})  # image shear (+/- deg)
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
+        # Sending the model to the device used for training
+        self.model.to(self.device)
 
         pg0, pg1, pg2 = [], [], []  # optimizer parameter groups
         for k, v in self.model.named_modules():
@@ -243,6 +245,7 @@ class Trainer(basic.Trainer):
                 pbar.set_description(s)
 
             lr_schedule.step()
+            torch.save(self.model.state_dict(),  '/home/data/model/yolov5.pth')
 
     def test_model(self, config, testset):  # pylint: disable=unused-argument
         """The testing loop for YOLOv5.
