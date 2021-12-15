@@ -82,7 +82,6 @@ class Trainer(basic.Trainer):
                          1)  # accumulate loss before optimizing
 
         hyp.update({'optimizer': 'SGD',  # ['adam', 'SGD', None] if none, default is SGD
-            'lr0': 0.01,  # initial learning rate (SGD=1E-2, Adam=1E-3)
             'momentum': 0.937,  # SGD momentum/Adam beta1
             'weight_decay': 5e-4,  # optimizer weight decay
             'giou': 0.05,  # giou loss gain
@@ -100,6 +99,8 @@ class Trainer(basic.Trainer):
             'translate': 0.0,  # image translation (+/- fraction)
             'scale': 0.5,  # image scale (+/- gain)
             'shear': 0.0})  # image shear (+/- deg)
+
+        print("Learning rate is ", hyp['lr0'], flush=True)
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
         # Sending the model to the device used for training
