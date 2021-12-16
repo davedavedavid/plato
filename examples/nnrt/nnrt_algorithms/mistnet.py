@@ -56,6 +56,7 @@ class Algorithm(fedavg.Algorithm):
             # logging.info("[Client #%d] Extracting %d features from %s examples.",
             #          self.client_id, count, len(dataset))
             if epsilon is not None:
+                logging.info("epsilon is %d.",epsilon)
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
                     logits = self.trainer.randomize(logits, targets, epsilon)
