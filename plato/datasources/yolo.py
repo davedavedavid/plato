@@ -20,10 +20,10 @@ from plato.datasources import base
 
 def collate_fn(batch):
     """Customized version for the MistNet server when cut_layer is used."""
-    img, label = zip(*batch)  # transposed
+    img, label, path, shape = zip(*batch)  # transposed
     for i, l in enumerate(label):
-        l[:, 0] = i  # add target image index for build_targets()
-    return torch.stack(img, 0), torch.cat(label, 0)
+        l[0, :] = i  # add target image index for build_targets()
+    return torch.stack(img, 0), torch.cat(label, 1)
 
 
 class YOLODataset(torch.utils.data.Dataset):
