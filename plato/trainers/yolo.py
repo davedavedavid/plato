@@ -191,9 +191,9 @@ class Trainer(basic.Trainer):
 
             for i, (imgs, targets, *__) in pbar:
                 ni = i + nb * epoch  # number integrated batches (since train start)
-                targets = targets.to(torch.float32).cpu().numpy()
-                targets = np.moveaxis(targets, -1, -2)
-                targets = torch.from_numpy(targets).to(torch.float32)
+                targets = targets.to(torch.float32)
+                # targets = np.moveaxis(targets, -1, -2)
+                # targets = torch.from_numpy(targets).to(torch.float32)
                 
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
@@ -352,10 +352,7 @@ class Trainer(basic.Trainer):
         stats = [np.concatenate(x, 0) for x in zip(*stats)]  # to numpy
         if len(stats) and stats[0].any():
             p, r, ap, f1, ap_class = ap_per_class(*stats)
-            print("P is ", p, flush=True)
-            print("R is ", r, flush=True)
-            print("AP is ", ap, flush=True)
-            p, r, ap50, ap = p[:, 0], r[:, 0], ap[:, 0], ap.mean(1)  # [P, R, AP@0.5, AP@0.5:0.95]
+            p, r, ap50, ap = p[:], r[:], ap[:, 0], ap.mean(1)  # [P, R, AP@0.5, AP@0.5:0.95]
             mp, mr, map50, map = p.mean(), r.mean(), ap50.mean(), ap.mean()
             nt = np.bincount(stats[3].astype(np.int64), minlength=nc)  # number of targets per class
         else:
