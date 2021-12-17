@@ -524,6 +524,8 @@ class LoadImagesAndLabels(object):  # for training/testing
                     f += glob.iglob(p + os.sep + '*')
                 else:
                     raise Exception('%s does not exist' % p)
+            for file in f:
+                print(file, flush=True)
             self.img_files = sorted([x.replace('/', os.sep) for x in f if os.path.splitext(x)[-1].lower() in img_formats])
         except Exception as e:
             raise Exception('Error loading data from %s: %s\nSee %s' % (path, e, help_url))
