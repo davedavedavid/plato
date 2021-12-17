@@ -16,9 +16,7 @@ from PIL import Image, ExifTags
 from tqdm import tqdm
 
 help_url = 'https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data'
-img_formats = [
-    'bmp', 'jpg', 'jpeg', 'png', 'tif', 'tiff', 'dng', 'webp', 'mpo'
-]  # acceptable image suffixes
+img_formats = ['.bmp', '.jpg', '.jpeg', '.png', '.tif', '.tiff','.dng']
 vid_formats = ['mov', 'avi', 'mp4', 'mpg', 'mpeg', 'm4v', 'wmv',
                'mkv']  # acceptable video suffixes
 logger = logging.getLogger(__name__)
@@ -515,7 +513,6 @@ class LoadImagesAndLabels(object):  # for training/testing
             for p in path if isinstance(path, list) else [path]:
                 p = str(Path(p))  # os-agnostic
                 parent = str(Path(p).parent) + os.sep
-                print("Path p is ", p, flush=True)
                 if os.path.isfile(p):  # file
                     with open(p, 'r') as t:
                         t = t.read().splitlines()
@@ -524,10 +521,6 @@ class LoadImagesAndLabels(object):  # for training/testing
                     f += glob.iglob(p + os.sep + '*')
                 else:
                     raise Exception('%s does not exist' % p)
-            for file in f:
-                temp_file = file.replace('/', os.sep)
-                print(temp_file)
-                print(os.path.splitext(temp_file)[-1].lower())
             self.img_files = sorted([x.replace('/', os.sep) for x in f if os.path.splitext(x)[-1].lower() in img_formats])
         except Exception as e:
             raise Exception('Error loading data from %s: %s\nSee %s' % (path, e, help_url))
@@ -540,7 +533,7 @@ class LoadImagesAndLabels(object):  # for training/testing
         self.n = n  # number of images
         self.batch = bi  # batch index of image
         self.img_size = img_size
-        self.augment = augment
+        self.augment = augment 
         self.hyp = hyp
         self.image_weights = image_weights
         self.rect = False if image_weights else rect
