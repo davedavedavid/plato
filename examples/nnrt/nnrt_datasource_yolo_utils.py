@@ -515,6 +515,7 @@ class LoadImagesAndLabels(object):  # for training/testing
             for p in path if isinstance(path, list) else [path]:
                 p = str(Path(p))  # os-agnostic
                 parent = str(Path(p).parent) + os.sep
+                print("Path p is ", p, flush=True)
                 if os.path.isfile(p):  # file
                     with open(p, 'r') as t:
                         t = t.read().splitlines()
