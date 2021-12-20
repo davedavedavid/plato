@@ -194,12 +194,14 @@ class Trainer(basic.Trainer):
                 targets = targets.to(torch.float32)
                 # targets = np.moveaxis(targets, -1, -2)
                 # targets = torch.from_numpy(targets).to(torch.float32)
+
+                print('imgs dtype before', imgs.dtype, flush=True)
+                imgs = imgs.to(torch.float16)
                 
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
                 print('imgs dtype', imgs.dtype, flush=True)
-                imgs = imgs.to(torch.float16)
                 # Warmup
                 if ni <= nw:
                     xi = [0, nw]  # x interp
