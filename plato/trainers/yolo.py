@@ -198,6 +198,8 @@ class Trainer(basic.Trainer):
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
+                print('imgs dtype', imgs.dtype, flush=True)
+                imgs = imgs.to(torch.float16)
                 # Warmup
                 if ni <= nw:
                     xi = [0, nw]  # x interp
