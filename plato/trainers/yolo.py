@@ -195,7 +195,7 @@ class Trainer(basic.Trainer):
                 # targets = np.moveaxis(targets, -1, -2)
                 # targets = torch.from_numpy(targets).to(torch.float32)
 
-                print('imgs dtype before', imgs.dtype, flush=True)
+                #print('imgs dtype before', imgs.dtype, flush=True)--torch.float64
                 imgs = imgs.to(torch.float16)
                 
                 # save targets

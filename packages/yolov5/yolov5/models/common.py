@@ -24,15 +24,8 @@ class Conv(nn.Module):
         self.act = nn.LeakyReLU(0.1, inplace=True) if act else nn.Identity()
 
     def forward(self, x):
-        print('x dtype', x.dtype, flush=True)
-        temp1 = self.conv(x)
-        print('temp1 dtype', temp1.dtype, flush=True)
-        temp2 = self.bn(temp1)
-        print('temp2 dtype', temp2.dtype, flush=True)
-        temp3 = self.act(temp2)
-        print('temp3 dtype', temp3.dtype, flush=True)
-        return temp3
-        # return self.act(self.bn(self.conv(x)))
+        #print('x dtype', x.dtype, flush=True)
+        return self.act(self.bn(self.conv(x)))
 
     def fuseforward(self, x):
         return self.act(self.conv(x))
