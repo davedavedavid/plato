@@ -201,7 +201,7 @@ class Trainer(basic.Trainer):
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
-                print('imgs dtype', imgs.dtype, flush=True)
+                #print('imgs dtype', imgs.dtype, flush=True)
                 # Warmup
                 if ni <= nw:
                     xi = [0, nw]  # x interp
