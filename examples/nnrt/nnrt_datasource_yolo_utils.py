@@ -508,6 +508,8 @@ def random_affine(img, targets=(), degrees=10, translate=.1, scale=.1, shear=10,
 class LoadImagesAndLabels(object):  # for training/testing
     def __init__(self, path, img_size=640, batch_size=16, augment=False, hyp=None, rect=False, image_weights=False,
                  cache_images=False, single_cls=False, stride=32, pad=0.0):
+        np.random.seed(1234)
+        random.seed(1234)
         try:
             f = []  # image files
             for p in path if isinstance(path, list) else [path]:
