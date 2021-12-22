@@ -4,6 +4,7 @@ from yolov5.utils.torch_utils import time_synchronized
 
 import torch
 from plato.config import Config
+from copy import deepcopy
 
 try:
     import thop  # for FLOPS computation
@@ -47,7 +48,7 @@ class Model(yolo.Model):
 
     def forward_from(self, x, cut_layer=4, profile=False):
         y, dt = [], []  # outputs
-
+        layer4out = deepcopy(x)
         for m in self.model:
             if m.i <= cut_layer:
                 y.append(None)
@@ -68,11 +69,10 @@ class Model(yolo.Model):
                 print('%10.1f%10.0f%10.1fms %-40s' % (o, m.np, dt[-1], m.type))
 
             if m.i == 16:
-                print('input:',x, flush=True)
+                x[1] = layer4out
+                #print('input:',x, flush=True)
             x = m(x)  # run
-            if m.i == 15:
-                print('output:',x, flush=True)
-                
+
             if not self.training and x[0].device.type == 'npu':
                 torch.npu.synchronize()
             y.append(x if m.i in self.save else None)  # save output
