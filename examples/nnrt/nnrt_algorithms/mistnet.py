@@ -45,10 +45,10 @@ class Algorithm(fedavg.Algorithm):
         for inputs, targets, *__ in dataset:
             # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
             #     "The input shape is not consistent with the requirement predefined model."
-            print("Load image is ", inputs, flush=True)
-            print("Load targets is ", targets, flush=True)
-            print("Random numpy number is ", np.random.randn(), flush=True)
-            print("Random randn number is ", random.random(), flush=True)
+            # print("Load image is ", inputs, flush=True)
+            # print("Load targets is ", targets, flush=True)
+            # print("Random numpy number is ", np.random.randn(), flush=True)
+            # print("Random randn number is ", random.random(), flush=True)
             inputs = inputs.astype(np.float32)
             inputs = inputs / 255.0  # normalize image and convert image type at the same time
             logits = self.model.forward(inputs)

@@ -288,10 +288,8 @@ class Trainer(basic.Trainer):
         logging.info("[Server] Start testing model.")
 
         for __, (img, targets, *__) in enumerate(tqdm(test_loader, desc=s)):
-            img = img.to(device, non_blocking=True)
-            targets = targets.to(torch.float32).cpu().numpy()
-            targets = np.moveaxis(targets, -1, -2)
-            targets = torch.from_numpy(targets).to(torch.float32)
+            img = img.to(torch.float32).to(device, non_blocking=True)
+            targets = targets.to(torch.float32).to(device)
 
             nb, _, height, width = img.shape  # batch size, channels, height, width
             # TODO: here we do not have orignial image shape, I temporarily mannuly set this
