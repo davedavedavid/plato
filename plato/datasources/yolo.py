@@ -84,7 +84,7 @@ class DataSource(base.DataSource):
                 Config().data.train_path,
                 self.image_size,
                 Config().trainer.batch_size,
-                augment=False,  # augment images
+                augment=True,  # augment images
                 hyp=None,  # augmentation hyperparameters
                 rect=False,  # rectangular training
                 cache_images=False,
