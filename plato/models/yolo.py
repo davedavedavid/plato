@@ -48,7 +48,7 @@ class Model(yolo.Model):
     def forward_from(self, x, cut_layer=4, profile=False):
         y, dt = [], []  # outputs
         for m in self.model:
-            if m.i < cut_layer:
+            if m.i <= cut_layer:
                 y.append(None)
                 continue
             print('m: ', m, flush=True)
