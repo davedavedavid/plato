@@ -67,9 +67,12 @@ class Model(yolo.Model):
                 dt.append((time_synchronized() - t) * 100)
                 print('%10.1f%10.0f%10.1fms %-40s' % (o, m.np, dt[-1], m.type))
 
+            if m.i == 16:
+                print('input:',x, flush=True)
             x = m(x)  # run
-            if x is None:
-                print('m.i:', m.i, flush=True)
+            if m.i == 15:
+                print('output:',x, flush=True)
+                
             if not self.training and x[0].device.type == 'npu':
                 torch.npu.synchronize()
             y.append(x if m.i in self.save else None)  # save output
