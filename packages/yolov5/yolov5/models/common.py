@@ -115,13 +115,13 @@ class Concat(nn.Module):
         self.d = dimension
 
     def forward(self, x):
-        print('type: ', type(x))
+        print('type: ', type(x), flush=True)
         if isinstance(x, list):
-            print('len x: ', len(x))
+            print('len x: ', len(x), flush=True)
             for index, data in enumerate(x):
-                print(index, data.shape, data.dtype)
+                print(index, data.shape, data.dtype, flush=True)
         else:
-            print('x: ', x.shape, x.dtype)
+            print('x: ', x.shape, x.dtype, flush=True)
         return torch.cat(x, self.d)
 
 
