@@ -54,6 +54,7 @@ class Algorithm(fedavg.Algorithm):
             np.save("/home/data/model/test_image.npy", inputs)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
+            np.save("/home/data/model/test_feat.npy", logits)
             targets = np.expand_dims(
                 targets, axis=0
             )  # add batch axis to make sure self.train.randomize correct
