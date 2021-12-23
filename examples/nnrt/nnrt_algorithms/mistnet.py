@@ -51,7 +51,7 @@ class Algorithm(fedavg.Algorithm):
             # print("Random randn number is ", random.random(), flush=True)
             inputs = inputs.astype(np.float32)
             inputs = inputs / 255.0  # normalize image and convert image type at the same time
-            np.save("./test_image.npy", inputs)
+            np.save("/home/data/model/test_image.npy", inputs)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             targets = np.expand_dims(
