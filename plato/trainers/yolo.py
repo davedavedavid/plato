@@ -48,6 +48,7 @@ class Trainer(basic.Trainer):
                                                 extract_features, cut_layer)
 
     def train_model(self, config, trainset, sampler, cut_layer=None):  # pylint: disable=unused-argument
+        return 
         """The training loop for YOLOv5.
 
         Arguments:
@@ -288,6 +289,7 @@ class Trainer(basic.Trainer):
         logging.info("[Server] Start testing model.")
 
         for __, (img, targets, *__) in enumerate(tqdm(test_loader, desc=s)):
+            # load images from disk
             img = img.to(torch.float32).to(device, non_blocking=True)
             targets = targets.to(torch.float32).to(device)
 

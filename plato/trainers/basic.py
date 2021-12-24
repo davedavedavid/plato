@@ -90,13 +90,13 @@ class Trainer(base.Trainer):
         npu = 0
         device = torch.device("npu:%d" % npu)
         ckpt = torch.load(model_path, map_location='cpu')
-        exclude_weight_prefix = ['model.24.m.0', 'model.24.m.1', 'model.24.m.2']
-        list_keys = list(ckpt.keys())
-        for key in list_keys:
-            for prefix in exclude_weight_prefix:
-                if key.startswith(prefix):
-                    ckpt.pop(key)
-        self.model.load_state_dict(ckpt, strict=False)
+        # exclude_weight_prefix = ['model.24.m.0', 'model.24.m.1', 'model.24.m.2']
+        # list_keys = list(ckpt.keys())
+        # for key in list_keys:
+        #     for prefix in exclude_weight_prefix:
+        #         if key.startswith(prefix):
+        #             ckpt.pop(key)
+        self.model.load_state_dict(ckpt, strict=True)
 
     def train_process(self, config, trainset, sampler, cut_layer=None):
         """The main training loop in a federated learning workload, run in
