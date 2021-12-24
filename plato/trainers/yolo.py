@@ -354,7 +354,6 @@ class Trainer(basic.Trainer):
 
         # Compute statistics
         stats = [np.concatenate(x, 0) for x in zip(*stats)]  # to numpy
-        print("Stats 0 ", stats[0], flush=True)
         if len(stats) and stats[0].any():
             p, r, ap, f1, ap_class = ap_per_class(*stats)
             p, r, ap50, ap = p[:], r[:], ap[:, 0], ap.mean(1)  # [P, R, AP@0.5, AP@0.5:0.95]
