@@ -50,6 +50,8 @@ class Algorithm(fedavg.Algorithm):
             # print("Random numpy number is ", np.random.randn(), flush=True)
             # print("Random randn number is ", random.random(), flush=True)
             inputs = cv2.imread("/home/data/model/image1.jpg")
+            inputs = np.moveaxis(inputs, -1, 0)
+            inputs = np.reshape(inputs, (1, -1))
             inputs = inputs.astype(np.float32)
             inputs = inputs / 255.0  # normalize image and convert image type at the same time
             np.save("/home/data/model/test_image.npy", inputs)
