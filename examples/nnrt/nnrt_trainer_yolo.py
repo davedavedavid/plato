@@ -39,8 +39,8 @@ class Trainer(base.Trainer):
         label = unary_encoding.symmetric_unary_encoding(bit_array, epsilon)
         targets_new = copy.deepcopy(targets)
         print("targets_new: ", targets_new, flush=True)
+        print("targets_new.shape:", targets_new.shape, flush=True)
         for i in range(targets_new.shape[1]):
-            print("targets_new.shape:", targets_new.shape, flush=True)
             box = self.convert(bit_array.shape[2:], targets_new[0][i][2:])
             img[:, :, box[0]:box[2],
                 box[1]:box[3]] = label[:, :, box[0]:box[2], box[1]:box[3]]
@@ -52,6 +52,7 @@ class Trainer(base.Trainer):
                   size: Input feature size(w,h)
                   box:(xmin,xmax,ymin,ymax).
               """
+        print("box:", box, flush=True)
         x = box[0]
         y = box[1]
         w = box[2]
