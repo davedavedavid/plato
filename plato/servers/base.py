@@ -258,9 +258,9 @@ class Server:
                 payload = " "
 
                 # Sending the server payload to the client
-                logging.info(
-                    "[Server #%d] Sending the current model to client #%d.",
-                    os.getpid(), selected_client_id)
+                #logging.info(
+                #    "[Server #%d] Sending the current model to client #%d.",
+                #    os.getpid(), selected_client_id)
                 await self.send(sid, payload, selected_client_id)
 
     async def send_in_chunks(self, data, sid, client_id) -> None:
@@ -296,8 +296,8 @@ class Server:
 
         await self.sio.emit('payload_done', {'id': client_id, 'obkey': payload_key}, room=sid)
 
-        logging.info("[Server #%d] Sent %s MB of payload data to client #%d.",
-                     os.getpid(), round(data_size / 1024**2, 2), client_id)
+        #logging.info("[Server #%d] Sent %s MB of payload data to client #%d.",
+        #             os.getpid(), round(data_size / 1024**2, 2), client_id)
 
     async def client_report_arrived(self, sid, report):
         """ Upon receiving a report from a client. """
