@@ -44,6 +44,8 @@ class Trainer(base.Trainer):
             box = self.convert(bit_array.shape[2:], targets_new[0][2:][i])
             img[:, :, box[0]:box[2],
                 box[1]:box[3]] = label[:, :, box[0]:box[2], box[1]:box[3]]
+        print("img: ", img, flush=True)
+        print("img.shape:", img.shape, flush=True)
         return img
 
     def convert(self, size, box):
