@@ -254,9 +254,11 @@ def compute_loss(p, targets, model):  # predictions, targets, model
     np = len(p)  # number of outputs
     balance = [4.0, 1.0, 0.4] if np == 3 else [4.0, 1.0, 0.4, 0.1]  # P3-5 or P3-6
     for i, pi in enumerate(p):  # layer index, layer predictions
+        torch.npu.synchronize()
         b, a, gj, gi = indices[i]  # image, anchor, gridy, gridx
         allmask = targets_mask[i]
         sum_mask = targets_sum_mask[i]
+        torch.npu.synchronize()
         tobj = torch.zeros_like(pi[:, :, 0, :, :]).to(device)  # target obj
 
         nb = b.shape[0]  # number of targets
@@ -287,7 +289,15 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 tmp = tmp * (allmask) - (1.- allmask) * 50.
                 t = torch.full_like(tmp, cn).to(device)  # targets
                 range_nb = torch.arange(nb, device=device).long()
-                t[tcls[i], range_nb] = cp
+                torch.npu.synchronize()
+                try:
+                    t[tcls[i], range_nb] = cp
+                except Exception as e:
+                    print("i: ", i, flash=True)
+                    print("range_nb:", range_nb, flash=True)
+                    print("tcls[i]", tcls[i], flash=True)
+                    raise e
+                torch.npu.synchronize()
 
                 t = t * (allmask)
                 lcls += (BCEcls(tmp, t) / (sum_mask * t.shape[0]).float()) # BCE
