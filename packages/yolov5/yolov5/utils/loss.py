@@ -293,9 +293,11 @@ def compute_loss(p, targets, model):  # predictions, targets, model
                 try:
                     t[tcls[i], range_nb] = cp
                 except Exception as e:
-                    print("i: ", i, flash=True)
-                    print("range_nb:", range_nb, flash=True)
-                    print("tcls[i]", tcls[i], flash=True)
+                    print("i: ", i, flush=True)
+                    print("range_nb:", range_nb, flush=True)
+                    print("tcls[i]", tcls[i], flush=True)
+                    print("t.shape:", t.shape(), flush=True)
+                    print("targets.shape:", targets.shape(), flush=True)
                     raise e
                 torch.npu.synchronize()
 
@@ -327,6 +329,7 @@ def build_targets(p, targets, model):
     while nt > nt_max:
         nt_max *= 2
         print('**************** nt max=', nt_max)
+        print("target.shape: ",targets.shape(), flush=True)
     max_target = torch.zeros(6, nt_max, device=targets.device)   #  (6, 1024)
     max_target[0, :nt] = targets[0, :]
     max_target[1, :nt] = targets[1, :]
