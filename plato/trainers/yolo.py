@@ -64,6 +64,10 @@ class Trainer(basic.Trainer):
         total_batch_size = batch_size
         epochs = config['epochs']
 
+        if epochs == 0:
+            print("jump to test")
+            return
+
         # cuda = (self.device != 'cpu')
         nc = Config().data.num_classes  # number of classes
         names = Config().data.classes  # class names
