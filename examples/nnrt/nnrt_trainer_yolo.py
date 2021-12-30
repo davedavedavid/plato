@@ -55,7 +55,7 @@ class Trainer(base.Trainer):
                   size: Input feature size(w,h)
                   box:(xmin,xmax,ymin,ymax).
               """
-        print("box:", box, flush=True)
+        # print("box:", box, flush=True)
         x = box[0]
         y = box[1]
         w = box[2]
