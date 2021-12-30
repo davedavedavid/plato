@@ -54,10 +54,12 @@ def ap_per_class(tp, conf, pred_cls, target_cls, plot=False, save_dir='.', names
 
             # Recall
             recall = tpc / (n_l + 1e-16)  # recall curve
+            print("recall: ", recall, flush=True)
             r[ci] = np.interp(-px, -conf[i], recall[:, 0], left=0)  # negative x, xp because xp decreases
 
             # Precision
             precision = tpc / (tpc + fpc)  # precision curve
+            print("precision: ", precision, flush=True)
             p[ci] = np.interp(-px, -conf[i], precision[:, 0], left=1)  # p at pr_score
 
             # AP from recall-precision curve
