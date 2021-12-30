@@ -351,7 +351,9 @@ class Trainer(basic.Trainer):
 
                 # Append statistics (correct, conf, pcls, tcls)
                 stats.append((correct.cpu(), pred[:, 4].cpu(), pred[:, 5].cpu(), tcls))
-
+                print("correct.shape: ", correct.shape, flush=true)
+                print("pred.shape: ", pred.shape, flush=true)
+                print("tcls.shape: ", tcls.shape, flush=true)
         # Compute statistics
         stats = [np.concatenate(x, 0) for x in zip(*stats)]  # to numpy
         if len(stats) and stats[0].any():
