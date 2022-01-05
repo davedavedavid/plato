@@ -360,6 +360,7 @@ class Trainer(basic.Trainer):
         if len(stats) and stats[0].any():
             p, r, ap, f1, ap_class = ap_per_class(*stats)
             p, r, ap50, ap = p[:], r[:], ap[:, 0], ap.mean(1)  # [P, R, AP@0.5, AP@0.5:0.95]
+            print(ap, flush=True)
             mp, mr, map50, map = p.mean(), r.mean(), ap50.mean(), ap.mean()
             nt = np.bincount(stats[3].astype(np.int64), minlength=nc)  # number of targets per class
         else:
