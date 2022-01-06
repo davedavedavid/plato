@@ -328,7 +328,7 @@ def build_targets(p, targets, model):
     nt_max = 32 * batch_size
     while nt > nt_max:
         nt_max *= 2
-        //TODO 
+        #TODO 
         #print('**************** nt max=', nt_max)
         #print("nt: ",nt, flush=True)
     max_target = torch.zeros(6, nt_max, device=targets.device)   #  (6, 1024)
