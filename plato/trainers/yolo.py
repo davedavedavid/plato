@@ -87,7 +87,7 @@ class Trainer(basic.Trainer):
                          1)  # accumulate loss before optimizing
 
         hyp.update({'optimizer': 'SGD',  # ['adam', 'SGD', None] if none, default is SGD
-            'momentum': 0.937,  # SGD momentum/Adam beta1
+            #：'momentum': 0.937,  # SGD momentum/Adam beta1
             'weight_decay': 5e-4,  # optimizer weight decay
             'giou': 0.05,  # giou loss gain
             'cls': 0.5,  # cls loss gain
@@ -145,7 +145,7 @@ class Trainer(basic.Trainer):
 
         # Mixed precision training
         if mixed_precision:
-            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
+            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=1024)
         if Config().trainer.linear_lr:
             lf = lambda x: (1 - x / (epochs - 1)) * (1.0 - hyp['lrf']) + hyp[
                 'lrf']  # linear
