@@ -185,6 +185,7 @@ class Trainer(basic.Trainer):
 
         # test data for model
         features = np.load("/home/data/model/test_feature_center.npy")
+        features = torch.from_numpy(features).to(torch.float32).to(self.device)
         self.model.train()
         pred = self.model.forward_from(features, 4)
         np.save("/home/data/model/plato_output1.npy", pred[0].cpu().detach().numpy())
