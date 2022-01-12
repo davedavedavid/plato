@@ -193,8 +193,9 @@ class Client:
         logging.info(
             "[Client #%d] Received %s MB of payload data from the server.",
             client_id, round(payload_size / 1024**2, 2))
-
-        self.load_payload(self.server_payload)
+        
+        if not self.server_payload:
+            self.load_payload(self.server_payload)
         self.server_payload = None
 
         report, payload = await self.train()
@@ -245,6 +246,9 @@ class Client:
 
         await self.sio.emit('client_payload_done', {'id': self.client_id, 'obkey': payload_key})
 
+        logging.info("[Client #%d] Sent %s MB of payload data (before pickle) to the server.",
+                     self.client_id, round(sys.getsizeof(payload) / 1024**2, 2))
+        
         logging.info("[Client #%d] Sent %s MB of payload data to the server.",
                      self.client_id, round(data_size / 1024**2, 2))
 

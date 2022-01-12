@@ -392,7 +392,6 @@ class Trainer(basic.Trainer):
             maps[c] = ap[i]
         return (mp, mr, map50, map, *(loss.cpu() / len(test_loader)).tolist()), maps, t
 
-
     def randomize(self, bit_array: np.ndarray, targets: np.ndarray, epsilon):
         """
         The object detection unary encoding method.

@@ -27,9 +27,6 @@ class Trainer(base.Trainer):
     def test(self, testset) -> float:
         pass
 
-    async def server_test(self, testset):
-        pass
-
     def randomize(self, bit_array: np.ndarray, targets: np.ndarray, epsilon):
         """
         The object detection unary encoding method.

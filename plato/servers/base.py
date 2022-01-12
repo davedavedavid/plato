@@ -255,7 +255,7 @@ class Server:
                 payload = self.customize_server_payload(payload)
 
                 # In nnrt demo, we do not need to send model state from server to clients
-                payload = " "
+                payload = 0
 
                 # Sending the server payload to the client
                 #logging.info(
@@ -382,13 +382,16 @@ class Server:
     async def wrap_up(self):
         """Wrapping up when each round of training is done."""
         # Break the loop when the target accuracy is achieved
-        target_accuracy = Config().trainer.target_accuracy
+        # target_accuracy = Config().trainer.target_accuracy
 
         # if target_accuracy and self.accuracy >= target_accuracy:
-        if target_accuracy:
-            # logging.info("[Server #%d] Target accuracy reached.", os.getpid())
-            logging.info("[Server #%d] Finish testing!", os.getpid())
-            await self.close()
+        # if target_accuracy:
+        #     # logging.info("[Server #%d] Target accuracy reached.", os.getpid())
+        #     logging.info("[Server #%d] Finish testing!", os.getpid())
+        #     await self.close()
+        
+        # you can use one of the self.accuracy as the target_accuracy
+        print(self.accuracy)
 
         if self.current_round >= Config().trainer.rounds:
             logging.info("Target number of training rounds reached.")
