@@ -239,8 +239,10 @@ class Client:
                 _data = pickle.dumps(data)
                 await self.send_in_chunks(_data)
                 data_size += sys.getsizeof(_data)
-                original_data_size += sys.getsizeof(data[0])
-                original_data_size += sys.getsizeof(data[1])
+                # original_data_size += sys.getsizeof(data[0])
+                # original_data_size += sys.getsizeof(data[1])
+                original_data_size += data[0].nbytes
+                original_data_size += data[1].nbytes
         else:
             _data = pickle.dumps(payload)
             await self.send_in_chunks(_data)
