@@ -109,13 +109,6 @@ class Trainer(basic.Trainer):
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
 
-        # freeze model first 4 layers
-        freeze_list = ['model.0.', 'model.1.', 'model.2.', 'model.3.']
-        for name, param in self.model.named_parameters():
-            for freeze_layer in freeze_list:
-                if name.startswith(freeze_layer):
-                    param.requires_grad = False
-
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -191,7 +184,6 @@ class Trainer(basic.Trainer):
         #scaler = amp.GradScaler(enabled=cuda)
         #compute_loss = ComputeLoss(self.model)
 
-        cut_layer = None
 
         for epoch in range(1, epochs + 1):
             self.model.train()
