@@ -115,7 +115,7 @@ class Trainer(basic.Trainer):
             for freeze_layer in freeze_list:
                 if name.startswith(freeze_layer):
                     param.requires_grad = False
-                    
+
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -217,8 +217,6 @@ class Trainer(basic.Trainer):
                 
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
-
-                print("Images shape is ", imgs.shape, flush=True)
 
                 # print('imgs dtype', imgs.dtype, flush=True)
                 # Warmup
