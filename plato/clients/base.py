@@ -193,8 +193,9 @@ class Client:
         logging.info(
             "[Client #%d] Received %s MB of payload data from the server.",
             client_id, round(payload_size / 1024**2, 2))
-
-        self.load_payload(self.server_payload)
+        
+        if not self.server_payload:
+            self.load_payload(self.server_payload)
         self.server_payload = None
 
         report, payload = await self.train()
@@ -228,23 +229,31 @@ class Client:
             unique_key = uuid.uuid4().hex[:6].upper()
             payload_key = f'client_payload_{self.client_id}_{unique_key}'
             self.s3_client.send_to_s3(payload_key, payload)
-            data_size = sys.getsizeof(pickle.dumps(payload))
         else:
             payload_key = None
-            if isinstance(payload, list):
-                data_size: int = 0
-
-                for data in payload:
-                    _data = pickle.dumps(data)
-                    await self.send_in_chunks(_data)
-                    data_size += sys.getsizeof(_data)
-            else:
-                _data = pickle.dumps(payload)
+            
+        if isinstance(payload, list):
+            data_size: int = 0
+            original_data_size: int = 0
+            for data in payload:
+                _data = pickle.dumps(data)
                 await self.send_in_chunks(_data)
-                data_size = sys.getsizeof(_data)
+                data_size += sys.getsizeof(_data)
+                # original_data_size += sys.getsizeof(data[0])
+                # original_data_size += sys.getsizeof(data[1])
+                original_data_size += data[0].nbytes
+                original_data_size += data[1].nbytes
+        else:
+            _data = pickle.dumps(payload)
+            await self.send_in_chunks(_data)
+            data_size = sys.getsizeof(_data)
+            original_data_size = sys.getsizeof(payload)
 
         await self.sio.emit('client_payload_done', {'id': self.client_id, 'obkey': payload_key})
 
+        logging.info("[Client #%d] Sent %s MB of payload data (before pickle) to the server.",
+                     self.client_id, round(original_data_size / 1024**2, 2))
+        
         logging.info("[Client #%d] Sent %s MB of payload data to the server.",
                      self.client_id, round(data_size / 1024**2, 2))
 
