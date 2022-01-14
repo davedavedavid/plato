@@ -57,13 +57,13 @@ class Algorithm(fedavg.Algorithm):
                 # np.save("/home/data/model/test_image.npy", inputs)
 
                 # logits = self.model.forward(inputs)
-                logits = inputs
-                print("Inputs shape is ", inputs.shape)
+                # logits = inputs
+                print("Inputs shape is ", inputs.shape, flush=True)
                 # logits = np.reshape(logits, features_shape)
                 # np.save("/home/data/model/test_feat.npy", logits)
-                targets = np.expand_dims(
-                    targets, axis=0
-                )  # add batch axis to make sure self.train.randomize correct
+                # targets = np.expand_dims(
+                #     targets, axis=0
+                # )  # add batch axis to make sure self.train.randomize correct
                 # count += 1
                 # logging.info("[Client #%d] Extracting %d features from %s examples.",
                 #          self.client_id, count, len(dataset))
@@ -81,8 +81,9 @@ class Algorithm(fedavg.Algorithm):
                 #     else:
                 #         logits = logits.astype('float32')
 
-                for i in np.arange(logits.shape[0]):  # each sample in the batch
-                    feature_dataset.append((logits[i], targets[i]))
+                # for i in np.arange(logits.shape[0]):  # each sample in the batch
+                #     feature_dataset.append((logits[i], targets[i]))
+                feature_dataset.append((inputs, targets))
 
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
