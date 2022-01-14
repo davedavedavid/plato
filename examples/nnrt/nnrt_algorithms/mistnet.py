@@ -54,7 +54,7 @@ class Algorithm(fedavg.Algorithm):
                 # inputs = np.reshape(inputs, (1, -1))
                 inputs = inputs.astype(np.float32)
                 inputs = inputs / 255.0  # normalize image and convert image type at the same time
-                inputs = np.expand_dims(inputs, axis=0)
+                # inputs = np.expand_dims(inputs, axis=0)
                 # np.save("/home/data/model/test_image.npy", inputs)
 
                 # logits = self.model.forward(inputs)
