@@ -55,8 +55,11 @@ class Algorithm(fedavg.Algorithm):
                 inputs = inputs.astype(np.float32)
                 inputs = inputs / 255.0  # normalize image and convert image type at the same time
                 # np.save("/home/data/model/test_image.npy", inputs)
-                logits = self.model.forward(inputs)
-                logits = np.reshape(logits, features_shape)
+
+                # logits = self.model.forward(inputs)
+                logits = inputs
+                print("Inputs shape is ", inputs.shape)
+                # logits = np.reshape(logits, features_shape)
                 # np.save("/home/data/model/test_feat.npy", logits)
                 targets = np.expand_dims(
                     targets, axis=0
@@ -64,19 +67,19 @@ class Algorithm(fedavg.Algorithm):
                 # count += 1
                 # logging.info("[Client #%d] Extracting %d features from %s examples.",
                 #          self.client_id, count, len(dataset))
-                if epsilon is not None:
-                    logging.info("epsilon is %d.",epsilon)
-                    logits = unary_encoding.encode(logits)
-                    if callable(_randomize):
-                        logits = self.trainer.randomize(logits, targets, epsilon)
-                    else:
-                        logits = unary_encoding.randomize(logits, epsilon)
-                    # Pytorch is currently not supported on A500 and we cannot convert
-                    # numpy array to tensor
-                    if self.trainer.device != 'cpu':
-                        logits = logits.astype('float16')
-                    else:
-                        logits = logits.astype('float32')
+                # if epsilon is not None:
+                #     logging.info("epsilon is %d.",epsilon)
+                #     logits = unary_encoding.encode(logits)
+                #     if callable(_randomize):
+                #         logits = self.trainer.randomize(logits, targets, epsilon)
+                #     else:
+                #         logits = unary_encoding.randomize(logits, epsilon)
+                #     # Pytorch is currently not supported on A500 and we cannot convert
+                #     # numpy array to tensor
+                #     if self.trainer.device != 'cpu':
+                #         logits = logits.astype('float16')
+                #     else:
+                #         logits = logits.astype('float32')
 
                 for i in np.arange(logits.shape[0]):  # each sample in the batch
                     feature_dataset.append((logits[i], targets[i]))
@@ -92,4 +95,5 @@ class Algorithm(fedavg.Algorithm):
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
-        return [-1, 320, 80, 80]
+        # return [-1, 320, 80, 80]
+        return [-1, 3, 640, 640]
