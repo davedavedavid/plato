@@ -183,17 +183,7 @@ class Trainer(basic.Trainer):
         #scaler = amp.GradScaler(enabled=cuda)
         #compute_loss = ComputeLoss(self.model)
 
-        # test data for model
-        features = np.load("/home/data/model/test_feature_center.npy")
-        features = torch.from_numpy(features).to(torch.float32).to(self.device)
-        self.model.eval()
-        pred = self.model.forward_from(features, 4)
-        np.save("/home/data/model/plato_output1.npy", pred[0].cpu().detach().numpy())
-
-        np.save("/home/data/model/plato_output21.npy", pred[1][0].cpu().detach().numpy())
-        np.save("/home/data/model/plato_output22.npy", pred[1][1].cpu().detach().numpy())
-        np.save("/home/data/model/plato_output23.npy", pred[1][2].cpu().detach().numpy())
-        exit(0)
+        cut_layer = None
 
         for epoch in range(1, epochs + 1):
             self.model.train()
@@ -206,7 +196,9 @@ class Trainer(basic.Trainer):
                                 device=self.device)  # Initializing mean losses
             optimizer.zero_grad()
 
-            for i, (imgs, targets, *__) in pbar:
+            # for i, (imgs, targets, *__) in pbar:
+            for i, (imgs, targets) in pbar: # clients send original images as feature dataset
+                
                 ni = i + nb * epoch  # number integrated batches (since train start)
                 targets = targets.to(torch.float32)
                 # targets = np.moveaxis(targets, -1, -2)

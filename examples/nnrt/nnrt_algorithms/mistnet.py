@@ -41,7 +41,7 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
-        for i in range(5):
+        for i in range(1):
             for inputs, targets, *__ in dataset:
                 # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
                 #     "The input shape is not consistent with the requirement predefined model."
@@ -54,11 +54,12 @@ class Algorithm(fedavg.Algorithm):
                 # inputs = np.reshape(inputs, (1, -1))
                 inputs = inputs.astype(np.float32)
                 inputs = inputs / 255.0  # normalize image and convert image type at the same time
+                inputs = np.expand_imds(inputs, axis=0)
                 # np.save("/home/data/model/test_image.npy", inputs)
 
                 # logits = self.model.forward(inputs)
                 # logits = inputs
-                print("Inputs shape is ", inputs.shape, flush=True)
+
                 # logits = np.reshape(logits, features_shape)
                 # np.save("/home/data/model/test_feat.npy", logits)
                 # targets = np.expand_dims(
@@ -96,5 +97,4 @@ class Algorithm(fedavg.Algorithm):
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
-        # return [-1, 320, 80, 80]
-        return [-1, 3, 640, 640]
+        return [-1, 320, 80, 80]
