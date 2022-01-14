@@ -108,6 +108,14 @@ class Trainer(basic.Trainer):
         print("Learning rate is ", hyp['lr0'], flush=True)
         
         hyp['weight_decay'] *= total_batch_size * accumulate / nbs  # scale weight_decay
+
+        # freeze model first 4 layers
+        freeze_list = ['model.0.', 'model.1.', 'model.2.', 'model.3.']
+        for name, param in self.model.named_parameters():
+            for freeze_layer in freeze_list:
+                if name.startswith(freeze_layer):
+                    param.requires_grad = False
+                    
         # Sending the model to the device used for training
         self.model.to(self.device)
 
@@ -198,7 +206,7 @@ class Trainer(basic.Trainer):
 
             # for i, (imgs, targets, *__) in pbar:
             for i, (imgs, targets) in pbar: # clients send original images as feature dataset
-                
+
                 ni = i + nb * epoch  # number integrated batches (since train start)
                 targets = targets.to(torch.float32)
                 # targets = np.moveaxis(targets, -1, -2)
@@ -210,7 +218,9 @@ class Trainer(basic.Trainer):
                 # save targets
                 imgs, targets = imgs.to(self.device), targets.to(self.device)
 
-                #print('imgs dtype', imgs.dtype, flush=True)
+                print("Images shape is ", imgs.shape, flush=True)
+
+                # print('imgs dtype', imgs.dtype, flush=True)
                 # Warmup
                 if ni <= nw:
                     xi = [0, nw]  # x interp
