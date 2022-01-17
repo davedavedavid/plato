@@ -65,22 +65,22 @@ class Algorithm(fedavg.Algorithm):
                 targets = np.expand_dims(
                     targets, axis=0
                 )  # add batch axis to make sure self.train.randomize correct
-                # count += 1
-                # logging.info("[Client #%d] Extracting %d features from %s examples.",
-                #          self.client_id, count, len(dataset))
-                # if epsilon is not None:
-                #     logging.info("epsilon is %d.",epsilon)
-                #     logits = unary_encoding.encode(logits)
-                #     if callable(_randomize):
-                #         logits = self.trainer.randomize(logits, targets, epsilon)
-                #     else:
-                #         logits = unary_encoding.randomize(logits, epsilon)
-                #     # Pytorch is currently not supported on A500 and we cannot convert
-                #     # numpy array to tensor
-                #     if self.trainer.device != 'cpu':
-                #         logits = logits.astype('float16')
-                #     else:
-                #         logits = logits.astype('float32')
+                #count += 1
+                #logging.info("[Client #%d] Extracting %d features from %s examples.",
+                #         self.client_id, count, len(dataset))
+                if epsilon is not None:
+                    logging.info("epsilon is %d.",epsilon)
+                    logits = unary_encoding.encode(logits)
+                    if callable(_randomize):
+                        logits = self.trainer.randomize(logits, targets, epsilon)
+                    else:
+                        logits = unary_encoding.randomize(logits, epsilon)
+                    # Pytorch is currently not supported on A500 and we cannot convert
+                    # numpy array to tensor
+                    if self.trainer.device != 'cpu':
+                        logits = logits.astype('float16')
+                    else:
+                        logits = logits.astype('float32')
 
                 for i in np.arange(logits.shape[0]):  # each sample in the batch
                     feature_dataset.append((logits[i], targets[i]))
