@@ -41,7 +41,7 @@ class Algorithm(fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
-        for i in range(1):
+        for i in range(5):
             for inputs, targets, *__ in dataset:
                 # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
                 #     "The input shape is not consistent with the requirement predefined model."
