@@ -97,4 +97,5 @@ class Algorithm(fedavg.Algorithm):
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
-        return [-1, 320, 184, 184]
+        #return [-1, 320, 184, 184]
+        return [-1, 320, 120, 120]
