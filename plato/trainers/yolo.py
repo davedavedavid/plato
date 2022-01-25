@@ -64,10 +64,6 @@ class Trainer(basic.Trainer):
         total_batch_size = batch_size
         epochs = config['epochs']
 
-        if epochs == 0:
-            print("jump to test")
-            return
-
         # cuda = (self.device != 'cpu')
         nc = Config().data.num_classes  # number of classes
         names = Config().data.classes  # class names
@@ -171,7 +167,7 @@ class Trainer(basic.Trainer):
         hyp['box'] *= 3. / nl  # scale to layers
         hyp['cls'] *= nc / 80. * 3. / nl  # scale to classes and layers
         hyp['obj'] *= (Config().data.image_size /
-                       640)**2 * 3. / nl  # scale to image size and layers
+                       1472)**2 * 3. / nl  # scale to image size and layers
         self.model.nc = nc  # attach number of classes to model
         self.model.hyp = hyp  # attach hyperparameters to model
         self.model.gr = 1.0  # iou loss ratio (obj_loss = 1.0 or iou)
