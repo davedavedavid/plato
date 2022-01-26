@@ -142,7 +142,7 @@ class Trainer(basic.Trainer):
 
         # Mixed precision training
         if mixed_precision:
-            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=1024)
+            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
         if Config().trainer.linear_lr:
             lf = lambda x: (1 - x / (epochs - 1)) * (1.0 - hyp['lrf']) + hyp[
                 'lrf']  # linear
