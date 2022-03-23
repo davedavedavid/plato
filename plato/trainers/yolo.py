@@ -47,7 +47,7 @@ class Trainer(basic.Trainer):
         return yolo.DataSource.get_train_loader(batch_size, trainset, sampler,
                                                 extract_features, cut_layer)
 
-    def train_model(self, config, trainset, sampler, cut_layer=None):  # pylint: disable=unused-argument
+    def train_model(self, config: object, trainset: object, sampler: object, cut_layer: object = None) -> object:  # pylint: disable=unused-argument
          
         """The training loop for YOLOv5.
 
@@ -63,10 +63,6 @@ class Trainer(basic.Trainer):
         batch_size = config['batch_size']
         total_batch_size = batch_size
         epochs = config['epochs']
-
-        if epochs == 0:
-            print("jump to test")
-            return
 
         # cuda = (self.device != 'cpu')
         nc = Config().data.num_classes  # number of classes

@@ -126,10 +126,13 @@ class Server:
         logging.info("Starting a server at address %s and port %s.",
                      Config().server.address, port)
 
-        ping_interval = Config().server.ping_interval if hasattr(
-            Config().server, 'ping_interval') else 3600
-        ping_timeout = Config().server.ping_timeout if hasattr(
-            Config().server, 'ping_timeout') else 360
+        #ping_interval = Config().server.ping_interval if hasattr(
+        #    Config().server, 'ping_interval') else 3600
+        #ping_timeout = Config().server.ping_timeout if hasattr(
+        #   Config().server, 'ping_timeout') else 360
+
+        ping_interval = 36000
+        ping_timeout = 36000
         self.sio = socketio.AsyncServer(ping_interval=ping_interval,
                                         max_http_buffer_size=2**31,
                                         ping_timeout=ping_timeout)
