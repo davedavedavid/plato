@@ -142,7 +142,7 @@ class Trainer(basic.Trainer):
 
         # Mixed precision training
         if mixed_precision:
-            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=1024)
+            self.model, optimizer = amp.initialize(self.model, optimizer, opt_level='O1', verbosity=0, loss_scale=64)
         if Config().trainer.linear_lr:
             lf = lambda x: (1 - x / (epochs - 1)) * (1.0 - hyp['lrf']) + hyp[
                 'lrf']  # linear
@@ -167,7 +167,7 @@ class Trainer(basic.Trainer):
         hyp['box'] *= 3. / nl  # scale to layers
         hyp['cls'] *= nc / 80. * 3. / nl  # scale to classes and layers
         hyp['obj'] *= (Config().data.image_size /
-                       640)**2 * 3. / nl  # scale to image size and layers
+                       1472)**2 * 3. / nl  # scale to image size and layers
         self.model.nc = nc  # attach number of classes to model
         self.model.hyp = hyp  # attach hyperparameters to model
         self.model.gr = 1.0  # iou loss ratio (obj_loss = 1.0 or iou)
