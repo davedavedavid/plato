@@ -13,8 +13,16 @@ import numpy as np
 
 
 def encode(x: np.ndarray):
-    x[x > 0] = 1
-    x[x <= 0] = 0
+    # 1bit
+    # x[x > 0] = 1
+    # x[x <= 0] = 0
+    # return x、
+
+    # 2bit
+    x[(x > 0.675)] = 1.15
+    x[(x > 0) & (x <= 0.675)] = 0.315
+    x[(x > -0.675) & (x <= 0)] = -0.315
+    x[x <= -0.675] = -1.15
     return x
 
 
@@ -27,9 +35,37 @@ def randomize(bit_array: np.ndarray, epsilon):
 
 
 def symmetric_unary_encoding(bit_array: np.ndarray, epsilon):
-    p = np.e**(epsilon / 2) / (np.e**(epsilon / 2) + 1)
-    q = 1 / (np.e**(epsilon / 2) + 1)
-    return produce_random_response(bit_array, p, q)
+    # p = np.e**(epsilon / 2) / (np.e**(epsilon / 2) + 1)
+    # q = 1 / (np.e**(epsilon / 2) + 1)
+    # return produce_random_response(bit_array, p, q)
+
+    # 2bit
+    p = np.e**(epsilon / 2) / (np.e**(epsilon / 2) + 3)
+    q = round((1-p)/3, 4)
+    p = 1 - q * 3
+    return k_random_response(bit_array, [-1.15, -0.315, 0.315, 1.15], p, q)
+
+def k_random_response(value: np.ndarray, values, p, q):
+    """
+    the k-random response
+    :param value: current value
+    :param values: the possible value
+    :param p: prob
+    :return:
+    """
+    if not isinstance(values, list):
+        raise Exception("The values should be list")
+    k = len(values)
+    replace_arrays = []
+    out_array = np.zeros(value.shape)
+    for i in range(k):
+        probs = [q] * k
+        probs[i] = p
+        replace_arrays.append(np.random.choice(values, size=value.shape, replace=True, p=probs))
+    for j in range(k):
+        out_array[value == values[j]] = replace_arrays[j][value == values[j]]
+
+    return out_array
 
 
 def optimized_unary_encoding(bit_array: np.ndarray, epsilon):
