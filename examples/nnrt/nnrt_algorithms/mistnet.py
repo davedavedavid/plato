@@ -98,4 +98,4 @@ class Algorithm(fedavg.Algorithm):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
         #return [-1, 320, 184, 184]
-        return [-1, 320, 120, 120]
+        return [-1, 320, 80, 80]
