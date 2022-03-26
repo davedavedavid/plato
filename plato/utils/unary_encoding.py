@@ -40,7 +40,7 @@ def symmetric_unary_encoding(bit_array: np.ndarray, epsilon):
     # return produce_random_response(bit_array, p, q)
 
     # 2bit
-    print("2bit encoding", flush=True)
+    # print("2bit encoding", flush=True)
     p = np.e**(epsilon / 2) / (np.e**(epsilon / 2) + 3)
     q = round((1-p)/3, 4)
     p = 1 - q * 3
