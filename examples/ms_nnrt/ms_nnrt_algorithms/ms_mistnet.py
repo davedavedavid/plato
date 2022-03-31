@@ -8,6 +8,7 @@ from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
 from plato.utils import unary_encoding
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
+from examples.ms_nnrt.config import ConfigYOLOV5
 
 class Algorithm(ms_fedavg.Algorithm):
     """The NNRT-based MistNet algorithm, used by both the client and the
@@ -31,12 +32,13 @@ class Algorithm(ms_fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
+        config = ConfigYOLOV5()
         device_num = 1
-        distributed_sampler = DistributedSampler(len(dataset), device_num, rank, shuffle=shuffle)
+        distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=True)
         dataset.size = len(distributed_sampler)
-        dataset_size = len(dataset)
-        cores = multiprocessing.cpu_count()
-        num_parallel_workers = int(cores / device_num)
+        config.dataset_size = len(dataset)
+        #cores = multiprocessing.cpu_count()
+        #num_parallel_workers = int(cores / device_num)
         multi_scale_trans = MultiScaleTrans(config, device_num)
         dataset.transforms = multi_scale_trans
 
@@ -48,7 +50,7 @@ class Algorithm(ms_fedavg.Algorithm):
         #for i in range(5):
         #for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
-            image, annotation, size = MultiScaleTrans(img=img, anno=anno, input_size=input_size, mosaic_flag=mosaic_flag)
+            image, annotation, size = multi_scale_trans(img=img, anno=anno, input_size=input_size, mosaic_flag=mosaic_flag)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox(annotation, size)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
