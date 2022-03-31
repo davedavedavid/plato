@@ -7,7 +7,7 @@ import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
 from plato.utils import unary_encoding
-
+from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 
 class Algorithm(ms_fedavg.Algorithm):
     """The NNRT-based MistNet algorithm, used by both the client and the
@@ -31,19 +31,33 @@ class Algorithm(ms_fedavg.Algorithm):
 
         features_shape = self.features_shape()
 
+        device_num = 1
+        distributed_sampler = DistributedSampler(len(dataset), device_num, rank, shuffle=shuffle)
+        dataset.size = len(distributed_sampler)
+        dataset_size = len(dataset)
+        cores = multiprocessing.cpu_count()
+        num_parallel_workers = int(cores / device_num)
+        multi_scale_trans = MultiScaleTrans(config, device_num)
+        dataset.transforms = multi_scale_trans
+
+        def concatenate(images):
+            images = np.concatenate((images[..., ::2, ::2], images[..., 1::2, ::2],
+                                     images[..., ::2, 1::2], images[..., 1::2, 1::2]), axis=0)
+            return images
+
         #for i in range(5):
-        for inputs, targets, *__ in dataset:
-                # assert inputs.shape[1] == Config().data.input_height and inputs.shape[2] == Config().data.input_width, \
-                #     "The input shape is not consistent with the requirement predefined model."
-                # print("Load image is ", inputs, flush=True)
-                # print("Load targets is ", targets, flush=True)
-                # print("Random numpy number is ", np.random.randn(), flush=True)
-                # print("Random randn number is ", random.random(), flush=True)
-                # inputs = cv2.imread("/home/data/model/image1.jpg")
-                # inputs = np.moveaxis(inputs, -1, 0)
-                # inputs = np.reshape(inputs, (1, -1))
-            inputs = inputs.astype(np.float32)
-            inputs = inputs / 255.0  # normalize image and convert image type at the same time
+        #for inputs, targets, *__ in dataset:
+        for img, anno, input_size, mosaic_flag in dataset:
+            image, annotation, size = MultiScaleTrans(img=img, anno=anno, input_size=input_size, mosaic_flag=mosaic_flag)
+            annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox(annotation, size)
+            mean = [m * 255 for m in [0.485, 0.456, 0.406]]
+            std = [s * 255 for s in [0.229, 0.224, 0.225]]
+            image = (image - mean) /std
+            image = image.swapaxes(1,2).swapaxes(0,1)       #   HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
+            ds = concatenate(image)
+
+            inputs = ds.astype(np.float32)
+            #inputs = inputs / 255.0  # normalize image and convert image type at the same time
                 # inputs = np.expand_dims(inputs, axis=0)
                 # np.save("/home/data/model/test_image.npy", inputs)
 
