@@ -50,8 +50,13 @@ class Algorithm(ms_fedavg.Algorithm):
         #for i in range(5):
         #for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
+            img_hight = img.shape[2] * 2
+            img_width = img.shape[3] * 2
+            input_shape = img.shape[2:4]
+            input_shape = np.array(input_shape, dtype=np.float32) * 2
             image, annotation, size = multi_scale_trans(img=img, anno=anno, input_size=input_size, mosaic_flag=mosaic_flag)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox(annotation, size)
+            annotation_x = annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_shape
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             image = (image - mean) /std
@@ -69,7 +74,7 @@ class Algorithm(ms_fedavg.Algorithm):
             logits = np.reshape(logits, features_shape)
                 # np.save("/home/data/model/test_feat.npy", logits)
             targets = np.expand_dims(
-                    targets, axis=0
+                    annotation_x[0], axis=0
                 )  # add batch axis to make sure self.train.randomize correct
                 #count += 1
                 #logging.info("[Client #%d] Extracting %d features from %s examples.",
@@ -78,7 +83,7 @@ class Algorithm(ms_fedavg.Algorithm):
                 logging.info("epsilon is %d.",epsilon)
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
-                    logits = self.trainer.randomize(logits, targets, epsilon)
+                    logits = self.trainer.randomize(logits, gt_box1, epsilon)
                 else:
                     logits = unary_encoding.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
