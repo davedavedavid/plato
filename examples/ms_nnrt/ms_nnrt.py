@@ -10,6 +10,8 @@ from plato.clients.mistnet import Client
 os.environ['config_file'] = './ms_mistnet_yolov5.yml'
 
 
+print('test.')
+
 def main():
     """ A Plato mistnet training sesstion using a nnrt yolo model, datasource and trainer. """
     datasource = nnrt_datasource.DataSource(
