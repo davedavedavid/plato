@@ -56,7 +56,7 @@ class Algorithm(ms_fedavg.Algorithm):
             img_width = input_size[1]*2
             input_size = np.array(input_size, dtype=np.float32) * 2
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size, mosaic_flag=mosaic_flag)
-            print('image, annotation, size ', image, annotation, size, flush=True)
+            # print('image, annotation, size ', image, annotation, size, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_size]

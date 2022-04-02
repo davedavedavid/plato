@@ -385,6 +385,7 @@ def _preprocess_true_boxes(true_boxes, anchors, in_shape, num_classes, max_boxes
     anchors = np.expand_dims(anchors, 0)
     anchors_max = anchors / 2.
     anchors_min = -anchors_max
+    valid_mask = boxes_wh[..., 0] > 0
     wh = boxes_wh[valid_mask]
     if wh.size != 0:
         wh = np.expand_dims(wh, -2)
