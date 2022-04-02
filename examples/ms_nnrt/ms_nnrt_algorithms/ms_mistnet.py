@@ -41,6 +41,7 @@ class Algorithm(ms_fedavg.Algorithm):
         #num_parallel_workers = int(cores / device_num)
         multi_scale_trans = MultiScaleTrans(config, device_num)
         dataset.transforms = multi_scale_trans
+        PreprocessTrueBox_ = PreprocessTrueBox(config)
 
         def concatenate(images):
             images = np.concatenate((images[..., ::2, ::2], images[..., 1::2, ::2],
@@ -51,13 +52,14 @@ class Algorithm(ms_fedavg.Algorithm):
         #for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
-            print('img.shape,anno, input_size,mosaic_flag ', img.shape, np.array(anno), input_size, mosaic_flag, flush=True)
             img_hight = input_size[0]*2
             img_width = input_size[1]*2
             input_size = np.array(input_size, dtype=np.float32) * 2
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size, mosaic_flag=mosaic_flag)
-            annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox(annotation, size)
-            annotation_x = annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_size
+            print('image, annotation, size ', image, annotation, size, flush=True)
+            annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
+            print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             image = (image - mean) /std
