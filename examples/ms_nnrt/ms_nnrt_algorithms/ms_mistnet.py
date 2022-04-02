@@ -58,7 +58,7 @@ class Algorithm(ms_fedavg.Algorithm):
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size, mosaic_flag=mosaic_flag)
             # print('image, annotation, size ', image, annotation, size, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-            print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            # print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
@@ -71,7 +71,7 @@ class Algorithm(ms_fedavg.Algorithm):
                 # inputs = np.expand_dims(inputs, axis=0)
                 # np.save("/home/data/model/test_image.npy", inputs)
 
-            logits = self.model.foward(inputs)
+            logits = self.model.forward(inputs)
                 # logits = inputs
 
             logits = np.reshape(logits, features_shape)
