@@ -774,7 +774,7 @@ class MultiScaleTrans:
         if mosaic_flag[0] == 0:
             img = decode(img)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
-        return img, anno, np.array(img.shape[0:2]), mosaic_flag
+        return img, anno, np.array(img.shape[0:2])
 
 
 def thread_batch_preprocess_true_box(annos, config, input_shape, result_index, batch_bbox_true_1, batch_bbox_true_2,
