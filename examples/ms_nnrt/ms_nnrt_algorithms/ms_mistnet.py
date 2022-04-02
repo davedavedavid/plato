@@ -10,10 +10,12 @@ from plato.utils import unary_encoding
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 from examples.ms_nnrt.config import ConfigYOLOV5
 
+
 class Algorithm(ms_fedavg.Algorithm):
     """The NNRT-based MistNet algorithm, used by both the client and the
     server.
     """
+
     def extract_features(self, dataset, sampler, cut_layer: str, epsilon=None):
         """Extracting features using layers before the cut_layer.
         dataset: The training or testing dataset. This datasets does not based on
@@ -37,8 +39,8 @@ class Algorithm(ms_fedavg.Algorithm):
         distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=True)
         dataset.size = len(distributed_sampler)
         config.dataset_size = len(dataset)
-        #cores = multiprocessing.cpu_count()
-        #num_parallel_workers = int(cores / device_num)
+        # cores = multiprocessing.cpu_count()
+        # num_parallel_workers = int(cores / device_num)
         multi_scale_trans = MultiScaleTrans(config, device_num)
         dataset.transforms = multi_scale_trans
         PreprocessTrueBox_ = PreprocessTrueBox(config)
@@ -48,42 +50,44 @@ class Algorithm(ms_fedavg.Algorithm):
                                      images[..., ::2, 1::2], images[..., 1::2, 1::2]), axis=0)
             return images
 
-        #for i in range(5):
-        #for inputs, targets, *__ in dataset:
+        # for i in range(5):
+        # for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
-            img_hight = input_size[0]*2
-            img_wight = input_size[1]*2
+            img_hight = input_size[0] * 2
+            img_wight = input_size[1] * 2
             input_size = np.array(input_size, dtype=np.float32) * 2
-            image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size, mosaic_flag=mosaic_flag)
+            image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
+                                                        mosaic_flag=mosaic_flag)
             # print('image, annotation, size ', image, annotation, size, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             # print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
-            annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, input_size]
+            annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
+                            input_size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
-            image = (image - mean) /std
-            image = image.swapaxes(1,2).swapaxes(0,1)       #   HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
+            image = (image - mean) / std
+            image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             ds = concatenate(image)
 
             inputs = ds.astype(np.float32)
-            #inputs = inputs / 255.0  # normalize image and convert image type at the same time
-                # inputs = np.expand_dims(inputs, axis=0)
-                # np.save("/home/data/model/test_image.npy", inputs)
+            # inputs = inputs / 255.0  # normalize image and convert image type at the same time
+            # inputs = np.expand_dims(inputs, axis=0)
+            # np.save("/home/data/model/test_image.npy", inputs)
 
             logits = self.model.forward(inputs)
-                # logits = inputs
+            # logits = inputs
 
             logits = np.reshape(logits, features_shape)
-                # np.save("/home/data/model/test_feat.npy", logits)
+            # np.save("/home/data/model/test_feat.npy", logits)
             targets = np.expand_dims(
-                    annotation_x[0], axis=0
-                )  # add batch axis to make sure self.train.randomize correct
-                #count += 1
-                #logging.info("[Client #%d] Extracting %d features from %s examples.",
-                #         self.client_id, count, len(dataset))
+                annotation_x[0], axis=0
+            )  # add batch axis to make sure self.train.randomize correct
+            # count += 1
+            # logging.info("[Client #%d] Extracting %d features from %s examples.",
+            #         self.client_id, count, len(dataset))
             if epsilon is not None:
-                logging.info("epsilon is %d.",epsilon)
+                logging.info("epsilon is %d.", epsilon)
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
                     logits = self.trainer.randomize(logits, gt_box1, epsilon)
@@ -111,5 +115,6 @@ class Algorithm(ms_fedavg.Algorithm):
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
-        #return [-1, 320, 184, 184]
-        return [-1, 320, 120, 120]
+        # return [-1, 320, 184, 184]
+        # return [-1, 320, 120, 120]
+        return [-1, 128, 80, 80]  # 12*640*640--> [-1 128 80 80]
