@@ -50,7 +50,7 @@ class Algorithm(ms_fedavg.Algorithm):
         #for i in range(5):
         #for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
-            print('img.shape, input_size,mosaic_flag ', img.shape, input_size, mosaic_flag, flush=True)
+            print('img.shape,anno, input_size,mosaic_flag ', img.shape,anno, input_size, mosaic_flag, flush=True)
             img_hight = input_size[0]*2
             img_width = input_size[1]*2
             # img_hight = img.shape[2] * 2
