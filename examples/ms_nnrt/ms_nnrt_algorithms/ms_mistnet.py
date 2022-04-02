@@ -80,9 +80,8 @@ class Algorithm(ms_fedavg.Algorithm):
 
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
-            targets = np.expand_dims(
-                annotation_x[0], axis=0
-            )  # add batch axis to make sure self.train.randomize correct
+            annotation_x[0] = np.expand_dims(annotation_x[0], axis=0)  # add batch axis to make sure self.train.randomize correct
+
             # count += 1
             # logging.info("[Client #%d] Extracting %d features from %s examples.",
             #         self.client_id, count, len(dataset))
@@ -90,10 +89,10 @@ class Algorithm(ms_fedavg.Algorithm):
                 logging.info("epsilon is %d.", epsilon)
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
-                    print(' gt_box1, logits.shape', gt_box1, logits.shape, flush=True)
-                    logits = self.trainer.randomize(logits, gt_box1, epsilon=1)
+                    logits = self.trainer.randomize(logits, annotation_x[0], epsilon=1)
+                    print(' annotation_x[0], logits.shape, epsilon', annotation_x[0].shape, logits.shape, epsilon, flush=True)
                 else:
-                    logits = unary_encoding.randomize(logits, epsilon)
+                    logits = unary_encoding.randomize(logits, epsilon=100)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 if self.trainer.device != 'cpu':
@@ -102,8 +101,7 @@ class Algorithm(ms_fedavg.Algorithm):
                     logits = logits.astype('float32')
 
             for i in np.arange(logits.shape[0]):  # each sample in the batch
-                feature_dataset.append((logits[i], targets[i]))
-                # feature_dataset.append((inputs, targets))
+                feature_dataset.append((logits[i], annotation_x[i]))
 
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
