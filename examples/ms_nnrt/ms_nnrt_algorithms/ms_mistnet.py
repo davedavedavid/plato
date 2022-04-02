@@ -75,7 +75,8 @@ class Algorithm(ms_fedavg.Algorithm):
             # inputs = inputs / 255.0  # normalize image and convert image type at the same time
             # inputs = np.expand_dims(inputs, axis=0)
             # np.save("/home/data/model/test_image.npy", inputs)
-            #  1*12*640*640 input
+            #  1*12*320*320 input   logits: 1 *128 *80 *80
+            print('logits.shape:', inputs.shape, flush=True)
             logits = self.model.forward(inputs)
 
             print('logits.shape:', logits.shape, flush=True)
@@ -118,5 +119,5 @@ class Algorithm(ms_fedavg.Algorithm):
         # TODO: Do not hard code the features shape
         # return [-1, 320, 184, 184]
         return [-1, 320, 120, 120]
-        # return [-1, 128, 80, 80]  # 1*12*640*640--> [4 128 80 80]   [-1 320 80 80]
+        # return [-1, 512, 80, 80]  #  [1 512 80 80] [-1, 320, 80, 80]
 
