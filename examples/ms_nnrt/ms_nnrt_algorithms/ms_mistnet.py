@@ -61,7 +61,7 @@ class Algorithm(ms_fedavg.Algorithm):
                                                         mosaic_flag=mosaic_flag)
             # print('image, annotation, size ', image, annotation, size, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-            # print('annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3', annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
                             input_size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
@@ -90,7 +90,8 @@ class Algorithm(ms_fedavg.Algorithm):
                 logging.info("epsilon is %d.", epsilon)
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
-                    logits = self.trainer.randomize(logits, gt_box1, epsilon)
+                    print(' gt_box1, logits.shape', gt_box1, logits.shape, flush=True)
+                    logits = self.trainer.randomize(logits, gt_box1, epsilon=1)
                 else:
                     logits = unary_encoding.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
