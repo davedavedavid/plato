@@ -50,12 +50,12 @@ class Algorithm(ms_fedavg.Algorithm):
         #for i in range(5):
         #for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
-            print('img.shape, input_size,mosaic_flag ', img.shape, input_size, mosaic_flag)
+            print('img.shape, input_size,mosaic_flag ', img.shape, input_size, mosaic_flag, flush=True)
             img_hight = input_size[0]*2
             img_width = input_size[1]*2
             # img_hight = img.shape[2] * 2
             # img_width = img.shape[3] * 2
-            input_shape = img.shape[2:4]
+            # input_shape = img.shape[2:4]
             input_shape = np.array(input_shape, dtype=np.float32) * 2
             image, annotation, size = multi_scale_trans(img=img, anno=anno, input_size=input_size, mosaic_flag=mosaic_flag)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox(annotation, size)
