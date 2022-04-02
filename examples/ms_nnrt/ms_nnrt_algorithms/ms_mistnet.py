@@ -70,16 +70,11 @@ class Algorithm(ms_fedavg.Algorithm):
             image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             ds = concatenate(image)
-
             inputs = ds.astype(np.float32)
-            # inputs = inputs / 255.0  # normalize image and convert image type at the same time
-            # inputs = np.expand_dims(inputs, axis=0)
-            # np.save("/home/data/model/test_image.npy", inputs)
-            #  1*12*320*320 input   logits: 1 *128 *80 *80
-            print('logits.shape:', inputs.shape, flush=True)
+            #  1*12*320*320 input   logits: 1 * 128 *80 *80
+            logging.info('inputs.shape:', inputs.shape)
             logits = self.model.forward(inputs)
-
-            print('logits.shape:', logits.shape, flush=True)
+            logging.info('inputs.shape:', logits.shape)
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0], axis=0)  # add batch axis to make sure self.train.randomize correct
@@ -110,14 +105,12 @@ class Algorithm(ms_fedavg.Algorithm):
                      self.client_id, len(feature_dataset))
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
-        # os._exit()
-        print('feature_dataset.shape', feature_dataset.shape)
+        logging.info('feature_dataset.shape: ', feature_dataset.shape)
         return feature_dataset
 
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
-        # return [-1, 320, 184, 184]
-        return [-1, 320, 120, 120]
-        # return [-1, 512, 80, 80]  #  [1 512 80 80] [-1, 320, 80, 80]
+        # return [-1, 320, 120, 120]
+        return [-1, 128, 80, 80]  # input: 12*320*320
 
