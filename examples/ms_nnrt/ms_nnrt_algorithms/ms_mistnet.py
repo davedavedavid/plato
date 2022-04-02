@@ -75,10 +75,10 @@ class Algorithm(ms_fedavg.Algorithm):
             # inputs = inputs / 255.0  # normalize image and convert image type at the same time
             # inputs = np.expand_dims(inputs, axis=0)
             # np.save("/home/data/model/test_image.npy", inputs)
-
+            #  1*12*640*640 input
             logits = self.model.forward(inputs)
-            # logits = inputs
-            print('logits.shape:', logits.shape)
+
+            print('logits.shape:', logits.shape, flush=True)
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0], axis=0)  # add batch axis to make sure self.train.randomize correct
