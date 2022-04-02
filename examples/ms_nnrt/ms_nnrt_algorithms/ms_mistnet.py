@@ -72,7 +72,7 @@ class Algorithm(ms_fedavg.Algorithm):
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            logging.info('inputs.shape:', inputs.shape)
+            # logging.info('inputs.shape:', inputs.shape)
             logits = self.model.forward(inputs)
             # logging.info('inputs.shape:', logits.shape)
             logits = np.reshape(logits, features_shape)
