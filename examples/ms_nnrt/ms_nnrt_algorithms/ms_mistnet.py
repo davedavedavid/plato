@@ -2,7 +2,8 @@ import logging
 import time
 import cv2
 import random
-
+import sys
+import os
 import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
@@ -77,7 +78,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
             logits = self.model.forward(inputs)
             # logits = inputs
-
+            print('logits.shape:', logits.shape)
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0], axis=0)  # add batch axis to make sure self.train.randomize correct
@@ -90,9 +91,9 @@ class Algorithm(ms_fedavg.Algorithm):
                 logits = unary_encoding.encode(logits)
                 if callable(_randomize):
                     logits = self.trainer.randomize(logits, annotation_x[0], epsilon=1)
-                    print(' annotation_x[0], logits.shape, epsilon', annotation_x[0].shape, logits.shape, epsilon, flush=True)
+                    # print(' annotation_x[0], logits.shape, epsilon', annotation_x[0].shape, logits.shape, epsilon, flush=True)
                 else:
-                    logits = unary_encoding.randomize(logits, epsilon=100)
+                    logits = unary_encoding.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 if self.trainer.device != 'cpu':
@@ -108,12 +109,14 @@ class Algorithm(ms_fedavg.Algorithm):
                      self.client_id, len(feature_dataset))
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
-
+        # os._exit()
+        print('feature_dataset.shape', feature_dataset.shape)
         return feature_dataset
 
     def features_shape(self):
         """ Return the features shape of the cutlayer output. """
         # TODO: Do not hard code the features shape
         # return [-1, 320, 184, 184]
-        # return [-1, 320, 120, 120]
-        return [-1, 128, 80, 80]  # 12*640*640--> [-1 128 80 80]
+        return [-1, 320, 120, 120]
+        # return [-1, 128, 80, 80]  # 1*12*640*640--> [4 128 80 80]   [-1 320 80 80]
+
