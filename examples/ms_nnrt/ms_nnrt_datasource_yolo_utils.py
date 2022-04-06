@@ -237,7 +237,7 @@ class COCOYoloDataset:
             # tmp [x_min y_min x_max y_max, label]
             out_target.append(tmp)
         flag = np.array([0])
-        return img, out_target, None, input_size
+        return img, out_target, input_size, flag
 
     def __len__(self):
         return len(self.img_ids)
@@ -385,6 +385,7 @@ def _preprocess_true_boxes(true_boxes, anchors, in_shape, num_classes, max_boxes
     anchors = np.expand_dims(anchors, 0)
     anchors_max = anchors / 2.
     anchors_min = -anchors_max
+    valid_mask = boxes_wh[..., 0] > 0
     wh = boxes_wh[valid_mask]
     if wh.size != 0:
         wh = np.expand_dims(wh, -2)
@@ -774,7 +775,7 @@ class MultiScaleTrans:
         if mosaic_flag[0] == 0:
             img = decode(img)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
-        return img, anno, np.array(img.shape[0:2]), mosaic_flag
+        return img, anno, np.array(img.shape[0:2])
 
 
 def thread_batch_preprocess_true_box(annos, config, input_shape, result_index, batch_bbox_true_1, batch_bbox_true_2,
