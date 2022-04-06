@@ -25,9 +25,9 @@ from mindspore import context
 from mindspore.communication.management import init, get_rank, get_group_size
 from mindspore.train.callback import ModelCheckpoint, RunContext
 from mindspore.train.callback import _InternalCallbackParam, CheckpointConfig
-from ms_yolov5.src.logger import get_logger
-from ms_yolov5.src.util import AverageMeter
-from ms_yolov5.src.config import ConfigYOLOV5
+from packages.ms_yolov5.src.logger import get_logger
+from packages.ms_yolov5.src.util import AverageMeter
+from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
 
 from plato.datasources.mindspore import ms_yolo
