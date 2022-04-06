@@ -42,8 +42,12 @@ def get(model=None):
     logging.info("Trainer: %s", trainer_name)
 
     if Config().trainer.model_name == 'yolov5':
-        from plato.trainers import yolo
-        return yolo.Trainer()
+        if hasattr(Config().trainer, 'use_mindspore'):
+            from plato.trainers.mindspore import ms_yolo
+            return ms_yolo.Trainer()
+        else:
+            from plato.trainers import yolo
+            return yolo.Trainer()
     elif Config().trainer.type == 'HuggingFace':
         from plato.trainers import huggingface
         return huggingface.Trainer(model)

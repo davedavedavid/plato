@@ -9,12 +9,13 @@ import logging
 import os
 from itertools import chain
 from plato.algorithms.mistnet import FeatureDataset
+from plato.algorithms.mindspore.mistnet import dataset_generator
 
 from plato.config import Config
 from plato.samplers import all_inclusive
 from plato.servers import fedavg
 import torch
-
+import mindspore
 
 class Server(fedavg.Server):
     """The MistNet server for federated learning."""
@@ -42,17 +43,22 @@ class Server(fedavg.Server):
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         for feature in feature_dataset:
-            feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
+            if hasattr(Config().trainer, 'use_mindspore'):
+                feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
+            else:
+                feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
-
-        # Training the model using all the features received from the client
+            # Training the model using all the features received from the client
         sampler = all_inclusive.Sampler(feature_dataset_tensor)
         self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
 
         # Test the updated model
         if not Config().clients.do_test:
-            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
+            if hasattr(Config().trainer, 'use_mindspore'):
+                self.accuracy = self.trainer.test(dataset_generator(feature_dataset_tensor))
+            else:
+                self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
             logging.info('[Server #{:d}] Finish testing model.'.format(os.getpid()))
             # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
             #     os.getpid(), 100 * self.accuracy))
