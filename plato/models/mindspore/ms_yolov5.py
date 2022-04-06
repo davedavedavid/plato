@@ -2,10 +2,14 @@ import argparse
 from src.lr_scheduler import get_lr
 from ms_yolov5.src.yolo import YOLOV5s, YoloWithLossCell, TrainingWrapper
 from ms_yolov5.src.yolov5_backbone import YOLOv5Backbone_to
-
+from ms_yolov5.src.initializer import default_recurisive_init, load_yolov5_params
+from ms_yolov5.src.lr_scheduler import get_lr
+from mindspore.nn.optim.momentum import Momentum
+from ms_yolov5.src.util import AverageMeter, get_param_groups
+from mindspore import Tensor
 
 class Model(nn.Cell):
-    def __init__(self, model_config, num_classes):
+    def __init__(self, model_config, opt, args):
         super(Model, self).__init__()
 
         network_to = YOLOv5Backbone_to()
@@ -16,9 +20,21 @@ class Model(nn.Cell):
         #     param.requires_grad = False
         #     print(param)
 
+        # default is kaiming-normal
+        default_recurisive_init(network_t)
+        load_yolov5_params(args, network_t)
         network_from = YoloWithLossCell(network_from)
 
+        lr = get_lr(args)
+
+        opt = Momentum(params=get_param_groups(network_t),
+                       learning_rate=Tensor(lr),
+                       momentum=args.momentum,
+                       weight_decay=args.weight_decay,
+                       loss_scale=args.loss_scale)
+
         network_from = TrainingWrapper(network_from, opt, args.loss_scale // 2)
+        network_from.set_train()
 
     def forward_to(self, x):
 

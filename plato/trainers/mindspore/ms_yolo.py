@@ -25,16 +25,11 @@ from mindspore import context
 from mindspore.communication.management import init, get_rank, get_group_size
 from mindspore.train.callback import ModelCheckpoint, RunContext
 from mindspore.train.callback import _InternalCallbackParam, CheckpointConfig
-
-from src.yolo import YOLOV5s, YoloWithLossCell, TrainingWrapper
-from src.logger import get_logger
-from src.util import AverageMeter, get_param_groups
-from src.lr_scheduler import get_lr
-from src.initializer import default_recurisive_init, load_yolov5_params
-from src.config import ConfigYOLOV5
+from ms_yolov5.src.logger import get_logger
+from ms_yolov5.src.util import AverageMeter
+from ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
 
-from plato.config import Config
 from plato.datasources.mindspore import ms_yolo
 from plato.trainers.mindspore import basic
 from plato.utils import unary_encoding
@@ -44,18 +39,6 @@ class Trainer(basic.Trainer):
     """The YOLOV5 trainer."""
     def __init__(self):
         super().__init__()
-
-    def train_loader(self,
-                     batch_size,
-                     trainset,
-                     sampler,
-                     extract_features=False,
-                     cut_layer=None):
-        """The train loader for training YOLOv5 using the COCO dataset or other datasets for the
-           YOLOv5 model.
-        """
-        return ms_yolo.DataSource.get_train_loader(batch_size, trainset, sampler,
-                                                extract_features, cut_layer)
 
     def parse_args(cloud_args=None):
         """Parse train arguments."""
@@ -173,7 +156,7 @@ class Trainer(basic.Trainer):
         training_shape = [int(args_training_shape), int(args_training_shape)]
         return training_shape
 
-    def train(self, trainset, sampler, cut_layer=None, cloud_args=None):
+    def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
         args = parse_args(cloud_args)
         loss_meter = AverageMeter('loss')
 
@@ -185,14 +168,6 @@ class Trainer(basic.Trainer):
             degree = get_group_size()
         context.set_auto_parallel_context(parallel_mode=parallel_mode, gradients_mean=True, device_num=degree)
 
-        network_t = YOLOV5s(is_training=True)
-
-        # default is kaiming-normal
-        default_recurisive_init(network_t)
-        load_yolov5_params(args, network_t)
-
-        network_t = YoloWithLossCell(network_t)
-
         config = ConfigYOLOV5()
 
         config.label_smooth = args.label_smooth
@@ -203,29 +178,14 @@ class Trainer(basic.Trainer):
         if args.resize_rate:
             config.resize_rate = args.resize_rate
 
-        train_loader = self.train_loader(batch_size,
-                                         trainset,
-                                         sampler,
-                                         cut_layer=cut_layer)
-
-        args.logger.info('Finish loading dataset')
-        data_size = len(train_loader)
+        data_size = len(trainset[0])
         args.steps_per_epoch = int(data_size / args.per_batch_size / args.group_size)
 
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
 
-        lr = get_lr(args)
+        network_t = self.model(config, opt, args)
 
-        opt = Momentum(params=get_param_groups(network_t),
-                       learning_rate=Tensor(lr),
-                       momentum=args.momentum,
-                       weight_decay=args.weight_decay,
-                       loss_scale=args.loss_scale)
-
-        network_t = TrainingWrapper(network_t, opt, args.loss_scale // 2)
-
-        network_t.set_train()
         if args.rank_save_ckpt_flag:
             # checkpoint save
             ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval
@@ -245,23 +205,13 @@ class Trainer(basic.Trainer):
 
         old_progress = -1
         t_end = time.time()
-        data_loader = train_loader.create_dict_iterator(output_numpy=True, num_epochs=1)
+        data_loader = ds.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         for i, data in enumerate(data_loader):
-            # images = data["image"]
-            # input_shape = images.shape[2:4]
-            # images = Tensor.from_numpy(images)
-            # batch_y_true_0 = Tensor.from_numpy(data['bbox1'])
-            # batch_y_true_1 = Tensor.from_numpy(data['bbox2'])
-            # batch_y_true_2 = Tensor.from_numpy(data['bbox3'])
-            # batch_gt_box0 = Tensor.from_numpy(data['gt_box1'])
-            # batch_gt_box1 = Tensor.from_numpy(data['gt_box2'])
-            # batch_gt_box2 = Tensor.from_numpy(data['gt_box3'])
-            # input_shape = Tensor(tuple(input_shape[::-1]), ms.float32)
-            # img_hight = P.Shape()(images)[2] * 2
-            # img_width = P.Shape()(images)[3] * 2
 
-            loss = network_t(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+            logits, [annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape] = data
+
+            loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
 
             loss_meter.update(loss.asnumpy())
