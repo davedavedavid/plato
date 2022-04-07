@@ -8,7 +8,7 @@ import os
 import time
 
 from plato.config import Config
-from plato.datasources import registry as datasources_registry
+# from plato.datasources import registry as datasources_registry
 from plato.utils import csv_processor
 
 from plato.servers import fedavg
