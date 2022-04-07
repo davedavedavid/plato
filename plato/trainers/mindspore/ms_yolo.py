@@ -30,7 +30,6 @@ from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
 
-from plato.datasources.mindspore import ms_yolo
 from plato.trainers.mindspore import basic
 from plato.utils import unary_encoding
 ms.set_seed(1)
@@ -159,7 +158,7 @@ class Trainer(basic.Trainer):
     def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
         args = parse_args(cloud_args)
         loss_meter = AverageMeter('loss')
-
+        print('loss_meter', loss_meter, trainset, flush=True)
         context.reset_auto_parallel_context()
         parallel_mode = ParallelMode.STAND_ALONE
         degree = 1

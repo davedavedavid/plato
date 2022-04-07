@@ -40,8 +40,8 @@ def get(model=None):
     """Get the trainer with the provided name."""
     trainer_name = Config().trainer.type
     logging.info("Trainer: %s", trainer_name)
-    print('Config().trainer:', Config().trainer, flush=True)
-    print('Config().trainer,use_mindspore:', Config().trainer.use_mindspore, hasattr(Config().trainer, 'use_mindspore'),  flush=True)
+    # print('Config().trainer:', Config().trainer, flush=True)
+    # print('Config().trainer,use_mindspore:', Config().trainer.use_mindspore, hasattr(Config().trainer, 'use_mindspore'),  flush=True)
     if Config().trainer.model_name == 'yolov5':
         if hasattr(Config().trainer, 'use_mindspore'):
             from plato.trainers.mindspore import ms_yolo
