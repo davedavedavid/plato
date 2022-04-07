@@ -9,7 +9,6 @@ import logging
 import os
 from itertools import chain
 from plato.algorithms.mistnet import FeatureDataset
-from plato.algorithms.mindspore.mistnet import dataset_generator
 
 from plato.config import Config
 from plato.samplers import all_inclusive
@@ -55,10 +54,7 @@ class Server(fedavg.Server):
 
         # Test the updated model
         if not Config().clients.do_test:
-            if hasattr(Config().trainer, 'use_mindspore'):
-                self.accuracy = self.trainer.test(dataset_generator(feature_dataset_tensor))
-            else:
-                self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
+            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
             logging.info('[Server #{:d}] Finish testing model.'.format(os.getpid()))
             # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
             #     os.getpid(), 100 * self.accuracy))
