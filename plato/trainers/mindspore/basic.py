@@ -36,7 +36,7 @@ class Trainer(base.Trainer):
                                         device_target='CPU')
         else:
             mindspore.context.set_context(mode=mindspore.context.PYNATIVE_MODE,
-                                        device_target='NPU')
+                                        device_target='Ascend')
 
         if model is None:
             self.model = models_registry.get()

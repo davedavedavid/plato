@@ -41,17 +41,6 @@ class Trainer(basic.Trainer):
         self.model = model
         if model is None:
             assert "Without model input."
-        # self.client_id = 0
-
-    # def set_client_id(self, client_id):
-    #     """ Setting the client ID and initialize the shared database table for controlling
-    #         the maximum concurrency with respect to the number of training clients.
-    #     """
-    #     self.client_id = client_id
-    #
-    #     # if hasattr(Config().trainer, 'max_concurrency'):
-    #     #     Trainer.run_sql_statement(
-    #     #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
     def parse_args(cloud_args=None):
         """Parse train arguments."""
