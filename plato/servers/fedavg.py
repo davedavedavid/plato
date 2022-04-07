@@ -71,8 +71,11 @@ class Server(base.Server):
 
         self.load_trainer()
 
+        """
         if not Config().clients.do_test:
             dataset = datasources_registry.get()
+        for pass it to debug
+        """
             # self.testset = dataset.get_test_set()
             # Here we do not get testset from disk. We directly use feature dataset
 
