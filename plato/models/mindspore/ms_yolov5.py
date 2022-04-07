@@ -6,6 +6,8 @@ from packages.ms_yolov5.src.lr_scheduler import get_lr
 from packages.ms_yolov5.src.util import AverageMeter, get_param_groups
 from mindspore.nn.optim.momentum import Momentum
 from mindspore import Tensor
+import mindspore.nn as nn
+
 
 class Model(nn.Cell):
     def __init__(self, model_config=None, args=None):
