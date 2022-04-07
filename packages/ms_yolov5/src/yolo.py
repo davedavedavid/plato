@@ -24,9 +24,9 @@ from mindspore.ops import operations as P
 from mindspore.ops import functional as F
 from mindspore.ops import composite as C
 
-from src.yolov5_backbone import YOLOv5Backbone_to, Conv, C3
-from src.config import ConfigYOLOV5
-from src.loss import ConfidenceLoss, ClassLoss
+from yolov5_backbone import YOLOv5Backbone_to, Conv, C3
+from config import ConfigYOLOV5
+from loss import ConfidenceLoss, ClassLoss
 
 
 class YOLOv5(nn.Cell):
