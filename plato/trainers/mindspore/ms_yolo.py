@@ -29,11 +29,11 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
-from plato.trainers.mindspore import basic
+# from plato.trainers.mindspore import basic
 
 ms.set_seed(1)
 
-class Trainer(basic.Trainer):
+class Trainer():
     """The YOLOV5 trainer."""
     def __init__(self, model=None):
         super().__init__()
