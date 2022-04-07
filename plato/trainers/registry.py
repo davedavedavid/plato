@@ -45,7 +45,7 @@ def get(model=None):
     if Config().trainer.model_name == 'yolov5':
         if hasattr(Config().trainer, 'use_mindspore'):
             from plato.trainers.mindspore import ms_yolo
-            return ms_yolo.Trainer()
+            return ms_yolo.Trainer(model)
         else:
             from plato.trainers import yolo
             return yolo.Trainer()

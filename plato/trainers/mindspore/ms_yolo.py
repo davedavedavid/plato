@@ -35,9 +35,12 @@ ms.set_seed(1)
 
 class Trainer():
     """The YOLOV5 trainer."""
-    def __init__(self):
+    def __init__(self, model=None):
         super().__init__()
         self.device = "npu:0"
+        self.model = model
+        if model is None:
+            assert "Without model input."
         # self.client_id = 0
 
     def set_client_id(self, client_id):
