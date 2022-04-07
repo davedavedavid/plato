@@ -77,7 +77,8 @@ class Algorithm(ms_fedavg.Algorithm):
             # logging.info('inputs.shape:', logits.shape)
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
-            annotation_x[0] = np.expand_dims(annotation_x[0], axis=0)  # add batch axis to make sure self.train.randomize correct
+            annotation_x[0] = np.expand_dims(annotation_x[0],
+                                             axis=0)  # add batch axis to make sure self.train.randomize correct
 
             # count += 1
             # logging.info("[Client #%d] Extracting %d features from %s examples.",
@@ -105,7 +106,7 @@ class Algorithm(ms_fedavg.Algorithm):
                      self.client_id, len(feature_dataset))
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
-        # logging.info('feature_dataset.shape: ', feature_dataset.shape)
+        print('feature_dataset.shape: ', feature_dataset,  flush=True)
         return feature_dataset
 
     def features_shape(self):
@@ -113,4 +114,3 @@ class Algorithm(ms_fedavg.Algorithm):
         # TODO: Do not hard code the features shape
         # return [-1, 320, 120, 120]
         return [-1, 128, 80, 80]  # input: 12*320*320
-
