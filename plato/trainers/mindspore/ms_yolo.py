@@ -29,15 +29,17 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
+import plato.trainers.base as base
 
 ms.set_seed(1)
 
-class Trainer():
+class Trainer(base.Trainer):
     """The YOLOV5 trainer."""
     def __init__(self):
         super().__init__()
         self.device = "npu:0"
         self.client_id = 0
+
 
     def parse_args(cloud_args=None):
         """Parse train arguments."""
