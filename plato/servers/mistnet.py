@@ -30,7 +30,7 @@ class Server(fedavg.Server):
         
         # check local model exist or not
         logging.info("[Server #%d] Loading a pre-trained model.", os.getpid())
-        self.trainer.load_model()
+        # self.trainer.load_model()
 
     async def process_reports(self):
         """Process the features extracted by the client and perform server-side training."""
