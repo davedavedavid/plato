@@ -29,17 +29,26 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
-import plato.trainers.base as base
+
 
 ms.set_seed(1)
 
-class Trainer(base.Trainer):
+class Trainer():
     """The YOLOV5 trainer."""
     def __init__(self):
         super().__init__()
         self.device = "npu:0"
-        self.client_id = 0
+        # self.client_id = 0
 
+    def set_client_id(self, client_id):
+        """ Setting the client ID and initialize the shared database table for controlling
+            the maximum concurrency with respect to the number of training clients.
+        """
+        self.client_id = client_id
+
+        # if hasattr(Config().trainer, 'max_concurrency'):
+        #     Trainer.run_sql_statement(
+        #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
     def parse_args(cloud_args=None):
         """Parse train arguments."""
