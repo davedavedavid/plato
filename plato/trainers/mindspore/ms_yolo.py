@@ -36,6 +36,8 @@ class Trainer():
     """The YOLOV5 trainer."""
     def __init__(self):
         super().__init__()
+        self.device = "npu:0"
+        self.client_id = 0
 
     def parse_args(cloud_args=None):
         """Parse train arguments."""
