@@ -44,13 +44,12 @@ class Server(fedavg.Server):
             print("len(feature) ", len(feature), flush=True)
             if hasattr(Config().trainer, 'use_mindspore'):
                 feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
-                print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
             else:
                 feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
             # Training the model using all the features received from the client
+        print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
         sampler = all_inclusive.Sampler(feature_dataset_tensor)
-        print("sampler    ", sampler, flush=True)
         self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
 
