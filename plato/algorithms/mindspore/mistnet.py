@@ -60,10 +60,10 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        print('trainset', trainset, len(trainset), flush=True)
-        for logit, annotation  in trainset:
-            # batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
-            print('batch_gt_box2, img_hight, img_width, input_shape', annotation, flush=True)
+        print('trainset', len(trainset), flush=True)
+        for logit in trainset:
+        # for logit, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape in trainset:
+            print('batch_gt_box2, img_hight, img_width, input_shape', logit, len(logit), flush=True)
             target = [annotation.asnumpy(), batch_y_true_0.asnumpy(), batch_y_true_1.asnumpy(), batch_y_true_2.asnumpy(), batch_gt_box0.asnumpy(), batch_gt_box1.asnumpy(), batch_gt_box2.asnumpy(), img_hight.asnumpy(), img_width.asnumpy(), input_shape.asnumpy()]
             yield logit.asnumpy(), target.asnumpy()
 
