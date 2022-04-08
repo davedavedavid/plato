@@ -34,8 +34,9 @@ class Server(fedavg.Server):
 
     async def process_reports(self):
         """Process the features extracted by the client and perform server-side training."""
+        print('self.updates', self.updates, flush=True)
         features = [features for (__, features) in self.updates]
-
+        print("features", len(features[0]), features, flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
         feature_dataset = list(chain.from_iterable(features))
 		

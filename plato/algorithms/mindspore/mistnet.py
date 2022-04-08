@@ -73,7 +73,6 @@ class Algorithm(fedavg.Algorithm):
         Arguments:
         trainset: The training dataset.
         """
-        feature_dataset = ds.GeneratorDataset(list(
-            Algorithm.dataset_generator(trainset)),
-                      column_names=["image", "label","batch_y_true_0", "batch_y_true_1","batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"])
+        feature_dataset = ds.GeneratorDataset(list(Algorithm.dataset_generator(trainset)),
+                      column_names=["image", "label"])      #  "batch_y_true_0", "batch_y_true_1","batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"
         self.trainer.train(feature_dataset)
