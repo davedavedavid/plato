@@ -34,25 +34,23 @@ class Server(fedavg.Server):
 
     async def process_reports(self):
         """Process the features extracted by the client and perform server-side training."""
-        # print('self.updates', self.updates, flush=True)
         features = [features for (__, features) in self.updates]
-        print("features", len(features), flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
         feature_dataset = list(chain.from_iterable(features))
-        print("feature_dataset", len(feature_dataset[0]), feature_dataset, flush=True)
+        print("feature_dataset", len(feature_dataset), flush=True)
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         for feature in feature_dataset:
-            print("feature1111", len(feature), feature, flush=True)
+            print("len(feature) ", len(feature), flush=True)
             if hasattr(Config().trainer, 'use_mindspore'):
                 feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
-                print("feature_dataset_tensor   ", len(feature_dataset_tensor), feature_dataset_tensor, flush=True)
+                print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
             else:
                 feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
             # Training the model using all the features received from the client
         sampler = all_inclusive.Sampler(feature_dataset_tensor)
-        print("sampler    ", len(sampler), sampler, flush=True)
+        print("sampler    ", sampler, flush=True)
         self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
 
