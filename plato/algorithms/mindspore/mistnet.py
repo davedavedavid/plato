@@ -61,12 +61,16 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
         print('trainset', len(trainset), flush=True)
-        for logit, target in trainset:
-            print('logit, target', len(logit), len(target), flush=True)
-            annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape = target
-            print('---------------------------', len(logit), len(target), len(annotation), len(batch_y_true_0), flush=True)
-            target = [annotation.asnumpy(), batch_y_true_0.asnumpy(), batch_y_true_1.asnumpy(), batch_y_true_2.asnumpy(), batch_gt_box0.asnumpy(), batch_gt_box1.asnumpy(), batch_gt_box2.asnumpy(), img_hight.asnumpy(), img_width.asnumpy(), input_shape.asnumpy()]
-            yield logit.asnumpy(), target.asnumpy()
+        # for logit, target in trainset:
+        #     print('logit, target', len(logit), len(target), flush=True)
+        print('logit, target', trainset[0], trainset[1], flush=True)
+        logit = trainset[0]
+        target = trainset[1]
+
+        annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape = target
+        print('---------------------------', len(logit), len(target), len(annotation), len(batch_y_true_0), flush=True)
+        target = [annotation.asnumpy(), batch_y_true_0.asnumpy(), batch_y_true_1.asnumpy(), batch_y_true_2.asnumpy(), batch_gt_box0.asnumpy(), batch_gt_box1.asnumpy(), batch_gt_box2.asnumpy(), img_hight.asnumpy(), img_width.asnumpy(), input_shape.asnumpy()]
+        yield logit.asnumpy(), target.asnumpy()
 
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
