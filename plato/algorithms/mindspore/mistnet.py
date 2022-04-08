@@ -61,8 +61,8 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
 
-        for logit, [annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape] in trainset:
-
+        for logit, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape  in trainset:
+            print('batch_gt_box2, img_hight, img_width, input_shape', batch_gt_box2, img_hight, img_width, input_shape, flush=True)
             target = [annotation.asnumpy(), batch_y_true_0.asnumpy(), batch_y_true_1.asnumpy(), batch_y_true_2.asnumpy(), batch_gt_box0.asnumpy(), batch_gt_box1.asnumpy(), batch_gt_box2.asnumpy(), img_hight.asnumpy(), img_width.asnumpy(), input_shape.asnumpy()]
             yield logit.asnumpy(), target.asnumpy()
 
@@ -75,5 +75,4 @@ class Algorithm(fedavg.Algorithm):
         feature_dataset = ds.GeneratorDataset(list(
             Algorithm.dataset_generator(trainset)),
                                               column_names=["image", "label"])
-
         self.trainer.train(feature_dataset)
