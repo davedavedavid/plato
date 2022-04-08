@@ -67,7 +67,7 @@ class Algorithm(fedavg.Algorithm):
         target = trainset[1]
 
         annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape = target
-        print('---------------------------', len(logit), len(target), len(annotation), len(batch_y_true_0), len(batch_y_true_1),len(batch_y_true_2),len(batch_gt_box0),len(batch_gt_box1),len(batch_gt_box2),len(img_hight), flush=True)
+        print('---------------------------', len(logit), len(target), len(annotation), len(batch_y_true_0), len(batch_y_true_1),len(batch_y_true_2),len(batch_gt_box0),len(batch_gt_box1),len(batch_gt_box2), img_hight, img_width, input_shape, flush=True)
         target = [annotation.asnumpy(), batch_y_true_0.asnumpy(), batch_y_true_1.asnumpy(), batch_y_true_2.asnumpy(), batch_gt_box0.asnumpy(), batch_gt_box1.asnumpy(), batch_gt_box2.asnumpy(), img_hight.asnumpy(), img_width.asnumpy(), input_shape.asnumpy()]
         print('target', len(target), flush=True)
         yield logit.asnumpy(), target
@@ -82,6 +82,26 @@ class Algorithm(fedavg.Algorithm):
                       column_names=["image", "label"])      #  "batch_y_true_0", "batch_y_true_1","batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"
         print('----------------------feature_dataset: ', len(feature_dataset), feature_dataset, flush=True)
         self.trainer.train(feature_dataset)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
