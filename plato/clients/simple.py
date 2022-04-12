@@ -6,7 +6,7 @@ import logging
 import time
 from dataclasses import dataclass
 
-from plato.algorithms import registry as algorithms_registry
+#from plato.algorithms import registry as algorithms_registry
 from plato.config import Config
 from plato.samplers import registry as samplers_registry
 from plato.trainers import registry as trainers_registry
