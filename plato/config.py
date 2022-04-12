@@ -228,7 +228,7 @@ class Config:
         config['trainer']['model_name'] = 'lenet5'
         config['algorithm'] = {}
         config['algorithm']['type'] = 'fedavg'
-        config['trainer']['use_mindspore'] = False
+        #config['trainer']['use_mindspore'] = False
         return config
     
     @staticmethod
