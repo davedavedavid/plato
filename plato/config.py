@@ -203,7 +203,7 @@ class Config:
         config['clients']['type'] = 'simple'
         config['clients']['total_clients'] = 1
         config['clients']['per_round'] = 1
-        config['clients']['do_test'] = True
+        config['clients']['do_test'] = False
         config['server'] = {}
         config['server']['address'] = '127.0.0.1'
         config['server']['port'] = 8000
