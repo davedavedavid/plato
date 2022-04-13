@@ -58,7 +58,7 @@ class DataSource(base.DataSource):
         return Config().data.classes
 
     def get_train_set(self):
-        print('Config().data.train_annFile, train_path:',Config().data.train_annFile, Config().data.train_path)
+        #print('Config().data.train_annFile, train_path:',Config().data.train_annFile, Config().data.train_path)
         if self.train_set is None:
             self.train_set = COCOYoloDataset(
                 root=Config().data.train_path,
