@@ -1,2 +1,2 @@
-from examples.nnrt.nnrt_algorithms import fedavg
-from examples.nnrt.nnrt_algorithms import mistnet
+from examples.ms_nnrt.nnrt_algorithms import ms_fedavg
+from examples.ms_nnrt.ms_nnrt_algorithms import ms_mistnet
