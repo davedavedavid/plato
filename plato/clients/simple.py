@@ -71,7 +71,7 @@ class Client(base.Client):
                      self.datasource.num_train_examples())
 
         # Setting up the data sampler
-        #self.sampler = samplers_registry.get(self.datasource, self.client_id)
+        self.sampler = samplers_registry.get(self.datasource, self.client_id)
 
         if hasattr(Config().trainer, 'use_mindspore'):
             # MindSpore requires samplers to be used while constructing
