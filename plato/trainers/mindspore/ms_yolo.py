@@ -61,7 +61,7 @@ class Trainer():
             # dataset related
             parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
             # network related
-            parser.add_argument('--resume_yolov5', default='/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
+            parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
             # optimizer and lr related
             parser.add_argument('--lr_scheduler', default='cosine_annealing', type=str,
