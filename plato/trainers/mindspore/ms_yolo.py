@@ -42,136 +42,123 @@ class Trainer():
         if model is None:
             assert "Without model input."
         # self.client_id = 0
-
-
     def set_client_id(self, client_id):
         """ Setting the client ID and initialize the shared database table for controlling
             the maximum concurrency with respect to the number of training clients.
         """
         self.client_id = client_id
-
         # if hasattr(Config().trainer, 'max_concurrency'):
         #     Trainer.run_sql_statement(
         #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
-
-    def parse_args(cloud_args=None):
-        """Parse train arguments."""
-        parser = argparse.ArgumentParser('mindspore coco training')
-
-        # device related
-        parser.add_argument('--device_target', type=str, default='Ascend',
-                            help='device where the code will be implemented.')
-
-        # dataset related
-        parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
-
-        # network related
-        parser.add_argument('--pretrained_backbone', default='', type=str,
-                            help='The backbone file of YOLOv5. Default: "".')
-        parser.add_argument('--resume_yolov5', default='./models/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
-                            help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
-
-        # optimizer and lr related
-        parser.add_argument('--lr_scheduler', default='cosine_annealing', type=str,
-                            help='Learning rate scheduler, options: exponential, cosine_annealing. Default: exponential')
-        parser.add_argument('--lr', default=0.013, type=float, help='Learning rate. Default: 0.01')
-        parser.add_argument('--lr_epochs', type=str, default='220,250',
-                            help='Epoch of changing of lr changing, split with ",". Default: 220,250')
-        parser.add_argument('--lr_gamma', type=float, default=0.1,
-                            help='Decrease lr by a factor of exponential lr_scheduler. Default: 0.1')
-        parser.add_argument('--eta_min', type=float, default=0.,
-                            help='Eta_min in cosine_annealing scheduler. Default: 0')
-        parser.add_argument('--T_max', type=int, default=300, help='T-max in cosine_annealing scheduler. Default: 320')
-        parser.add_argument('--max_epoch', type=int, default=300, help='Max epoch num to train the model. Default: 320')
-        parser.add_argument('--warmup_epochs', default=20, type=float, help='Warmup epochs. Default: 0')
-        parser.add_argument('--weight_decay', type=float, default=0.0005, help='Weight decay factor. Default: 0.0005')
-        parser.add_argument('--momentum', type=float, default=0.9, help='Momentum. Default: 0.9')
-
-        # loss related
-        parser.add_argument('--loss_scale', type=int, default=1024, help='Static loss scale. Default: 1024')
-        parser.add_argument('--label_smooth', type=int, default=0, help='Whether to use label smooth in CE. Default:0')
-        parser.add_argument('--label_smooth_factor', type=float, default=0.1,
-                            help='Smooth strength of original one-hot. Default: 0.1')
-
-        # logging related
-        parser.add_argument('--log_interval', type=int, default=100, help='Logging interval steps. Default: 100')
-        parser.add_argument('--ckpt_path', type=str, default='outputs/',
-                            help='Checkpoint save location. Default: outputs/')
-        parser.add_argument('--ckpt_interval', type=int, default=100, help='Save checkpoint interval. Default: 10')
-
-        parser.add_argument('--is_save_on_master', type=int, default=1,
-                            help='Save ckpt on master or all rank, 1 for master, 0 for all ranks. Default: 1')
-
-        # distributed related
-        parser.add_argument('--is_distributed', type=int, default=1,
-                            help='Distribute train or not, 1 for yes, 0 for no. Default: 1')
-        parser.add_argument('--rank', type=int, default=0, help='Local rank of distributed. Default: 0')
-        parser.add_argument('--group_size', type=int, default=1, help='World size of device. Default: 1')
-
-        # roma obs
-        parser.add_argument('--train_url', type=str, default="", help='train url')
-        # profiler init
-        parser.add_argument('--need_profiler', type=int, default=0,
-                            help='Whether use profiler. 0 for no, 1 for yes. Default: 0')
-
-        # reset default config
-        parser.add_argument('--training_shape', type=str, default="", help='Fix training shape. Default: ""')
-        parser.add_argument('--resize_rate', type=int, default=10,
-                            help='Resize rate for multi-scale training. Default: None')
-
-        args, _ = parser.parse_known_args()
-        args = merge_args(args, cloud_args)
-        if args.lr_scheduler == 'cosine_annealing' and args.max_epoch > args.T_max:
-            args.T_max = args.max_epoch
-
-        args.lr_epochs = list(map(int, args.lr_epochs.split(',')))
-
-        devid = int(os.getenv('DEVICE_ID', '0'))
-        context.set_context(mode=context.GRAPH_MODE, enable_auto_mixed_precision=True,
-                            device_target=args.device_target, save_graphs=False, device_id=devid)
-        # init distributed
-        if args.is_distributed:
-            if args.device_target == "Ascend":
-                init()
-            else:
-                init("nccl")
-            args.rank = get_rank()
-            args.group_size = get_group_size()
-
-        # select for master rank save ckpt or all rank save, compatible for model parallel
-        args.rank_save_ckpt_flag = 0
-        if args.is_save_on_master:
-            if args.rank == 0:
-                args.rank_save_ckpt_flag = 1
-        else:
-            args.rank_save_ckpt_flag = 1
-
-        # logger
-        args.outputs_dir = os.path.join(args.ckpt_path,
-                                        datetime.datetime.now().strftime('%Y-%m-%d_time_%H_%M_%S'))
-        args.logger = get_logger(args.outputs_dir, args.rank)
-        args.logger.save_args(args)
-
-        return args
-
-    def merge_args(args, cloud_args):
-        args_dict = vars(args)
-        if isinstance(cloud_args, dict):
-            for key in cloud_args.keys():
-                val = cloud_args[key]
-                if key in args_dict and val:
-                    arg_type = type(args_dict[key])
-                    if arg_type is not type(None):
-                        val = arg_type(val)
-                    args_dict[key] = val
-        return args
-
-    def convert_training_shape(args_training_shape):
-        training_shape = [int(args_training_shape), int(args_training_shape)]
-        return training_shape
-
     def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
+        def parse_args(cloud_args=None):
+            """Parse train arguments."""
+            parser = argparse.ArgumentParser('mindspore coco training')
+            # device related
+            parser.add_argument('--device_target', type=str, default='Ascend',
+                                help='device where the code will be implemented.')
+            # dataset related
+            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
+            # network related
+            parser.add_argument('--resume_yolov5', default='./models/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
+                                help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
+            # optimizer and lr related
+            parser.add_argument('--lr_scheduler', default='cosine_annealing', type=str,
+                                help='Learning rate scheduler, options: exponential, cosine_annealing. Default: exponential')
+            parser.add_argument('--lr', default=0.013, type=float, help='Learning rate. Default: 0.01')
+            parser.add_argument('--lr_epochs', type=str, default='220,250',
+                                help='Epoch of changing of lr changing, split with ",". Default: 220,250')
+            parser.add_argument('--lr_gamma', type=float, default=0.1,
+                                help='Decrease lr by a factor of exponential lr_scheduler. Default: 0.1')
+            parser.add_argument('--eta_min', type=float, default=0.,
+                                help='Eta_min in cosine_annealing scheduler. Default: 0')
+            parser.add_argument('--T_max', type=int, default=300,
+                                help='T-max in cosine_annealing scheduler. Default: 320')
+            parser.add_argument('--max_epoch', type=int, default=300,
+                                help='Max epoch num to train the model. Default: 320')
+            parser.add_argument('--warmup_epochs', default=20, type=float, help='Warmup epochs. Default: 0')
+            parser.add_argument('--weight_decay', type=float, default=0.0005,
+                                help='Weight decay factor. Default: 0.0005')
+            parser.add_argument('--momentum', type=float, default=0.9, help='Momentum. Default: 0.9')
+            # loss related
+            parser.add_argument('--loss_scale', type=int, default=1024, help='Static loss scale. Default: 1024')
+            parser.add_argument('--label_smooth', type=int, default=0,
+                                help='Whether to use label smooth in CE. Default:0')
+            parser.add_argument('--label_smooth_factor', type=float, default=0.1,
+                                help='Smooth strength of original one-hot. Default: 0.1')
+            # logging related
+            parser.add_argument('--log_interval', type=int, default=100, help='Logging interval steps. Default: 100')
+            parser.add_argument('--ckpt_path', type=str, default='outputs/',
+                                help='Checkpoint save location. Default: outputs/')
+            parser.add_argument('--ckpt_interval', type=int, default=100, help='Save checkpoint interval. Default: 10')
+            parser.add_argument('--is_save_on_master', type=int, default=1,
+                                help='Save ckpt on master or all rank, 1 for master, 0 for all ranks. Default: 1')
+            # distributed related
+            parser.add_argument('--is_distributed', type=int, default=1,
+                                help='Distribute train or not, 1 for yes, 0 for no. Default: 1')
+            parser.add_argument('--rank', type=int, default=0, help='Local rank of distributed. Default: 0')
+            parser.add_argument('--group_size', type=int, default=1, help='World size of device. Default: 1')
+            # roma obs
+            parser.add_argument('--train_url', type=str, default="", help='train url')
+            # profiler init
+            parser.add_argument('--need_profiler', type=int, default=0,
+                                help='Whether use profiler. 0 for no, 1 for yes. Default: 0')
+            # reset default config
+            parser.add_argument('--training_shape', type=str, default="", help='Fix training shape. Default: ""')
+            parser.add_argument('--resize_rate', type=int, default=10,
+                                help='Resize rate for multi-scale training. Default: None')
+            args, _ = parser.parse_known_args()
+
+            def merge_args(args, cloud_args):
+                args_dict = vars(args)
+                if isinstance(cloud_args, dict):
+                    for key in cloud_args.keys():
+                        val = cloud_args[key]
+                        if key in args_dict and val:
+                            arg_type = type(args_dict[key])
+                            if arg_type is not type(None):
+                                val = arg_type(val)
+                            args_dict[key] = val
+                return args
+            args = merge_args(args, cloud_args)
+            if args.lr_scheduler == 'cosine_annealing' and args.max_epoch > args.T_max:
+                args.T_max = args.max_epoch
+
+            args.lr_epochs = list(map(int, args.lr_epochs.split(',')))
+
+            devid = int(os.getenv('DEVICE_ID', '0'))
+            context.set_context(mode=context.GRAPH_MODE, enable_auto_mixed_precision=True,
+                                device_target=args.device_target, save_graphs=False, device_id=devid)
+            # init distributed
+            if args.is_distributed:
+                if args.device_target == "Ascend":
+                    init()
+                else:
+                    init("nccl")
+                args.rank = get_rank()
+                args.group_size = get_group_size()
+
+            # select for master rank save ckpt or all rank save, compatible for model parallel
+            args.rank_save_ckpt_flag = 0
+            if args.is_save_on_master:
+                if args.rank == 0:
+                    args.rank_save_ckpt_flag = 1
+            else:
+                args.rank_save_ckpt_flag = 1
+
+            # logger
+            args.outputs_dir = os.path.join(args.ckpt_path,
+                                            datetime.datetime.now().strftime('%Y-%m-%d_time_%H_%M_%S'))
+            args.logger = get_logger(args.outputs_dir, args.rank)
+            args.logger.save_args(args)
+
+            return args
+
+        def convert_training_shape(args_training_shape):
+            training_shape = [int(args_training_shape), int(args_training_shape)]
+            return training_shape
+
         args = parse_args(cloud_args)
         loss_meter = AverageMeter('loss')
         print('loss_meter', loss_meter, trainset, flush=True)
