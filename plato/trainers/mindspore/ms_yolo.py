@@ -132,10 +132,10 @@ class Trainer():
                                 device_target=args.device_target, save_graphs=False, device_id=devid)
             # init distributed
             if args.is_distributed:
-                if args.device_target == "Ascend":
-                    init()
-                else:
-                    init("nccl")
+                #if args.device_target == "Ascend":
+                #    init()
+                #else:
+                #    init("nccl")
                 args.rank = get_rank()
                 args.group_size = get_group_size()
 
