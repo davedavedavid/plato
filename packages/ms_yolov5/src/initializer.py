@@ -180,10 +180,6 @@ def default_recurisive_init(custom_cell):
 
 def load_yolov5_params(args, network):
     """Load yolov5 backbone parameter from checkpoint."""
-    if args.pretrained_backbone:
-        network = load_backbone(network, args.pretrained_backbone, args)
-        args.logger.info('load pre-trained backbone {} into network'.format(args.pretrained_backbone))
-
     if args.resume_yolov5:
         param_dict = load_checkpoint(args.resume_yolov5)
         #print(param_dict)
