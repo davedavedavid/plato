@@ -1,7 +1,7 @@
 import logging
 import os
 import math
-from plato.client_config import Config
+from plato.config import Config
 from plato.datasources import base
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import COCOYoloDataset
 
