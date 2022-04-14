@@ -41,7 +41,7 @@ class Server(fedavg.Server):
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         for feature in feature_dataset:
-            print("len(feature) ", feature.shape, len(feature), flush=True)
+            print("len(feature) ", feature, len(feature), flush=True)
             if hasattr(Config().trainer, 'use_mindspore'):
                 #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
                 feature_dataset_tensor.append(mindspore.Tensor(feature))
