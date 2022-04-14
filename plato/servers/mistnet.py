@@ -40,14 +40,15 @@ class Server(fedavg.Server):
         #print("feature_dataset", feature_dataset, type(feature_dataset), len(feature_dataset), flush=True)
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
-        for feature in feature_dataset:
-            print("len(feature) ", feature, len(feature), flush=True)
-            if hasattr(Config().trainer, 'use_mindspore'):
-                #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
-                feature_dataset_tensor.append(mindspore.Tensor(feature))
-                print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
-            else:
-                feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
+        #for feature in feature_dataset:
+        print("feature_dataset ", feature_dataset[0], feature_dataset[1], len(feature_dataset[1]), flush=True)
+        if hasattr(Config().trainer, 'use_mindspore'):
+            #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
+            feature_dataset_tensor.append(mindspore.Tensor(feature_dataset[0]))
+            feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature_dataset[1]])
+            print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
+        else:
+            feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
             # Training the model using all the features received from the client
         print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
