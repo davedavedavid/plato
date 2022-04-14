@@ -59,7 +59,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
+            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='./models/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -180,7 +180,7 @@ class Trainer():
         if args.resize_rate:
             config.resize_rate = args.resize_rate
 
-        data_size = len(trainset[0])
+        data_size = 1 #len(trainset[0])
         args.steps_per_epoch = int(data_size / args.per_batch_size / args.group_size)
 
         if not args.ckpt_interval:
@@ -207,7 +207,7 @@ class Trainer():
 
         old_progress = -1
         t_end = time.time()
-        data_loader = ds.create_dict_iterator(output_numpy=True, num_epochs=1)
+        data_loader = trainset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         for i, data in enumerate(data_loader):
 
