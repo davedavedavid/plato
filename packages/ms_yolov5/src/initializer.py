@@ -187,7 +187,8 @@ def load_yolov5_params(args, network):
         for key, values in param_dict.items():
             if key.startswith('moments.'):
                 continue
-            elif key.startswith('yolo_network.'):
+            #elif key.startswith('yolo_network.'):
+            elif key.startswith('network_from.'):
                 param_dict_new[key[13:]] = values
                 args.logger.info('in resume {}'.format(key))
             else:

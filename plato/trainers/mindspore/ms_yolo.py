@@ -207,10 +207,10 @@ class Trainer():
 
         old_progress = -1
         t_end = time.time()
-        data_loader = trainset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        #data_loader = trainset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         #for i, data in enumerate(data_loader):
-        for i, data in data_loader:
+        for i, data in trainset:
             logits, [annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape] = data
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
