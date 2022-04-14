@@ -41,17 +41,17 @@ class Server(fedavg.Server):
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         #for feature in feature_dataset:
-        print("feature_dataset ", feature_dataset[0], feature_dataset[1], len(feature_dataset[1]), flush=True)
+        #print("feature_dataset ", feature_dataset[0], feature_dataset[1], len(feature_dataset[1]), flush=True)
         if hasattr(Config().trainer, 'use_mindspore'):
             #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
             feature_dataset_tensor.append(mindspore.Tensor(feature_dataset[0]))
-            feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature_dataset[1]])
-            print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
+            feature_dataset_tensor.append([elem for elem in feature_dataset[1]])
+            #print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
         else:
-            feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
+            feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature_dataset])
 
             # Training the model using all the features received from the client
-        print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
+        #print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
         sampler = all_inclusive.Sampler(feature_dataset_tensor)
         self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
