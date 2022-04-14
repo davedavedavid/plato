@@ -99,7 +99,7 @@ class Algorithm(ms_fedavg.Algorithm):
                     logits = logits.astype('float32')
 
             #for i in np.arange(logits.shape[0]):  # each sample in the batch
-            feature_dataset.append((logits[0], annotation_x))
+            feature_dataset.append((logits[0], annotation_x[:]))
 
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
