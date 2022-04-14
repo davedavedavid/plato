@@ -10,7 +10,7 @@ Differential Privacy," found in docs/papers.
 import logging
 from dataclasses import dataclass
 
-from plato.config import Config
+from plato.client_config import Config
 from plato.clients import simple
 
 
