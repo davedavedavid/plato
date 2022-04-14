@@ -178,7 +178,7 @@ def default_recurisive_init(custom_cell):
         elif isinstance(cell, (nn.BatchNorm2d, nn.BatchNorm1d)):
             pass
 
-def load_yolov5_params(args, network_f, network):
+def load_yolov5_params(args, network):
     """Load yolov5 backbone parameter from checkpoint."""
     if args.pretrained_backbone:
         network = load_backbone(network, args.pretrained_backbone, args)
@@ -187,27 +187,16 @@ def load_yolov5_params(args, network_f, network):
     if args.resume_yolov5:
         param_dict = load_checkpoint(args.resume_yolov5)
         #print(param_dict)
-        # keys = []
-        # for k, v in param_dict.items():
-        #     if k.startswith('yolo_network.feature_map.backblock'):
-        #         continue
-        #     keys.append(k)  # 将‘moments.yolo_network.feature_map.backblock’开头的key过滤掉，留下需要的
-        # param_dict_ = {k: param_dict[k] for k in keys}
-        # #print(param_dict_)
         param_dict_new = {}
         for key, values in param_dict.items():
             if key.startswith('moments.'):
                 continue
             elif key.startswith('yolo_network.'):
-                if key.startswith('yolo_network.feature_map.backblock'):
-                    continue
-                else:
-                    param_dict_new[key[13:]] = values
-                    args.logger.info('in resume {}'.format(key))
+                param_dict_new[key[13:]] = values
+                args.logger.info('in resume {}'.format(key))
             else:
                 param_dict_new[key] = values
                 args.logger.info('in resume {}'.format(key))
         args.logger.info('resume finished')
-        load_param_into_net(network_f, param_dict_new)
         load_param_into_net(network, param_dict_new)
         args.logger.info('load_model {} success'.format(args.resume_yolov5))
