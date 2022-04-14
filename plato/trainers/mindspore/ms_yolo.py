@@ -95,7 +95,7 @@ class Trainer():
             parser.add_argument('--is_save_on_master', type=int, default=1,
                                 help='Save ckpt on master or all rank, 1 for master, 0 for all ranks. Default: 1')
             # distributed related
-            parser.add_argument('--is_distributed', type=int, default=1,
+            parser.add_argument('--is_distributed', type=int, default=0,
                                 help='Distribute train or not, 1 for yes, 0 for no. Default: 1')
             parser.add_argument('--rank', type=int, default=0, help='Local rank of distributed. Default: 0')
             parser.add_argument('--group_size', type=int, default=1, help='World size of device. Default: 1')
@@ -132,10 +132,10 @@ class Trainer():
                                 device_target=args.device_target, save_graphs=False, device_id=devid)
             # init distributed
             if args.is_distributed:
-                #if args.device_target == "Ascend":
-                #    init()
-                #else:
-                #    init("nccl")
+                if args.device_target == "Ascend":
+                    init()
+                else:
+                    init("nccl")
                 args.rank = get_rank()
                 args.group_size = get_group_size()
 
