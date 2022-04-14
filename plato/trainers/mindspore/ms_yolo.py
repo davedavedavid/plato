@@ -161,7 +161,7 @@ class Trainer():
 
         args = parse_args(cloud_args)
         loss_meter = AverageMeter('loss')
-        print('loss_meter', loss_meter, trainset, flush=True)
+        #print('loss_meter', loss_meter, trainset, flush=True)
         context.reset_auto_parallel_context()
         parallel_mode = ParallelMode.STAND_ALONE
         degree = 1
@@ -209,8 +209,8 @@ class Trainer():
         t_end = time.time()
         data_loader = trainset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
-        for i, data in enumerate(data_loader):
-
+        #for i, data in enumerate(data_loader):
+        for i, data in data_loader:
             logits, [annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape] = data
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,

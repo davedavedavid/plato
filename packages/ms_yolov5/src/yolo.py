@@ -24,7 +24,7 @@ from mindspore.ops import operations as P
 from mindspore.ops import functional as F
 from mindspore.ops import composite as C
 
-from .yolov5_backbone import YOLOv5Backbone_to, Conv, C3
+from .yolov5_backbone import YOLOv5Backbone_from, Conv, C3
 from .config import ConfigYOLOV5
 from .loss import ConfidenceLoss, ClassLoss
 
@@ -343,7 +343,7 @@ class YOLOV5s(nn.Cell):
         self.config = ConfigYOLOV5()
 
         # YOLOv5 network
-        self.feature_map = YOLOv5(backbone=YOLOv5Backbone_to(),
+        self.feature_map = YOLOv5(backbone=YOLOv5Backbone_from(),
                                   out_channel=self.config.out_channel)
 
         # prediction on the default anchor boxes
