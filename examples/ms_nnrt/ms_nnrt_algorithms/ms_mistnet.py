@@ -6,7 +6,7 @@ import sys
 import os
 import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
-from plato.client_config import Config
+from plato.config import Config
 from plato.utils import unary_encoding
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 from examples.ms_nnrt.config import ConfigYOLOV5

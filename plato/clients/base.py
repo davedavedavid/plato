@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 import socketio
 
-from plato.client_config import Config
+from plato.config import Config
 from plato.utils import s3
 
 

@@ -7,7 +7,7 @@ on a configuration at run-time.
 import logging
 from collections import OrderedDict
 
-from plato.client_config import Config
+from plato.config import Config
 
 if hasattr(Config().trainer, 'use_mindspore'):
     from plato.samplers.mindspore import (

@@ -12,7 +12,7 @@ from plato.clients import (
     mistnet,
 )
 
-from plato.client_config import Config
+from plato.config import Config
 
 registered_clients = OrderedDict([
     ('simple', simple.Client),
