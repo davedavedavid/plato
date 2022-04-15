@@ -220,7 +220,7 @@ class Config:
         config['trainer']['parallelized'] = False
         config['trainer']['target_accuracy'] = 0.94
         config['trainer']['epochs'] = 5
-        config['trainer']['batch_size'] = 32
+        config['trainer']['batch_size'] = 1
         config['trainer']['optimizer'] = 'SGD'
         config['trainer']['learning_rate'] = 0.01
         config['trainer']['momentum'] = 0.9
@@ -228,7 +228,7 @@ class Config:
         config['trainer']['model_name'] = 'lenet5'
         config['algorithm'] = {}
         config['algorithm']['type'] = 'fedavg'
-        #config['trainer']['use_mindspore'] = True
+        config['trainer']['use_mindspore'] = True
         return config
     
     @staticmethod

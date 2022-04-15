@@ -17,7 +17,9 @@ import os
 import time
 import argparse
 import datetime
+import multiprocessing
 import mindspore as ms
+import mindspore.dataset as ds
 from mindspore.context import ParallelMode
 from mindspore.nn.optim.momentum import Momentum
 from mindspore import Tensor
@@ -29,7 +31,6 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
-# from plato.trainers.mindspore import basic
 
 ms.set_seed(1)
 
@@ -205,12 +206,18 @@ class Trainer():
             cb_params.cur_epoch_num = 1
             run_context = RunContext(cb_params)
             ckpt_cb.begin(run_context)
-
         old_progress = -1
         t_end = time.time()
-        #data_loader = trainset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
-        for image, label in trainset:
+        device_num = 1
+        cores = multiprocessing.cpu_count()
+        num_parallel_workers = int(cores / device_num)
+        trainset = trainset[0], trainset[1]
+        feature_dataset = ds.GeneratorDataset(trainset, column_names=["image", "label"])
+        feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
+        data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        #for image, label in feature_dataset:
+        for i, image, label in enumerate(data_loader):
             logits = image
             #label_ = data["label"]
             annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape = label

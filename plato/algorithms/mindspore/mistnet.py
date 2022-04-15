@@ -60,9 +60,9 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        print('trainset', len(trainset), flush=True)
+        #print('trainset', len(trainset), flush=True)
         # for logit, target in trainset:
-        print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
+        #print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
         logit = trainset[0]
         target = trainset[1]
 
@@ -75,12 +75,12 @@ class Algorithm(fedavg.Algorithm):
         Arguments:
         trainset: The training dataset.
         """
-        feature_dataset = Algorithm.dataset_generator(trainset)
-        # feature_dataset= ds.GeneratorDataset(list(Algorithm.dataset_generator(trainset)),
-        #               column_names=["image", "label"])      #  "batch_y_true_0", "batch_y_true_1","batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"
+        #feature_dataset = Algorithm.dataset_generator(trainset)
+        # feature_dataset= ds.GeneratorDataset(Algorithm.dataset_generator(trainset),
+        #                column_names=["image", "label"])
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         #print('----------------------feature_dataset: ', feature_dataset, flush=True)
-        self.trainer.train(feature_dataset)
+        self.trainer.train(trainset)
 
 
 
