@@ -32,7 +32,7 @@ class Model(nn.Cell):
 
         self.network_from = TrainingWrapper(self.network_from, opt, args.loss_scale // 2)
         self.network_from.set_train()
-        print('load network_from.', self.network_from, lr, flush=True)
+        #print('load network_from.', self.network_from, flush=True)
 
     def forward_to(self, x):
 
