@@ -213,10 +213,10 @@ class Trainer():
         trainset = trainset[0], trainset[1]
         feature_dataset = ds.GeneratorDataset(trainset, column_names=["image", "label"])
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
-        data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        print("data_loader: ",data_loader,flush=True)
+        #data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        print("feature_dataset: ",feature_dataset,flush=True)
         #for image, label in feature_dataset:
-        for i, image, label in enumerate(data_loader):
+        for i, image, label in enumerate(feature_dataset):
             print("i: ", i, flush=True)
             logits = image
             #label_ = data["label"]
