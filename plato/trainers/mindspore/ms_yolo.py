@@ -186,10 +186,8 @@ class Trainer():
 
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
-        print("self.model: ", self.model, flush=True)
         network_t = self.model
         network_t.load_model_train(args)
-        print("network_t: ", network_t, flush=True)
         if args.rank_save_ckpt_flag:
             # checkpoint save
             ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval
@@ -216,15 +214,17 @@ class Trainer():
         feature_dataset = ds.GeneratorDataset(trainset, column_names=["image", "label"])
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        print("data_loader: ",data_loader,flush=True)
         #for image, label in feature_dataset:
         for i, image, label in enumerate(data_loader):
+            print("i: ", i, flush=True)
             logits = image
             #label_ = data["label"]
             annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape = label
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
-
+            print("loss: ", loss, flush=True)
             loss_meter.update(loss.asnumpy())
 
             if args.rank_save_ckpt_flag:
