@@ -186,8 +186,8 @@ class Trainer():
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         print("self.model: ", self.model, flush=True)
-        #network_t = self.model.load_model_train(args)
-        network_t = self.model(args)
+        network_t = self.model
+        network_t.load_model_train(args)
         print("network_t: ", network_t, flush=True)
         if args.rank_save_ckpt_flag:
             # checkpoint save
