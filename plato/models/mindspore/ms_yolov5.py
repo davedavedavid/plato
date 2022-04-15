@@ -17,7 +17,7 @@ class Model(nn.Cell):
 
         self.yolo_network = YOLOV5s(is_training=True)
 
-    #def load_model_train(self, args):
+    def load_model_train(self, args):
         default_recurisive_init(self.yolo_network)
         load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
@@ -34,11 +34,11 @@ class Model(nn.Cell):
         self.network_from.set_train()
         #print('load network_from.', self.network_from, flush=True)
 
-    def forward_to(self, x):
+        def forward_to(self, x):
 
-        logits = self.network_to(x)
-        return logits
+            logits = self.network_to(x)
+            return logits
 
-    def forward_from(self, logits, *args): # *args = batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,batch_gt_box2, img_hight, img_width, input_shape
-        loss = self.network_from(logits, *args)
-        return loss
+        def forward_from(self, logits, *args): # *args = batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,batch_gt_box2, img_hight, img_width, input_shape
+            loss = self.network_from(logits, *args)
+            return loss
