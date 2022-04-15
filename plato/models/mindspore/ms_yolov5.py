@@ -10,14 +10,14 @@ import mindspore.nn as nn
 
 
 class Model(nn.Cell):
-    def __init__(self, model_config=None, args=None):
+    def __init__(self, args=None):
         super(Model, self).__init__()
 
         self.network_to = YOLOv5Backbone_to()
 
         self.yolo_network = YOLOV5s(is_training=True)
 
-    def load_model_train(self, args):
+    #def load_model_train(self, args):
         default_recurisive_init(self.yolo_network)
         load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
