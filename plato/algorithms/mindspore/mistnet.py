@@ -81,7 +81,7 @@ class Algorithm(fedavg.Algorithm):
         """
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                             "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        dataset_ = Algorithm.dataset_generator(trainset)
+        dataset_ = list(Algorithm.dataset_generator(trainset))
         dataset= ds.GeneratorDataset(dataset_, column_names=column_out_names)
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         print('----dataset-----: ', dataset, flush=True)
