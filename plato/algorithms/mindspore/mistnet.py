@@ -64,10 +64,17 @@ class Algorithm(fedavg.Algorithm):
         # for logit, target in trainset:
         #print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
         logit = trainset[0]
-        target = trainset[1]
-
-        #logit = logit.asnumpy()
-        yield logit, target
+        annotation = trainset[1][0]
+        batch_y_true_0 = trainset[1][1]
+        batch_y_true_1 = trainset[1][2]
+        batch_y_true_2 = trainset[1][3]
+        batch_gt_box0 = trainset[1][4]
+        batch_gt_box1 = trainset[1][5]
+        batch_gt_box2 = trainset[1][6]
+        img_hight = trainset[1][7]
+        img_width = trainset[1][8]
+        input_shape = trainset[1][9]
+        return logit, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
 
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
@@ -75,12 +82,12 @@ class Algorithm(fedavg.Algorithm):
         Arguments:
         trainset: The training dataset.
         """
-        #feature_dataset = Algorithm.dataset_generator(trainset)
+        dataset = Algorithm.dataset_generator(trainset)
         # feature_dataset= ds.GeneratorDataset(Algorithm.dataset_generator(trainset),
         #                column_names=["image", "label"])
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         #print('----------------------feature_dataset: ', feature_dataset, flush=True)
-        self.trainer.train(trainset)
+        self.trainer.train(dataset)
 
 
 

@@ -52,7 +52,7 @@ class Trainer():
         #     Trainer.run_sql_statement(
         #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
-    def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
+    def train(self, dataset, sampler=None, cut_layer=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -210,12 +210,11 @@ class Trainer():
         device_num = 1
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
-        print("trainset: ",trainset[1][0],flush=True)
-        trainset_ = trainset[0], trainset[1][0],trainset[1][1],trainset[1][2],trainset[1][3],trainset[1][4],trainset[1][5],trainset[1][6],trainset[1][7],trainset[1][8],trainset[1][9]
-        feature_dataset = ds.GeneratorDataset(trainset_, column_names=["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"])
+        #print("trainset: ",trainset[1][0],flush=True)
+        feature_dataset = ds.GeneratorDataset(dataset, column_names=["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"])
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         #data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        #print("feature_dataset: ",feature_dataset,flush=True)
+        print("feature_dataset: ",feature_dataset,flush=True)
         for i, data in enumerate(feature_dataset):
             print("i: ", i, flush=True)
             logits = data["image"]
