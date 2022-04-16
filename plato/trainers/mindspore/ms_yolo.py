@@ -52,7 +52,7 @@ class Trainer():
         #     Trainer.run_sql_statement(
         #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
-    def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
+    def train(self, dataset, sampler=None, cut_layer=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -213,7 +213,7 @@ class Trainer():
         #print("trainset: ",trainset[1][0],flush=True)
         column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
                         "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        feature_dataset= ds.GeneratorDataset(trainset, column_names=["image", "label"])
+        feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
         def dataset_order(feature_dataset):
             for image, label in feature_dataset:
                 logit = image
