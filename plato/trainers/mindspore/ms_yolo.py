@@ -52,7 +52,7 @@ class Trainer():
         #     Trainer.run_sql_statement(
         #         "CREATE TABLE IF NOT EXISTS trainers (run_id int)")
 
-    def train(self, dataset, sampler=None, cut_layer=None, cloud_args=None):
+    def train(self, trainset, sampler=None, cut_layer=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -210,28 +210,22 @@ class Trainer():
         device_num = 1
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
-        #print("trainset: ",trainset[1][0],flush=True)
+
         column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
                         "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
-        def dataset_order(feature_dataset):
-            for image, label in feature_dataset:
-                logit = image
-                annotation = label[0]
-                batch_y_true_0 = label[1]
-                batch_y_true_1 = label[2]
-                batch_y_true_2 = label[3]
-                batch_gt_box0 = label[4]
-                batch_gt_box1 = label[5]
-                batch_gt_box2 = label[6]
-                img_hight = label[7]
-                img_width = label[8]
-                input_shape = label[9]
-            return logit, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0,\
-                   batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
-
-        feature_dataset = feature_dataset.map(operations=dataset_order(feature_dataset),
-                                              input_columns=["image", "label"],
+        #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
+        def re_order(trainset):
+            for im, la in trainset:
+                print("im: ",im, la, flush=True)
+                image = im
+                annotation = la[0], batch_y_true_0 = la[1]
+                batch_y_true_1 = la[2], batch_y_true_2 = la[3]
+                batch_gt_box0 = la[4], batch_gt_box1 = la[5]
+                batch_gt_box2 = la[6], img_hight = la[7]
+                img_width = la[8], input_shape = la[9]
+                print("input_shape: ", input_shape, flush=True)
+            return image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
+        feature_dataset = trainset.map(operations=re_order, input_columns=["image", "label"],
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)
