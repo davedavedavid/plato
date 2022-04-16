@@ -211,11 +211,16 @@ class Trainer():
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
         #print("trainset: ",trainset[1][0],flush=True)
-        feature_dataset = ds.GeneratorDataset(dataset, column_names=["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"])
+        column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
+                        "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
+        feature_dataset = ds.GeneratorDataset(dataset, column_names = column_out_names)
+        feature_dataset = feature_dataset.map(operations=None, input_columns=column_out_names,
+                    output_columns=column_out_names, column_order=column_out_names,
+                    num_parallel_workers=min(4, num_parallel_workers), python_multiprocessing=False)
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
-        #data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        print("feature_dataset: ",feature_dataset,flush=True)
-        for i, data in enumerate(feature_dataset):
+        data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        #print("feature_dataset: ",feature_dataset,flush=True)
+        for i, data in enumerate(data_loader):
             print("i: ", i, flush=True)
             logits = data["image"]
             batch_y_true_0 = data["batch_y_true_0"]
