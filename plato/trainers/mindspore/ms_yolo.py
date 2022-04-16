@@ -225,14 +225,14 @@ class Trainer():
                 img_width = la[8], input_shape = la[9]
                 print("input_shape: ", input_shape, flush=True)
             return image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
-        feature_dataset = trainset.map(operations=re_order, input_columns=["image", "label"],
+        feature_dataset = trainset.map(operations=re_order(trainset), input_columns=["image", "label"],
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        #print("feature_dataset: ",feature_dataset,flush=True)
+        print("data_loader: ",data_loader,flush=True)
         for i, data in enumerate(data_loader):
             print("i: ", i, flush=True)
             logits = data["image"]
