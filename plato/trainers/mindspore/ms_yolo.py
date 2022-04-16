@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
-
+import mindspore.dataset.vision.py_transforms as py_vision
 ms.set_seed(1)
 
 class Trainer():
@@ -214,12 +214,8 @@ class Trainer():
         column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
                         "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
-        def re_order(dataset):
-            for image, annotation, batch_y_true_0, batch_y_true_1, \
-                batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
-                img_hight, img_width, input_shape in dataset:
-                print('----image, annotation, batch_y_true_0-----: ', image, annotation, batch_y_true_0, flush=True)
-        feature_dataset = dataset.map(operations=re_order(dataset), input_columns=column_out_names,
+        transform = [py_vision.ToTensor()]
+        feature_dataset = dataset.map(operations=transform, input_columns=column_out_names,
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)

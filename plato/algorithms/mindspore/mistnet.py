@@ -71,7 +71,7 @@ class Algorithm(fedavg.Algorithm):
         img_hight = trainset[1][7]
         img_width = trainset[1][8]
         input_shape = trainset[1][9]
-        #print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
+        print('logit, target: ', image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2,batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape, flush=True)
         return image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, \
                batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
     def train(self, trainset, *args):
@@ -85,6 +85,10 @@ class Algorithm(fedavg.Algorithm):
         dataset= ds.GeneratorDataset(dataset_, column_names=column_out_names)
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         print('----dataset-----: ', dataset, flush=True)
+        for image, annotation, batch_y_true_0, batch_y_true_1, \
+            batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
+            img_hight, img_width, input_shape in dataset:
+            print('----image, annotation, batch_y_true_0-----: ', image, annotation, batch_y_true_0, flush=True)
         self.trainer.train(dataset)
 
 
