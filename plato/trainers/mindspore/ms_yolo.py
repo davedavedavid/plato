@@ -215,17 +215,11 @@ class Trainer():
                         "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
         def re_order(dataset):
-            for im, la in dataset:
-                print("im: ",im, la, flush=True)
-                image = im
-                annotation = la[0], batch_y_true_0 = la[1]
-                batch_y_true_1 = la[2], batch_y_true_2 = la[3]
-                batch_gt_box0 = la[4], batch_gt_box1 = la[5]
-                batch_gt_box2 = la[6], img_hight = la[7]
-                img_width = la[8], input_shape = la[9]
-                print("input_shape: ", input_shape, flush=True)
-            return image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
-        feature_dataset = dataset.map(operations=re_order(dataset), input_columns=["image", "label"],
+            for image, annotation, batch_y_true_0, batch_y_true_1, \
+                batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
+                img_hight, img_width, input_shape in dataset:
+                print('----image, annotation, batch_y_true_0-----: ', image, annotation, batch_y_true_0, flush=True)
+        feature_dataset = dataset.map(operations=re_order(dataset), input_columns=column_out_names,
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)
