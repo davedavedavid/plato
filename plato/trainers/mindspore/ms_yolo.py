@@ -211,7 +211,7 @@ class Trainer():
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
         print("trainset: ",trainset[1][0],flush=True)
-        trainset[0], trainset[1][0],trainset[1][1],trainset[1][2],trainset[1][3],trainset[1][4],trainset[1][5],trainset[1][6],trainset[1][7],trainset[1][8],trainset[1][9] = trainset_
+        trainset_ = trainset[0], trainset[1][0],trainset[1][1],trainset[1][2],trainset[1][3],trainset[1][4],trainset[1][5],trainset[1][6],trainset[1][7],trainset[1][8],trainset[1][9]
         feature_dataset = ds.GeneratorDataset(trainset_, column_names=["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0", "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"])
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         #data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
