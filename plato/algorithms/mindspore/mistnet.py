@@ -61,9 +61,16 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
         image = trainset[0]
-        annotation = trainset[1][0], batch_y_true_0 = trainset[1][1], batch_y_true_1=trainset[1][2]
-        batch_y_true_2 = trainset[1][3], batch_gt_box0 = trainset[1][4], batch_gt_box1 = trainset[1][5]
-        batch_gt_box2 = trainset[1][6], img_hight = trainset[1][7], img_width = trainset[1][8], input_shape = trainset[1][9]
+        annotation = trainset[1][0]
+        batch_y_true_0 = trainset[1][1]
+        batch_y_true_1=trainset[1][2]
+        batch_y_true_2 = trainset[1][3]
+        batch_gt_box0 = trainset[1][4]
+        batch_gt_box1 = trainset[1][5]
+        batch_gt_box2 = trainset[1][6]
+        img_hight = trainset[1][7]
+        img_width = trainset[1][8]
+        input_shape = trainset[1][9]
         #print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
         return image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, \
                batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
