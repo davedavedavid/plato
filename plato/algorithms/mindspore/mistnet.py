@@ -63,17 +63,17 @@ class Algorithm(fedavg.Algorithm):
         logit = trainset[0]
         label = trainset[1]
         print('logit, target', len(trainset[0]), len(trainset[1]), flush=True)
-        yield logit, label
+        return logit, label
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
         Arguments:
         trainset: The training dataset.
         """
-        #dataset = Algorithm.dataset_generator(trainset)
-        dataset= ds.GeneratorDataset(Algorithm.dataset_generator(trainset), column_names=["image", "label"])
+        dataset_ = Algorithm.dataset_generator(trainset)
+        dataset= ds.GeneratorDataset(dataset_, column_names=["image", "label"])
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         print('----dataset-----: ', dataset, flush=True)
-        for img, lab in dataset:
+        for img, lab, _ in dataset:
             print('----img, lab-----: ', img, lab, flush=True)
         self.trainer.train(dataset)
 
