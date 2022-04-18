@@ -85,10 +85,11 @@ class Algorithm(fedavg.Algorithm):
         #                     "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         #d = list(Algorithm.dataset_generator(trainset))
         #print('----d-----: ',d, flush=True)
-        dataset= ds.GeneratorDataset(source=Algorithm.dataset_generator(trainset), column_names=["image", "label"])
+        #column_names = ["image", "label"]
+        dataset= ds.GeneratorDataset(source=trainset, column_names=["data"])
 
-        for image, label in dataset:
-             print('----image, label-----: ', image, label, flush=True)
+        for image in dataset:
+             print('----image-----: ', image, flush=True)
         self.trainer.train(dataset)
 
 
