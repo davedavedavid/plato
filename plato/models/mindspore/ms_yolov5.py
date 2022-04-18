@@ -18,7 +18,7 @@ class Model(nn.Cell):
 
     def load_model_train(self, args):
         default_recurisive_init(self.yolo_network)
-        load_yolov5_params(args, self.yolo_network)
+        #load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
 
         lr = get_lr(args)

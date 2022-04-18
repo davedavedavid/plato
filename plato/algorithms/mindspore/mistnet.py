@@ -89,7 +89,7 @@ class Algorithm(fedavg.Algorithm):
         # img_hight = trainset[1][7]
         # img_width = trainset[1][8]
         # input_shape = trainset[1][9]
-        #print('logit, target: ', image, label, flush=True)
+        print('logit, target: ', image, label, flush=True)
         yield image, label
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
