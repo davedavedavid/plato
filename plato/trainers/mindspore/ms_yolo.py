@@ -224,10 +224,6 @@ class Trainer():
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         print("data_loader: ",data_loader,flush=True)
-        for image, annotation, batch_y_true_0, batch_y_true_1, \
-             batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
-             img_hight, img_width, input_shape in data_loader():
-            print("image, annotation, batch_y_true_0: ",image, annotation, batch_y_true_0, flush=True)
         for i, image, annotation, batch_y_true_0, batch_y_true_1, \
              batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
              img_hight, img_width, input_shape in enumerate(data_loader):
