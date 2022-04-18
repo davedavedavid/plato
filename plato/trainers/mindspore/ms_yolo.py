@@ -219,25 +219,30 @@ class Trainer():
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)
+
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         print("data_loader: ",data_loader,flush=True)
-        for a, b in data_loader.items():
-            print("a,b: ",a ,b, flush=True)
-        for i, im,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10 in enumerate(data_loader.items()):
+        for image, annotation, batch_y_true_0, batch_y_true_1, \
+             batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
+             img_hight, img_width, input_shape in data_loader():
+            print("image, annotation, batch_y_true_0: ",image, annotation, batch_y_true_0, flush=True)
+        for i, image, annotation, batch_y_true_0, batch_y_true_1, \
+             batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
+             img_hight, img_width, input_shape in enumerate(data_loader):
             print("i: ", i, flush=True)
-            logits = im
-            annotation = b1
-            batch_y_true_0 = b2
-            batch_y_true_1 = b3
-            batch_y_true_2 = b4
-            batch_gt_box0 = b5
-            batch_gt_box1 = b6
-            batch_gt_box2 = b7
-            img_hight = b8
-            img_width = b9
-            input_shape = b10
+            logits = image
+            # annotation = b1
+            # batch_y_true_0 = b2
+            # batch_y_true_1 = b3
+            # batch_y_true_2 = b4
+            # batch_gt_box0 = b5
+            # batch_gt_box1 = b6
+            # batch_gt_box2 = b7
+            # img_hight = b8
+            # img_width = b9
+            # input_shape = b10
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
