@@ -46,7 +46,7 @@ class Server(fedavg.Server):
             #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
             feature_dataset_tensor.append(feature_dataset[0])
             feature_dataset_tensor.append([elem for elem in feature_dataset[1]])
-            #print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
+            print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
         else:
             feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature_dataset])
 
