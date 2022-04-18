@@ -78,34 +78,34 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
         image = trainset[0]
-        annotation = trainset[1][0]
-        batch_y_true_0 = trainset[1][1]
-        batch_y_true_1=trainset[1][2]
-        batch_y_true_2 = trainset[1][3]
-        batch_gt_box0 = trainset[1][4]
-        batch_gt_box1 = trainset[1][5]
-        batch_gt_box2 = trainset[1][6]
-        img_hight = trainset[1][7]
-        img_width = trainset[1][8]
-        input_shape = trainset[1][9]
+        label = trainset[1]
+        # annotation = trainset[1][0]
+        # batch_y_true_0 = trainset[1][1]
+        # batch_y_true_1=trainset[1][2]
+        # batch_y_true_2 = trainset[1][3]
+        # batch_gt_box0 = trainset[1][4]
+        # batch_gt_box1 = trainset[1][5]
+        # batch_gt_box2 = trainset[1][6]
+        # img_hight = trainset[1][7]
+        # img_width = trainset[1][8]
+        # input_shape = trainset[1][9]
         #print('logit, target: ', image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2,batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape, flush=True)
-        yield image, annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, \
-               batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
+        yield image, label #annotation, batch_y_true_0, batch_y_true_1, batch_y_true_2, \
+        #        batch_gt_box0, batch_gt_box1, batch_gt_box2, img_hight, img_width, input_shape
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
         Arguments:
         trainset: The training dataset.
         """
-        column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
-                            "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
+        # column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
+        #                     "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
+        column_out_names = ["image", "label"]
         #print('----list(Algorithm.dataset_generator(trainset))-----: ', list(Algorithm.dataset_generator(trainset)), flush=True)
         dataset= ds.GeneratorDataset(list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
         #feature_dataset = feature_dataset.batch(batch_size, num_parallel_workers=min(4, num_parallel_workers), drop_remainder=True)
         #print('----dataset-----: ', dataset, flush=True)
-        # for image, annotation, batch_y_true_0, batch_y_true_1, \
-        #     batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
-        #     img_hight, img_width, input_shape in dataset:
-        #     print('----image, annotation, batch_y_true_0-----: ', image, annotation, batch_y_true_0, flush=True)
+        for image, label in dataset:
+            print('----image, label-----: ', image, label, flush=True)
         self.trainer.train(dataset)
 
 

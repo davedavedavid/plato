@@ -211,11 +211,12 @@ class Trainer():
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
 
-        column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
-                        "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
+        # column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
+        #                 "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
+        column_out_names = ["image","label"]
         #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
         transform = [py_vision.ToTensor()]
-        feature_dataset = dataset.map(operations=transform, input_columns=column_out_names,
+        feature_dataset = dataset.map(operations=transform, input_columns=["image"],
                                               output_columns=column_out_names, column_order=column_out_names,
                                               num_parallel_workers=min(4, num_parallel_workers),
                                               python_multiprocessing=False)
@@ -224,11 +225,10 @@ class Trainer():
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         print("data_loader: ",data_loader,flush=True)
-        for i, image, annotation, batch_y_true_0, batch_y_true_1, \
-             batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, \
-             img_hight, img_width, input_shape in enumerate(data_loader):
+        for i, data in enumerate(data_loader):
             print("i: ", i, flush=True)
-            logits = image
+            logits = data["image"]
+            print("logits: ", logits, flush=True)
             # annotation = b1
             # batch_y_true_0 = b2
             # batch_y_true_1 = b3
