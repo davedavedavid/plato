@@ -222,7 +222,7 @@ class Trainer():
         feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        print("data_loader: ",data_loader.image,flush=True)
+        print("data_loader: ",data_loader,flush=True)
         for a, b in data_loader.items():
             print("a,b: ",a ,b, flush=True)
         for i, im,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10 in enumerate(data_loader.items()):
