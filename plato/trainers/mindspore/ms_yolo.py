@@ -223,18 +223,19 @@ class Trainer():
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         print("data_loader: ",data_loader,flush=True)
-        for i, data in enumerate(data_loader):
+        for i, im,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10 in enumerate(data_loader):
             print("i: ", i, flush=True)
-            logits = data["image"]
-            batch_y_true_0 = data["batch_y_true_0"]
-            batch_y_true_1 = data["batch_y_true_1"]
-            batch_y_true_2 = data["batch_y_true_2"]
-            batch_gt_box0 = data["batch_gt_box0"]
-            batch_gt_box1 = data["batch_gt_box2"]
-            batch_gt_box2 = data["batch_gt_box2"]
-            img_hight = data["img_hight"]
-            img_width = data["img_width"]
-            input_shape = data["input_shape"]
+            logits = im
+            annotation = b1
+            batch_y_true_0 = b2
+            batch_y_true_1 = b3
+            batch_y_true_2 = b4
+            batch_gt_box0 = b5
+            batch_gt_box1 = b6
+            batch_gt_box2 = b7
+            img_hight = b8
+            img_width = b9
+            input_shape = b10
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
