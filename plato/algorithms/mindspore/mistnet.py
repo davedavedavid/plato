@@ -89,8 +89,8 @@ class Algorithm(fedavg.Algorithm):
         #column_names = ["image", "label"]
         dataset= ds.GeneratorDataset(source=trainset, column_names=["data"])
 
-        for d,f in dataset:
-            print('----d-----: ', d, f, flush=True)
+        # for d,f in dataset:
+        #     print('----d-----: ', d, f, flush=True)
 
         self.trainer.train(dataset)
 
