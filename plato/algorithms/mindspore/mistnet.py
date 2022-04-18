@@ -60,9 +60,10 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        print('trainset: ', trainset, len(trainset), flush=True)
-        image = trainset[0]
-        label = trainset[1]
+        #print('trainset: ', trainset, len(trainset), flush=True)
+        for i in range(len(trainset)):
+            image = trainset[i]
+            label = trainset[i+1]
         # annotation = trainset[1][0]
         # batch_y_true_0 = trainset[1][1]
         # batch_y_true_1=trainset[1][2]
@@ -74,7 +75,7 @@ class Algorithm(fedavg.Algorithm):
         # img_width = trainset[1][8]
         # input_shape = trainset[1][9]
         #print('logit, target: ', image, label, flush=True)
-        yield image, label
+            yield image, label
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
         Arguments:
@@ -82,12 +83,12 @@ class Algorithm(fedavg.Algorithm):
         """
         # column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
         #                     "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        d = list(Algorithm.dataset_generator(trainset))
-        print('----d-----: ',d, flush=True)
-        dataset= ds.GeneratorDataset(d, column_names=["image", "label"])
+        #d = list(Algorithm.dataset_generator(trainset))
+        #print('----d-----: ',d, flush=True)
+        dataset= ds.GeneratorDataset(source=Algorithm.dataset_generator(trainset), column_names=["image", "label"])
 
-        # for image, label in dataset:
-        #     print('----image, label-----: ', image, label, flush=True)
+        for image, label in dataset:
+             print('----image, label-----: ', image, label, flush=True)
         self.trainer.train(dataset)
 
 
