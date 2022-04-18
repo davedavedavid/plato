@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from mindspore.ops import operations as P
-import mindspore.dataset.vision.py_transforms as py_vision
+
 ms.set_seed(1)
 
 class Trainer():
@@ -215,18 +215,18 @@ class Trainer():
         #                 "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         column_out_names = ["image","label"]
         #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
-        transform = [py_vision.ToTensor()]
-        feature_dataset = dataset.map(operations=transform, input_columns=["image"],
-                                              output_columns=column_out_names, column_order=column_out_names,
-                                              num_parallel_workers=min(4, num_parallel_workers),
-                                              python_multiprocessing=False)
 
-        feature_dataset = feature_dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
+        # feature_dataset = dataset.map(operations=transform, input_columns=["image"],
+        #                                       output_columns=column_out_names, column_order=column_out_names,
+        #                                       num_parallel_workers=min(4, num_parallel_workers),
+        #                                       python_multiprocessing=False)
+
+        feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         print("data_loader: ",data_loader,flush=True)
         for i, data in enumerate(data_loader):
-            print("i: ", i, flush=True)
+            print("i: ", i, data, flush=True)
             logits = data["image"]
             print("logits: ", logits, flush=True)
             # annotation = b1
