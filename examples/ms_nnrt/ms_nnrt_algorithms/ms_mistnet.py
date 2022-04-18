@@ -55,8 +55,8 @@ class Algorithm(ms_fedavg.Algorithm):
         # for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
-            img_hight = input_size[0] * 2
-            img_wight = input_size[1] * 2
+            img_hight = input_size[0]
+            img_wight = input_size[1]
             input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
