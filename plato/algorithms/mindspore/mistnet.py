@@ -60,10 +60,9 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        for image, label in trainset:
-            print('logit, target: ', image, label, flush=True)
-        #image = trainset[0]
-        #label = trainset[1]
+        print('trainset: ', trainset, len(trainset), flush=True)
+        image = trainset[0]
+        label = trainset[1]
         # annotation = trainset[1][0]
         # batch_y_true_0 = trainset[1][1]
         # batch_y_true_1=trainset[1][2]
@@ -75,7 +74,7 @@ class Algorithm(fedavg.Algorithm):
         # img_width = trainset[1][8]
         # input_shape = trainset[1][9]
         #print('logit, target: ', image, label, flush=True)
-            yield image, label
+        yield image, label
     def train(self, trainset, *args):
         """The main training loop used in the MistNet server.
         Arguments:
