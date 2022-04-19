@@ -58,7 +58,7 @@ class Server(fedavg.Server):
 
         # Test the updated model
         if not Config().clients.do_test:
-            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
+            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset))
             logging.info('[Server #{:d}] Finish testing model.'.format(os.getpid()))
             # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
             #     os.getpid(), 100 * self.accuracy))

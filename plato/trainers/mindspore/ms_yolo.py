@@ -215,17 +215,17 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         for i, data in enumerate(data_loader):
-            logits = Tensor.from_numpy(data["image"], ms.float16)
+            logits = Tensor(data["image"], ms.float16)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
-            batch_y_true_0 = Tensor.from_numpy(data["batch_y_true_0"], ms.float16)
-            batch_y_true_1 = Tensor.from_numpy(data["batch_y_true_1"], ms.float16)
-            batch_y_true_2 = Tensor.from_numpy(data["batch_y_true_2"], ms.float16)
-            batch_gt_box0 = Tensor.from_numpy(data["batch_gt_box0"], ms.float16)
-            batch_gt_box1 = Tensor.from_numpy(data["batch_gt_box1"], ms.float16)
-            batch_gt_box2 = Tensor.from_numpy(data["batch_gt_box2"], ms.float16)
+            batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float16)
+            batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float16)
+            batch_y_true_2 = Tensor(data["batch_y_true_2"], ms.float16)
+            batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float16)
+            batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float16)
+            batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float16)
             img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
             img_width = int(data["img_width"])
-            input_shape = Tensor.from_numpy(data["input_shape"], ms.float16)
+            input_shape = Tensor(data["input_shape"], ms.float16)
 
             print("logits: ", logits, logits.shape, flush=True)
             print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
