@@ -77,22 +77,14 @@ class Algorithm(fedavg.Algorithm):
             yield image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
                   batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape
     def train(self, trainset, *args):
-        """The main training loop used in the MistNet server.
-        Arguments:
-        trainset: The training dataset.
-        """
-
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        #d = list(Algorithm.dataset_generator(trainset))
         #print('----trainset-----: ',trainset, len(trainset), type(trainset), flush=True)
-        #column_names = ["image", "label"]
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
 
-        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
-            print('----image,annotation, batch_y_true_0-----: ', image,annotation, batch_y_true_0, flush=True)
-
+        # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+        #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
+        #     print('----image,annotation, batch_y_true_0-----: ', image,annotation, batch_y_true_0, flush=True)
         self.trainer.train(dataset)
 
 

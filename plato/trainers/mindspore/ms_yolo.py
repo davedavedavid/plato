@@ -75,9 +75,9 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=300,
+            parser.add_argument('--max_epoch', type=int, default=10,
                                 help='Max epoch num to train the model. Default: 320')
-            parser.add_argument('--warmup_epochs', default=20, type=float, help='Warmup epochs. Default: 0')
+            parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
                                 help='Weight decay factor. Default: 0.0005')
             parser.add_argument('--momentum', type=float, default=0.9, help='Momentum. Default: 0.9')
@@ -210,35 +210,26 @@ class Trainer():
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
 
-        # column_out_names = ["image","annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2", "batch_gt_box0",
-        #                 "batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        column_out_names = ["image","label"]
-        #feature_dataset= ds.GeneratorDataset(dataset, column_names=["image", "label"])
-
-        # feature_dataset = dataset.map(operations=transform, input_columns=["image"],
-        #                                       output_columns=column_out_names, column_order=column_out_names,
-        #                                       num_parallel_workers=min(4, num_parallel_workers),
-        #                                       python_multiprocessing=False)
-
         feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        print("data_loader: ",data_loader,flush=True)
+
         for i, data in enumerate(data_loader):
-            print("i: ", i, data, flush=True)
-            logits = Tensor.from_numpy(data["image"])
-            # annotation = b1
-            batch_y_true_0 = Tensor.from_numpy(data["batch_y_true_0"])
-            batch_y_true_1 = Tensor.from_numpy(data["batch_y_true_1"])
-            batch_y_true_2 = Tensor.from_numpy(data["batch_y_true_2"])
-            batch_gt_box0 = Tensor.from_numpy(data["batch_gt_box0"])
-            batch_gt_box1 = Tensor.from_numpy(data["batch_gt_box1"])
-            batch_gt_box2 = Tensor.from_numpy(data["batch_gt_box2"])
+            logits = Tensor.from_numpy(data["image"], ms.float16)
+            # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
+            batch_y_true_0 = Tensor.from_numpy(data["batch_y_true_0"], ms.float16)
+            batch_y_true_1 = Tensor.from_numpy(data["batch_y_true_1"], ms.float16)
+            batch_y_true_2 = Tensor.from_numpy(data["batch_y_true_2"], ms.float16)
+            batch_gt_box0 = Tensor.from_numpy(data["batch_gt_box0"], ms.float16)
+            batch_gt_box1 = Tensor.from_numpy(data["batch_gt_box1"], ms.float16)
+            batch_gt_box2 = Tensor.from_numpy(data["batch_gt_box2"], ms.float16)
             img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
             img_width = int(data["img_width"])
-            input_shape = Tensor.from_numpy(data["input_shape"])
+            input_shape = Tensor.from_numpy(data["input_shape"], ms.float16)
 
-
+            print("logits: ", logits, logits.shape, flush=True)
+            print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
+            print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             print("loss: ", loss, flush=True)
