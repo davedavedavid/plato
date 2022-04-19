@@ -30,7 +30,6 @@ from mindspore.train.callback import _InternalCallbackParam, CheckpointConfig
 from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
-from mindspore.ops import operations as P
 
 ms.set_seed(1)
 
@@ -227,18 +226,18 @@ class Trainer():
         print("data_loader: ",data_loader,flush=True)
         for i, data in enumerate(data_loader):
             print("i: ", i, data, flush=True)
-            logits = data["image"]
-            print("logits: ", logits, flush=True)
+            logits = Tensor.from_numpy(data["image"])
             # annotation = b1
-            # batch_y_true_0 = b2
-            # batch_y_true_1 = b3
-            # batch_y_true_2 = b4
-            # batch_gt_box0 = b5
-            # batch_gt_box1 = b6
-            # batch_gt_box2 = b7
-            # img_hight = b8
-            # img_width = b9
-            # input_shape = b10
+            batch_y_true_0 = Tensor.from_numpy(data["batch_y_true_0"])
+            batch_y_true_1 = Tensor.from_numpy(data["batch_y_true_1"])
+            batch_y_true_2 = Tensor.from_numpy(data["batch_y_true_2"])
+            batch_gt_box0 = Tensor.from_numpy(data["batch_gt_box0"])
+            batch_gt_box1 = Tensor.from_numpy(data["batch_gt_box1"])
+            batch_gt_box2 = Tensor.from_numpy(data["batch_gt_box2"])
+            img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
+            img_width = int(data["img_width"])
+            input_shape = Tensor.from_numpy(data["input_shape"])
+
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
