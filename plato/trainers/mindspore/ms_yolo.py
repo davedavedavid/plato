@@ -30,7 +30,8 @@ from mindspore.train.callback import _InternalCallbackParam, CheckpointConfig
 from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
-
+import mindspore.numpy as np
+from mindspore.common import dtype as mstype
 ms.set_seed(1)
 
 class Trainer():
@@ -225,7 +226,7 @@ class Trainer():
             batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
             img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
             img_width = int(data["img_width"])
-            input_shape = Tensor(data["input_shape"], ms.float32)
+            input_shape = np.asarray(data["input_shape"], dtype= mstype.float32)
 
             print("logits: ", logits, logits.shape, flush=True)
             print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
