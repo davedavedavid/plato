@@ -186,7 +186,7 @@ class YOLOv5Backbone_to(nn.Cell):
         #img_hight = P.Shape()(x)[2] * 2
         #img_width = P.Shape()(x)[3] * 2
         input_shape = F.shape(x)[2:4]
-        input_shape = F.cast(self.tenser_to_array(input_shape) * 2, ms.float16)
+        input_shape = F.cast(self.tenser_to_array(input_shape) * 2, ms.float32)
 
         fcs = self.focusv2(x)
         cv1 = self.conv1(fcs)

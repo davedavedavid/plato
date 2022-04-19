@@ -145,7 +145,7 @@ class DetectionBlock(nn.Cell):
             self.offset_x_y = 0.025
         else:
             raise KeyError("Invalid scale value for DetectionBlock")
-        self.anchors = Tensor([self.config.anchor_scales[i] for i in idx], ms.float16)
+        self.anchors = Tensor([self.config.anchor_scales[i] for i in idx], ms.float32)
         self.num_anchors_per_scale = 3
         self.num_attrib = 4 + 1 + self.config.num_classes
         self.lambda_coord = 1
@@ -171,8 +171,8 @@ class DetectionBlock(nn.Cell):
 
         range_x = range(grid_size[1])
         range_y = range(grid_size[0])
-        grid_x = P.Cast()(F.tuple_to_array(range_x), ms.float16)
-        grid_y = P.Cast()(F.tuple_to_array(range_y), ms.float16)
+        grid_x = P.Cast()(F.tuple_to_array(range_x), ms.float32)
+        grid_y = P.Cast()(F.tuple_to_array(range_y), ms.float32)
         # Tensor of shape [grid_size[0], grid_size[1], 1, 1] representing the coordinate of x/y axis for each grid
         # [batch, gridx, gridy, 1, 1]
         grid_x = self.tile(self.reshape(grid_x, (1, 1, -1, 1, 1)), (1, grid_size[0], 1, 1, 1))
@@ -188,7 +188,7 @@ class DetectionBlock(nn.Cell):
         # gridsize1 is x
         # gridsize0 is y
         box_xy = (self.scale_x_y * self.sigmoid(box_xy) - self.offset_x_y + grid) / \
-                 P.Cast()(F.tuple_to_array((grid_size[1], grid_size[0])), ms.float16)
+                 P.Cast()(F.tuple_to_array((grid_size[1], grid_size[0])), ms.float32)
         # box_wh is w->h
         box_wh = P.Exp()(box_wh) * self.anchors / input_shape
         box_confidence = self.sigmoid(box_confidence)
@@ -253,8 +253,8 @@ class YoloLossBlock(nn.Cell):
             idx = (6, 7, 8)
         else:
             raise KeyError("Invalid scale value for DetectionBlock")
-        self.anchors = Tensor([self.config.anchor_scales[i] for i in idx], ms.float16)
-        self.ignore_threshold = Tensor(self.config.ignore_threshold, ms.float16)
+        self.anchors = Tensor([self.config.anchor_scales[i] for i in idx], ms.float32)
+        self.ignore_threshold = Tensor(self.config.ignore_threshold, ms.float32)
         self.concat = P.Concat(axis=-1)
         self.iou = Iou()
         self.reduce_max = P.ReduceMax(keep_dims=False)
@@ -277,7 +277,7 @@ class YoloLossBlock(nn.Cell):
         true_boxes = y_true[:, :, :, :, :4]
 
         grid_shape = P.Shape()(prediction)[1:3]
-        grid_shape = P.Cast()(F.tuple_to_array(grid_shape[::-1]), ms.float16)
+        grid_shape = P.Cast()(F.tuple_to_array(grid_shape[::-1]), ms.float32)
 
         pred_boxes = self.concat((pred_xy, pred_wh))
         true_wh = y_true[:, :, :, :, 2:4]
@@ -301,7 +301,7 @@ class YoloLossBlock(nn.Cell):
 
         # ignore_mask IOU too small
         ignore_mask = best_iou < self.ignore_threshold
-        ignore_mask = P.Cast()(ignore_mask, ms.float16)
+        ignore_mask = P.Cast()(ignore_mask, ms.float32)
         ignore_mask = P.ExpandDims()(ignore_mask, -1)
         # ignore_mask backpro will cause a lot maximunGrad and minimumGrad time consume.
         # so we turn off its gradient
@@ -466,9 +466,9 @@ class Giou(nn.Cell):
         union = box_p_area + box_gt_area - intersection
         union = union + self.eps
         c_area = c_area + self.eps
-        iou = self.div(self.cast(intersection, ms.float16), self.cast(union, ms.float16))
+        iou = self.div(self.cast(intersection, ms.float32), self.cast(union, ms.float32))
         res_mid0 = c_area - union
-        res_mid1 = self.div(self.cast(res_mid0, ms.float16), self.cast(c_area, ms.float16))
+        res_mid1 = self.div(self.cast(res_mid0, ms.float32), self.cast(c_area, ms.float32))
         giou = iou - res_mid1
         giou = C.clip_by_value(giou, -1.0, 1.0)
         return giou
