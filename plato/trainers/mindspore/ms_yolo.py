@@ -226,7 +226,7 @@ class Trainer():
             batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
             img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
             img_width = int(data["img_width"])
-            input_shape = np.asarray(data["input_shape"], dtype= mstype.float32)
+            input_shape = Tensor(data["input_shape"], ms.float32)
 
             print("logits: ", logits, logits.shape, flush=True)
             print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
