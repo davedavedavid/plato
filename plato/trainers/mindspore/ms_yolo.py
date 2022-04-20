@@ -76,7 +76,7 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=10,
+            parser.add_argument('--max_epoch', type=int, default=200,
                                 help='Max epoch num to train the model. Default: 320')
             parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
@@ -231,10 +231,10 @@ class Trainer():
             img_width = int(data["img_width"])
             input_shape = Tensor(data["input_shape"], ms.float32)
 
-            print("logits: ", logits, logits.shape, flush=True)
-            print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
-            print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
-            print("input_shape: ", input_shape, type(input_shape), img_hight, flush=True)
+            #print("logits: ", logits, logits.shape, flush=True)
+            #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
+            #print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
+            #print("input_shape: ", input_shape, type(input_shape), img_hight, flush=True)
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             print("loss: ", loss, flush=True)
