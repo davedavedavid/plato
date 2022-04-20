@@ -31,9 +31,10 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
+from plato.trainers.mindspore import basic
 ms.set_seed(1)
 
-class Trainer():
+class Trainer(basic.Trainer):
     """The YOLOV5 trainer."""
     def __init__(self, model=None):
         super().__init__()
@@ -189,15 +190,16 @@ class Trainer():
         lr = get_lr(args)
         network_t.load_model_train(args, lr)
 
+        #def save_model(self, filename=None):
         if args.rank_save_ckpt_flag:
             # checkpoint save
             ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval
             ckpt_config = CheckpointConfig(save_checkpoint_steps=args.ckpt_interval,
-                                           keep_checkpoint_max=ckpt_max_num)
+                                            keep_checkpoint_max=ckpt_max_num)
             save_ckpt_path = os.path.join(args.outputs_dir, 'ckpt_' + str(args.rank) + '/')
             ckpt_cb = ModelCheckpoint(config=ckpt_config,
-                                      directory=save_ckpt_path,
-                                      prefix='{}'.format(args.rank))
+                                          directory=save_ckpt_path,
+                                          prefix='{}'.format(args.rank))
 
             cb_params = _InternalCallbackParam()
             cb_params.train_network = network_t
