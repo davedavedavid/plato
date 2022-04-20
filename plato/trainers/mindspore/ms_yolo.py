@@ -216,7 +216,7 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         for i, data in enumerate(data_loader):
-            logits = Tensor(data["image"], ms.float16)
+            logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
             batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float32)
