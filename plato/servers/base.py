@@ -404,7 +404,7 @@ class Server:
     async def close(self):
         """Closing the server."""
         logging.info("[Server #%d] Training concluded.", os.getpid())
-        self.trainer.save_model()
+        #self.trainer.save_model()
         
         model_dir = Config().params['model_dir']
         model_name = Config().trainer.model_name
