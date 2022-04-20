@@ -30,8 +30,7 @@ from mindspore.train.callback import _InternalCallbackParam, CheckpointConfig
 from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
-import mindspore.numpy as np
-from mindspore.common import dtype as mstype
+from packages.ms_yolov5.src.lr_scheduler import get_lr
 ms.set_seed(1)
 
 class Trainer():
@@ -187,7 +186,9 @@ class Trainer():
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model
-        network_t.load_model_train(args)
+        lr = get_lr(args)
+        network_t.load_model_train(args, lr)
+
         if args.rank_save_ckpt_flag:
             # checkpoint save
             ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval
