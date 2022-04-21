@@ -2,7 +2,6 @@ import argparse
 from packages.ms_yolov5.src.yolo import YOLOV5s, YoloWithLossCell, TrainingWrapper
 from packages.ms_yolov5.src.yolov5_backbone import YOLOv5Backbone_to
 from packages.ms_yolov5.src.initializer import default_recurisive_init, load_yolov5_params
-#from packages.ms_yolov5.src.lr_scheduler import get_lr
 from packages.ms_yolov5.src.util import AverageMeter, get_param_groups
 from mindspore.nn.optim.momentum import Momentum
 from mindspore import Tensor
@@ -14,12 +13,12 @@ class Model(nn.Cell):
 
         self.network_to = YOLOv5Backbone_to()
 
-        self.yolo_network = YOLOV5s(is_training=True)
+        self.network_from = YOLOV5s(is_training=True)
 
     def load_model_train(self, args, lr):
-        default_recurisive_init(self.yolo_network)
-        #load_yolov5_params(args, self.yolo_network)
-        self.network_from = YoloWithLossCell(self.yolo_network)
+        default_recurisive_init(self.network_from)
+        load_yolov5_params(args, self.network_from)
+        self.network_from = YoloWithLossCell(self.network_from)
 
         #lr = get_lr(args)
 

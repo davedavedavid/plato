@@ -189,7 +189,11 @@ def load_yolov5_params(args, network):
                 continue
             elif key.startswith('yolo_network.'):
             #elif key.startswith('network_from.'):
-                if key.startswith('yolo_network.feature_map.backblock') or key.startswith('yolo_network.feature_map.backbone.focusv2') or key.startswith('yolo_network.feature_map.backbone.conv1')or key.startswith('yolo_network.feature_map.backbone.C31')or key.startswith('yolo_network.feature_map.backbone.conv2'):
+                if key.startswith('yolo_network.feature_map.backblock') or \
+                        key.startswith('yolo_network.feature_map.backbone.focusv2') or \
+                        key.startswith('yolo_network.feature_map.backbone.conv1')or \
+                        key.startswith('yolo_network.feature_map.backbone.C31')or \
+                        key.startswith('yolo_network.feature_map.backbone.conv2'):
                     continue
                 else:
                     param_dict_new[key[13:]] = values
