@@ -190,7 +190,9 @@ class Trainer():
         lr = get_lr(args)
         network_t.load_model_train(args, lr)
         network_t.set_train()
-        #def save_model(self, filename=None):
+        for param in network_t.trainable_params():
+            #param.requires_grad = False
+            print(param)
         if args.rank_save_ckpt_flag:
             # checkpoint save
             ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval

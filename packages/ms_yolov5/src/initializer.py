@@ -178,7 +178,7 @@ def default_recurisive_init(custom_cell):
         elif isinstance(cell, (nn.BatchNorm2d, nn.BatchNorm1d)):
             pass
 
-def load_yolov5_params(args, network):
+def load_yolov5_params(args, network_t, network_f):
     """Load yolov5 backbone parameter from checkpoint."""
     if args.resume_yolov5:
         param_dict = load_checkpoint(args.resume_yolov5)
@@ -188,12 +188,11 @@ def load_yolov5_params(args, network):
             if key.startswith('moments.'):
                 continue
             elif key.startswith('yolo_network.'):
-            #elif key.startswith('network_from.'):
-                if key.startswith('yolo_network.feature_map.backblock') or \
-                        key.startswith('yolo_network.feature_map.backbone.focusv2') or \
-                        key.startswith('yolo_network.feature_map.backbone.conv1')or \
-                        key.startswith('yolo_network.feature_map.backbone.C31')or \
-                        key.startswith('yolo_network.feature_map.backbone.conv2'):
+                if key.startswith('yolo_network.feature_map.backblock'): #or \
+                        #key.startswith('yolo_network.feature_map.backbone.focusv2') or \
+                        #key.startswith('yolo_network.feature_map.backbone.conv1')or \
+                        #key.startswith('yolo_network.feature_map.backbone.C31')or \
+                        #key.startswith('yolo_network.feature_map.backbone.conv2'):
                     continue
                 else:
                     param_dict_new[key[13:]] = values
@@ -202,5 +201,6 @@ def load_yolov5_params(args, network):
                 param_dict_new[key] = values
                 args.logger.info('in resume {}'.format(key))
         args.logger.info('resume finished')
-        load_param_into_net(network, param_dict_new)
+        load_param_into_net(network_t, param_dict_new)
+        load_param_into_net(network_f, param_dict_new)
         args.logger.info('load_model {} success'.format(args.resume_yolov5))

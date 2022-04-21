@@ -13,12 +13,13 @@ class Model(nn.Cell):
 
         self.network_to = YOLOv5Backbone_to()
 
-        self.network_from = YOLOV5s(is_training=True)
+        self.yolo_network = YOLOV5s(is_training=True)
 
     def load_model_train(self, args, lr):
-        default_recurisive_init(self.network_from)
-        load_yolov5_params(args, self.network_from)
-        self.network_from = YoloWithLossCell(self.network_from)
+        default_recurisive_init(self.network_to)
+        default_recurisive_init(self.yolo_network)
+        load_yolov5_params(args, self.network_to, self.yolo_network)
+        self.network_from = YoloWithLossCell(self.yolo_network)
 
         #lr = get_lr(args)
 
