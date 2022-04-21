@@ -202,7 +202,7 @@ class Config:
         config['clients'] = {}
         config['clients']['type'] = 'simple'
         config['clients']['total_clients'] = 1
-        config['clients']['per_round'] = 1
+        config['clients']['per_round'] = 100
         config['clients']['do_test'] = True
         config['server'] = {}
         config['server']['address'] = '127.0.0.1'
