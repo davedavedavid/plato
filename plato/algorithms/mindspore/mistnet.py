@@ -73,18 +73,15 @@ class Algorithm(fedavg.Algorithm):
             img_hight = trainset[i][1][7]
             img_width = trainset[i][1][8]
             input_shape = trainset[i][1][9]
-        #print('logit, target: ', image, label, flush=True)
             yield image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
                   batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape
+
     def train(self, trainset, *args):
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         #print('----trainset-----: ',trainset, len(trainset), type(trainset), flush=True)
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
 
-        # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-        #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
-        #     print('----image,annotation, batch_y_true_0-----: ', image,annotation, batch_y_true_0, flush=True)
         self.trainer.train(dataset)
 
 
