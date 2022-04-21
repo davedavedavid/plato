@@ -67,7 +67,7 @@ class Trainer():
             # optimizer and lr related
             parser.add_argument('--lr_scheduler', default='cosine_annealing', type=str,
                                 help='Learning rate scheduler, options: exponential, cosine_annealing. Default: exponential')
-            parser.add_argument('--lr', default=0.013, type=float, help='Learning rate. Default: 0.01')
+            parser.add_argument('--lr', default=0.0005, type=float, help='Learning rate. Default: 0.01')
             parser.add_argument('--lr_epochs', type=str, default='220,250',
                                 help='Epoch of changing of lr changing, split with ",". Default: 220,250')
             parser.add_argument('--lr_gamma', type=float, default=0.1,
