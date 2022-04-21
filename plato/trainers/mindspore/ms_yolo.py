@@ -90,7 +90,7 @@ class Trainer():
                                 help='Smooth strength of original one-hot. Default: 0.1')
             # logging related
             parser.add_argument('--log_interval', type=int, default=100, help='Logging interval steps. Default: 100')
-            parser.add_argument('--ckpt_path', type=str, default='outputs/',
+            parser.add_argument('--ckpt_path', type=str, default='/home/data/pretrained/',
                                 help='Checkpoint save location. Default: outputs/')
             parser.add_argument('--ckpt_interval', type=int, default=100, help='Save checkpoint interval. Default: 10')
             parser.add_argument('--is_save_on_master', type=int, default=1,
