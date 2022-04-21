@@ -178,7 +178,7 @@ def default_recurisive_init(custom_cell):
         elif isinstance(cell, (nn.BatchNorm2d, nn.BatchNorm1d)):
             pass
 
-def load_yolov5_params(args, network_t, network_f):
+def load_yolov5_params(args, network):
     """Load yolov5 backbone parameter from checkpoint."""
     if args.resume_yolov5:
         param_dict = load_checkpoint(args.resume_yolov5)
@@ -201,6 +201,5 @@ def load_yolov5_params(args, network_t, network_f):
                 param_dict_new[key] = values
                 args.logger.info('in resume {}'.format(key))
         args.logger.info('resume finished')
-        load_param_into_net(network_t, param_dict_new)
-        load_param_into_net(network_f, param_dict_new)
+        load_param_into_net(network, param_dict_new)
         args.logger.info('load_model {} success'.format(args.resume_yolov5))
