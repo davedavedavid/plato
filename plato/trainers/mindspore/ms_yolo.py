@@ -189,7 +189,7 @@ class Trainer():
         network_t = self.model
         lr = get_lr(args)
         network_t.load_model_train(args, lr)
-
+        network_t.set_train()
         #def save_model(self, filename=None):
         if args.rank_save_ckpt_flag:
             # checkpoint save
@@ -219,6 +219,7 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
 
         for i, data in enumerate(data_loader):
+            print("i: ", i, flush=True)
             logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
@@ -234,10 +235,10 @@ class Trainer():
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
             #print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
-            print("input_shape: ", input_shape, type(input_shape), img_hight, flush=True)
+            #print("input_shape: ", input_shape, type(input_shape), img_hight, flush=True)
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
-            print("loss: ", loss, flush=True)
+            #print("loss: ", loss, flush=True)
             loss_meter.update(loss.asnumpy())
 
             if args.rank_save_ckpt_flag:
