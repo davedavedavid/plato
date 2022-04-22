@@ -52,7 +52,6 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):
-        # for inputs, targets, *__ in dataset:
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
             img_hight = input_size[0]
@@ -61,7 +60,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            print('size ', size,type(size), flush=True)
+            #print('size ', size,type(size), flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
 
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
@@ -73,17 +72,12 @@ class Algorithm(ms_fedavg.Algorithm):
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            # logging.info('inputs.shape:', inputs.shape)
             logits = self.model.forward(inputs)
-            # logging.info('inputs.shape:', logits.shape)
             logits = np.reshape(logits, features_shape)
             # np.save("/home/data/model/test_feat.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
 
-            # count += 1
-            # logging.info("[Client #%d] Extracting %d features from %s examples.",
-            #         self.client_id, count, len(dataset))
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
                 logits = unary_encoding.encode(logits)
@@ -107,7 +101,7 @@ class Algorithm(ms_fedavg.Algorithm):
                      self.client_id, len(feature_dataset))
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
-        print('feature_dataset: ', len(feature_dataset), feature_dataset,  flush=True)
+        #print('feature_dataset: ', len(feature_dataset), feature_dataset,  flush=True)
         return feature_dataset
 
     def features_shape(self):
