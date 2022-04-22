@@ -9,7 +9,7 @@ import mindspore.nn as nn
 
 class Model(nn.Cell):
     def __init__(self, args=None):
-        super(Model, self).__init__()
+        super(Model, self).__init__(auto_prefix = False)
 
         self.network_to = YOLOv5Backbone_to()
 
