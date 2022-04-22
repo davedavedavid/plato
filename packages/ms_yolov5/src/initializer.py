@@ -180,6 +180,8 @@ def default_recurisive_init(custom_cell):
 
 def load_yolov5_params(args, network):
     """Load yolov5 backbone parameter from checkpoint."""
+    for param in network.trainable_params():
+        print("-------",param)
     if args.resume_yolov5:
         param_dict = load_checkpoint(args.resume_yolov5)
         #print(param_dict)
@@ -188,11 +190,7 @@ def load_yolov5_params(args, network):
             if key.startswith('moments.'):
                 continue
             elif key.startswith('yolo_network.'):
-                if key.startswith('yolo_network.feature_map.backblock'): #or \
-                        #key.startswith('yolo_network.feature_map.backbone.focusv2') or \
-                        #key.startswith('yolo_network.feature_map.backbone.conv1')or \
-                        #key.startswith('yolo_network.feature_map.backbone.C31')or \
-                        #key.startswith('yolo_network.feature_map.backbone.conv2'):
+                if key.startswith('yolo_network.feature_map.backblock'):
                     continue
                 else:
                     param_dict_new[key[13:]] = values
