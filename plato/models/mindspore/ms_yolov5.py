@@ -1,4 +1,3 @@
-import argparse
 from packages.ms_yolov5.src.yolo import YOLOV5s, YoloWithLossCell, TrainingWrapper
 from packages.ms_yolov5.src.yolov5_backbone import YOLOv5Backbone_to
 from packages.ms_yolov5.src.initializer import default_recurisive_init, load_yolov5_params
@@ -20,8 +19,6 @@ class Model(nn.Cell):
         load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
 
-        #lr = get_lr(args)
-
         opt = Momentum(params=get_param_groups(self.network_from),
                        learning_rate=Tensor(lr),
                        momentum=args.momentum,
@@ -29,8 +26,6 @@ class Model(nn.Cell):
                        loss_scale=args.loss_scale)
 
         self.network_from = TrainingWrapper(self.network_from, opt, args.loss_scale // 2)
-        #self.network_from.set_train()
-        #print('load network_from.', self.network_from, flush=True)
 
     def forward_to(self, x):
 
