@@ -183,7 +183,7 @@ def load_yolov5_params(args, network):
     # for param in network.trainable_params():
     #     print("-------",param)
     if args.resume_yolov5:
-        print("args.resume_yolov5: ", args.resume_yolov5, flush=True)
+        #print("args.resume_yolov5: ", args.resume_yolov5, flush=True)
         param_dict = load_checkpoint(args.resume_yolov5)
         param_dict_new = {}
         for key, values in param_dict.items():

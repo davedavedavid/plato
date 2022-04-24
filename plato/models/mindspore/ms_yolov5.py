@@ -17,8 +17,9 @@ class Model(nn.Cell):
 
     def load_model_train(self, args, lr):
         default_recurisive_init(self.yolo_network)
-        model_dir = Config().params['pretrained_model_dir']
-        print("model_dir: ", model_dir, flush=True)
+        #model_dir = Config().params['pretrained_model_dir']
+        #model_name = Config().trainer.model_name
+        #print("model_dir: ", model_dir, flush=True)
         load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
 
