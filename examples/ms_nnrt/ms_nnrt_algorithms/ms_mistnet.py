@@ -1,9 +1,5 @@
 import logging
 import time
-import cv2
-import random
-import sys
-import os
 import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
@@ -40,8 +36,6 @@ class Algorithm(ms_fedavg.Algorithm):
         distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=True)
         dataset.size = len(distributed_sampler)
         config.dataset_size = len(dataset)
-        # cores = multiprocessing.cpu_count()
-        # num_parallel_workers = int(cores / device_num)
         multi_scale_trans = MultiScaleTrans(config, device_num)
         dataset.transforms = multi_scale_trans
         PreprocessTrueBox_ = PreprocessTrueBox(config)
