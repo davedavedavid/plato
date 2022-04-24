@@ -29,6 +29,7 @@ def get(model=None, datasource=None, algorithm=None, trainer=None):
 
     if client_type in registered_clients:
         logging.info("Client: %s", client_type)
+        print("algorithm: ", algorithm)
         registered_client = registered_clients[client_type](model=model, datasource=datasource, algorithm=algorithm, trainer=trainer)
     else:
         raise ValueError('No such client: {}'.format(client_type))
