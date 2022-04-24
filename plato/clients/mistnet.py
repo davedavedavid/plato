@@ -29,7 +29,7 @@ class Client(simple.Client):
 
         # Since training is performed on the server, the client should not be doing
         # its own testing for the model accuracy
-        assert not Config().clients.do_test
+        #assert not Config().clients.do_test
 
         # Perform a forward pass till the cut layer in the model
         features = self.algorithm.extract_features(

@@ -49,12 +49,12 @@ class Client(base.Client):
 
     def configure(self) -> None:
         """Prepare this client for training."""
-        print("self.trainer1: ", self.trainer)
+        print("self.trainer1: ", self.trainer, flush=True)
         if self.trainer is None:
             self.trainer = trainers_registry.get(self.model)
         self.trainer.set_client_id(self.client_id)
-        print("self.trainer2: ", self.trainer)
-        print("self.algorithm: ", self.algorithm)
+        print("self.trainer2: ", self.trainer, flush=True)
+        print("self.algorithm: ", self.algorithm, flush=True)
         if self.algorithm is None:
             self.algorithm = algorithms_registry.get(self.trainer)
         self.algorithm.set_client_id(self.client_id)
