@@ -5,6 +5,7 @@ from packages.ms_yolov5.src.util import AverageMeter, get_param_groups
 from mindspore.nn.optim.momentum import Momentum
 from mindspore import Tensor
 import mindspore.nn as nn
+from plato.config import Config
 
 class Model(nn.Cell):
     def __init__(self, args=None):
@@ -16,6 +17,8 @@ class Model(nn.Cell):
 
     def load_model_train(self, args, lr):
         default_recurisive_init(self.yolo_network)
+        model_dir = Config().params['pretrained_model_dir']
+        print("model_dir: ", model_dir, flush=True)
         load_yolov5_params(args, self.yolo_network)
         self.network_from = YoloWithLossCell(self.yolo_network)
 
