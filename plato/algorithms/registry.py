@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from plato.config import Config
 
-if not hasattr(Config().trainer, 'use_mindspore'):
+if hasattr(Config().trainer, 'use_mindspore'):
     from plato.algorithms.mindspore import (
         fedavg as fedavg_mindspore,
         mistnet as mistnet_mindspore,
