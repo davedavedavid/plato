@@ -54,7 +54,7 @@ class Client(base.Client):
         self.trainer.set_client_id(self.client_id)
 
         if self.algorithm is None:
-            print("self.algorithm: ", self.algorithm, flush=True)
+            #print("self.algorithm: ", self.algorithm, flush=True)
             self.algorithm = algorithms_registry.get(self.trainer)
         self.algorithm.set_client_id(self.client_id)
 

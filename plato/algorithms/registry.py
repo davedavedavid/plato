@@ -8,8 +8,8 @@ import logging
 from collections import OrderedDict
 
 from plato.config import Config
-print("Config: ", Config)
-if hasattr(Config().trainer, 'use_mindspore'):
+
+if not hasattr(Config().trainer, 'use_mindspore'):
     from plato.algorithms.mindspore import (
         fedavg as fedavg_mindspore,
         mistnet as mistnet_mindspore,

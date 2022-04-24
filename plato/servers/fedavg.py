@@ -10,7 +10,7 @@ import time
 
 from plato.algorithms import registry as algorithms_registry
 from plato.config import Config
-# from plato.datasources import registry as datasources_registry
+from plato.datasources import registry as datasources_registry
 from plato.trainers import registry as trainers_registry
 from plato.utils import csv_processor
 
@@ -71,11 +71,9 @@ class Server(base.Server):
 
         self.load_trainer()
 
-        """
         if not Config().clients.do_test:
             dataset = datasources_registry.get()
-        for pass it to debug
-        """
+
             # self.testset = dataset.get_test_set()
             # Here we do not get testset from disk. We directly use feature dataset
 

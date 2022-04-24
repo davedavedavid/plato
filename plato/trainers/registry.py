@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from plato.config import Config
 
-if hasattr(Config().trainer, 'use_mindspore'):
+if not hasattr(Config().trainer, 'use_mindspore'):
     from plato.trainers.mindspore import (
         basic as basic_mindspore, )
 
@@ -43,7 +43,7 @@ def get(model=None):
     # print('Config().trainer:', Config().trainer, flush=True)
     # print('Config().trainer,use_mindspore:', Config().trainer.use_mindspore, hasattr(Config().trainer, 'use_mindspore'),  flush=True)
     if Config().trainer.model_name == 'yolov5':
-        if hasattr(Config().trainer, 'use_mindspore'):
+        if not hasattr(Config().trainer, 'use_mindspore'):
             from plato.trainers.mindspore import ms_yolo
             return ms_yolo.Trainer(model)
         else:
