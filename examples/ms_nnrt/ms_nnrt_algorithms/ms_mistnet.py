@@ -3,7 +3,7 @@ import time
 import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
-from plato.utils import unary_encoding
+from plato.utils import unary_encoding_1b
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 from examples.ms_nnrt.config import ConfigYOLOV5
 
@@ -74,12 +74,12 @@ class Algorithm(ms_fedavg.Algorithm):
 
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
-                logits = unary_encoding.encode(logits)
+                logits = unary_encoding_1b.encode(logits)
                 if callable(_randomize):
                     logits = self.trainer.randomize(logits, annotation_x[0], epsilon=1)
                     # print(' annotation_x[0], logits.shape, epsilon', annotation_x[0].shape, logits.shape, epsilon, flush=True)
                 else:
-                    logits = unary_encoding.randomize(logits, epsilon)
+                    logits = unary_encoding_1b.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 if self.trainer.device != 'cpu':
