@@ -57,7 +57,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
+            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -226,15 +226,16 @@ class Trainer():
             batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)
             batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float32)
             batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
-            img_hight = int(data["img_hight"][0])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
-            img_width = int(data["img_width"][0])
-            input_shape = Tensor(data["input_shape"][0], ms.float32)
+            print("input_shape: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+                             batch_gt_box2, flush=True)
+            img_hight = int(data["img_hight"])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
+            img_width = int(data["img_width"])
+            input_shape = Tensor(data["input_shape"], ms.float32)
 
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
             #print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
-            print("input_shape: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
-                             batch_gt_box2, flush=True)
+
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())
