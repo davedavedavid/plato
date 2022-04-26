@@ -217,23 +217,23 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
-            print("data: ", data, flush=True)
+            #print("data: ", data, flush=True)
             logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
             batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float32)
             batch_y_true_2 = Tensor(data["batch_y_true_2"], ms.float32)
-            print("input_shape: ", batch_y_true_0,batch_y_true_0.shape, batch_y_true_1,batch_y_true_1.shape, batch_y_true_2,batch_y_true_2.shape, flush=True)
+            #print("input_shape: ", batch_y_true_0,batch_y_true_0.shape, batch_y_true_1,batch_y_true_1.shape, batch_y_true_2,batch_y_true_2.shape, flush=True)
             batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)
             batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float32)
             batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
-            print("input_shape: ", batch_gt_box0,batch_gt_box0.shape, batch_gt_box1,batch_gt_box1.shape,batch_gt_box2,batch_gt_box2.shape, flush=True)
+            #print("input_shape: ", batch_gt_box0,batch_gt_box0.shape, batch_gt_box1,batch_gt_box1.shape,batch_gt_box2,batch_gt_box2.shape, flush=True)
             img_hight = int(data["img_hight"][0])                       #in_shape:  640 <class 'int'> 640 <class 'mindspore.common.tensor.Tensor'>
             img_width = int(data["img_width"][0])
             input_shape = Tensor(data["input_shape"][0], ms.float32)
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
-            print("-------: ", data["img_hight"], data["input_shape"], flush=True)
+            #print("-------: ", data["img_hight"], data["input_shape"], flush=True)
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
