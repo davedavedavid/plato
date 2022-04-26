@@ -73,7 +73,7 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=200,
+            parser.add_argument('--max_epoch', type=int, default=10,
                                 help='Max epoch num to train the model. Default: 320')
             parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
@@ -213,7 +213,20 @@ class Trainer():
 
         feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
+        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
+            print('----image1-----: ',image, image.shape, annotation, annotation.shape, flush=True)
+            print('----batch_y_true_01-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
+            print('----batch_gt_box01-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
+            print('----img_hight,img_width,input_shape1-----: ', img_hight,img_width,input_shape, flush=True)
+
         feature_dataset = feature_dataset.repeat(args.max_epoch)
+        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
+            print('----image2-----: ',image, image.shape, annotation, annotation.shape, flush=True)
+            print('----batch_y_true_02-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
+            print('----batch_gt_box02-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
+            print('----img_hight,img_width,input_shape2-----: ', img_hight,img_width,input_shape, flush=True)
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
