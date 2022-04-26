@@ -233,7 +233,8 @@ class Trainer():
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
             #print("batch_gt_box0: ", batch_gt_box0, batch_gt_box0.shape, flush=True)
-            #print("input_shape: ", input_shape, type(input_shape), img_hight, flush=True)
+            print("input_shape: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+                             batch_gt_box2, flush=True)
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())
