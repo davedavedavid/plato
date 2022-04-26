@@ -68,7 +68,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            # np.save("/home/data/model/test_feat.npy", logits)
+            print("logits: ", logits, logits.shape, flush=True)
+            np.save("/home/data/test_logits.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
 
