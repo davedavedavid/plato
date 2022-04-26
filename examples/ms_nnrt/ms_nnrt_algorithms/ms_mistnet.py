@@ -71,7 +71,7 @@ class Algorithm(ms_fedavg.Algorithm):
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/test_logits.npy", logits)
-            print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
 

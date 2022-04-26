@@ -57,7 +57,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
+            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -217,7 +217,7 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
-            #print("data: ", data, flush=True)
+            print("data: ", data, flush=True)
             logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
