@@ -66,10 +66,11 @@ class Algorithm(ms_fedavg.Algorithm):
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
+            print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
-            np.save("/home/data/test_logits.npy", logits)
+            #np.save("/home/data/test_logits.npy", logits)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
 
