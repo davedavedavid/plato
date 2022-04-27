@@ -41,7 +41,7 @@ class Server(fedavg.Server):
         #for feature in feature_dataset:
         if hasattr(Config().trainer, 'use_mindspore'):
             feature_dataset_tensor = features[0]
-            print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
+            #print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
         else:
             feature_dataset = list(chain.from_iterable(features))
             for feature in feature_dataset:
