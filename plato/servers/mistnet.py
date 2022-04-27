@@ -47,7 +47,7 @@ class Server(fedavg.Server):
         #     feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature_dataset])
 
             # Training the model using all the features received from the client
-        #print("len feature_dataset_tensor ", len(feature_dataset_tensor), flush=True)
+        print("len feature_dataset ",feature_dataset, len(feature_dataset), flush=True)
         sampler = all_inclusive.Sampler(feature_dataset)
         self.algorithm.train(feature_dataset, sampler,
                              Config().algorithm.cut_layer)
