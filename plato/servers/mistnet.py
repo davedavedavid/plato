@@ -36,7 +36,8 @@ class Server(fedavg.Server):
         features = [features for (__, features) in self.updates]
         print("feature ", features, len(features), flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
-        feature_dataset = list(chain.from_iterable(features))   #[(array(1), array(2)), (array(3), array(4))]
+        feature_dataset = features
+        #feature_dataset = list(chain.from_iterable(features))   #[(array(1), array(2)), (array(3), array(4))]
 		# convert feature dataset from numpy to torch tensor
         # feature_dataset_tensor = []
         # #for feature in feature_dataset:
