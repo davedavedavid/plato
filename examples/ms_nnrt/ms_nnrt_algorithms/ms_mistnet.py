@@ -66,10 +66,10 @@ class Algorithm(ms_fedavg.Algorithm):
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            print("logits: ", logits, logits.shape, flush=True)
+            #print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/test_logits.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
@@ -92,7 +92,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
             #for i in np.arange(logits.shape[0]):  # each sample in the batch
             feature_dataset.append((logits[0], annotation_x[:]))
-
+            print("feature_dataset: ", feature_dataset, len(feature_dataset), flush=True)
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
                      self.client_id, len(feature_dataset))
