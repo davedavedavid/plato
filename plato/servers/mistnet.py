@@ -13,7 +13,7 @@ from plato.algorithms.mistnet import FeatureDataset
 from plato.config import Config
 from plato.samplers import all_inclusive
 from plato.servers import fedavg
-
+import torch
 
 class Server(fedavg.Server):
     """The MistNet server for federated learning."""
@@ -36,27 +36,25 @@ class Server(fedavg.Server):
         features = [features for (__, features) in self.updates]
         print("feature ", features, len(features), flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
-        feature_dataset = features
-        #feature_dataset = list(chain.from_iterable(features))   #[(array(1), array(2)), (array(3), array(4))]
 		# convert feature dataset from numpy to torch tensor
-        # feature_dataset_tensor = []
-        # #for feature in feature_dataset:
-        # if hasattr(Config().trainer, 'use_mindspore'):
-        #     #feature_dataset_tensor.append([mindspore.Tensor(elem) for elem in feature])
-        #     #feature_dataset_tensor.append(feature_dataset[0])
-        #     feature_dataset_tensor.append([elem for elem in feature_dataset])
-        # else:
-        #     feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature_dataset])
+        feature_dataset_tensor = []
+        #for feature in feature_dataset:
+        if hasattr(Config().trainer, 'use_mindspore'):
+            feature_dataset_tensor = features
+        else:
+            feature_dataset = list(chain.from_iterable(features))
+            for feature in feature_dataset:
+                feature_dataset_tensor.append([torch.from_numpy(elem) for elem in feature])
 
             # Training the model using all the features received from the client
         #print("len feature_dataset ",feature_dataset, len(feature_dataset), flush=True)
-        sampler = all_inclusive.Sampler(feature_dataset)
-        self.algorithm.train(feature_dataset, sampler,
+        sampler = all_inclusive.Sampler(feature_dataset_tensor)
+        self.algorithm.train(feature_dataset_tensor, sampler,
                              Config().algorithm.cut_layer)
 
         # Test the updated model
         if not Config().clients.do_test:
-            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset))
+            self.accuracy = self.trainer.test(FeatureDataset(feature_dataset_tensor))
             logging.info('[Server #{:d}] Finish testing model.'.format(os.getpid()))
             # logging.info('[Server #{:d}] Global model accuracy: {:.2f}%\n'.format(
             #     os.getpid(), 100 * self.accuracy))

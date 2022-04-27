@@ -60,7 +60,7 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        print('trainset: ', trainset, len(trainset), flush=True)
+        #print('trainset: ', trainset, len(trainset), flush=True)
         for i in range(len(trainset)):
             image = trainset[i][0]
             annotation = trainset[i][1][0]
@@ -79,7 +79,7 @@ class Algorithm(fedavg.Algorithm):
     def train(self, trainset, *args):
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
-        #print('----trainset-----: ',trainset, len(trainset), type(trainset), flush=True)
+        data_size = len(trainset)
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
         #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
@@ -87,7 +87,7 @@ class Algorithm(fedavg.Algorithm):
         #     print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
         #     print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
         #     print('----img_hight,img_width,input_shape-----: ', img_hight,img_width,input_shape, flush=True)
-        self.trainer.train(dataset)
+        self.trainer.train(dataset, data_size)
 
 
 
