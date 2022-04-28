@@ -700,10 +700,10 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     image = new_image
     image2 = np.asarray(image)
     print("image2:", image2, flush=True)
-    if flip:
-        image = filp_pil_image(image)
-        image3 = np.asarray(image)
-        print("image3:", image3, flush=True)
+    #if flip:
+    #    image = filp_pil_image(image)
+    #    image3 = np.asarray(image)
+    #    print("image3:", image3, flush=True)
     image = np.array(image)
     image = convert_gray_to_color(image)
     print("image4:", image,image.shape, flush=True)
