@@ -65,7 +65,7 @@ class DataSource(base.DataSource):
                 ann_file=Config().data.train_annFile,
                 filter_crowd_anno=True,
                 remove_images_without_annotations=True,
-                is_training=False)#True
+                is_training=True)
 
         return self.train_set
 
