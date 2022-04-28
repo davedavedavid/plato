@@ -63,8 +63,8 @@ class DataSource(base.DataSource):
             self.train_set = COCOYoloDataset(
                 root=Config().data.train_path,
                 ann_file=Config().data.train_annFile,
-                filter_crowd_anno=False,
-                remove_images_without_annotations=False,
+                filter_crowd_anno=True,
+                remove_images_without_annotations=True,
                 is_training=False)#True
 
         return self.train_set
