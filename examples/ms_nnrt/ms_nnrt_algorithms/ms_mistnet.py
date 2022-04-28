@@ -22,7 +22,8 @@ class Algorithm(ms_fedavg.Algorithm):
         epsilon: If epsilon is not None, local differential privacy should be
                 applied to the features extracted.
         """
-
+        for image4, annotation, input_size, mosaic_flag in dataset:
+            print('image4: ', image4, image4.shape, flush=True)
         tic = time.perf_counter()
 
         feature_dataset = []
@@ -54,7 +55,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            print("image:", image, image.shape, flush=True)
+            #print("image:", image, image.shape, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
 
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
@@ -63,11 +64,11 @@ class Algorithm(ms_fedavg.Algorithm):
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            print("image2:", image, image.shape, flush=True)
+            #print("image2:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             #print("logits: ", logits, logits.shape, flush=True)
