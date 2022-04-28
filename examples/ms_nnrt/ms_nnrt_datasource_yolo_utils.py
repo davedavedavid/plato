@@ -187,6 +187,7 @@ class COCOYoloDataset:
             labels4 = np.concatenate(labels4, 0)
             np.clip(labels4[:, :4], 0, 2 * s, out=labels4[:, :4])  # use with random_perspective
         flag = np.array([1])
+        print('img4: ', img4, img4.shape, flush=True)
         return img4, labels4, input_size, flag
 
     def __getitem__(self, index):
@@ -206,6 +207,7 @@ class COCOYoloDataset:
             return img, img_id
 
         input_size = [640, 640]
+        print('random.random() < 0.5: ', random.random(), random.random() < 0.5, flush=True)
         if self.mosaic and random.random() < 0.5:
             return self._mosaic_preprocess(index, input_size)
         img = np.fromfile(os.path.join(self.root, img_path), dtype='int8')
@@ -237,6 +239,7 @@ class COCOYoloDataset:
             # tmp [x_min y_min x_max y_max, label]
             out_target.append(tmp)
         flag = np.array([0])
+        print('img: ', img, img.shape, flush=True)
         return img, out_target, input_size, flag
 
     def __len__(self):
