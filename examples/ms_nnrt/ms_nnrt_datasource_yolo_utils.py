@@ -13,7 +13,7 @@ from pycocotools.coco import COCO
 
 class DistributedSampler:
     """Distributed sampler."""
-    def __init__(self, dataset_size, num_replicas=None, rank=None, shuffle=False):
+    def __init__(self, dataset_size, num_replicas=None, rank=None, shuffle=True):
         if num_replicas is None:
             print("***********Setting world_size to 1 since it is not passed in ******************")
             num_replicas = 1
