@@ -33,7 +33,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
         config = ConfigYOLOV5()
         device_num = 1
-        distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=True)
+        distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=False)
         dataset.size = len(distributed_sampler)
         config.dataset_size = len(dataset)
         multi_scale_trans = MultiScaleTrans(config, device_num)
