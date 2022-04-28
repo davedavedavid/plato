@@ -66,8 +66,8 @@ class DataSource(base.DataSource):
                 filter_crowd_anno=True,
                 remove_images_without_annotations=True,
                 is_training=True)
-        for image1, annotation, input_size, mosaic_flag in self.train_set:
-            print('image1: ', image1, image1.shape, flush=True)
+        for image, annotation, input_size, mosaic_flag in self.train_set:
+            print('image: ', image, image.shape, flush=True)
         return self.train_set
 
     def get_test_set(self):

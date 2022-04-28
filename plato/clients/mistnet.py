@@ -32,8 +32,6 @@ class Client(simple.Client):
         #assert not Config().clients.do_test
 
         # Perform a forward pass till the cut layer in the model
-        for image3, annotation, input_size, mosaic_flag in self.trainset:
-            print('image3: ', image3, image3.shape, flush=True)
         features = self.algorithm.extract_features(
             self.trainset,
             self.sampler,
