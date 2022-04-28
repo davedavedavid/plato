@@ -698,10 +698,12 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
     image = new_image
-    print("image2:", image, flush=True)
+    image2 = np.asarray(image)
+    print("image2:", image2, flush=True)
     if flip:
         image = filp_pil_image(image)
-        print("image3:", image, flush=True)
+        image3 = np.asarray(image)
+        print("image3:", image3, flush=True)
     image = np.array(image)
     image = convert_gray_to_color(image)
     print("image4:", image,image.shape, flush=True)
@@ -781,7 +783,8 @@ class MultiScaleTrans:
         print("img1:", img, img.shape,anno, input_size, mosaic_flag, self.device_num,flush=True)
         if mosaic_flag[0] == 0:
             img = decode(img)
-        print("img2:", img, flush=True)
+        img2 = np.asarray(img)
+        print("img2:", img2, flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
         print("img3:", img, img.shape, flush=True)
         return img, anno, np.array(img.shape[0:2])
