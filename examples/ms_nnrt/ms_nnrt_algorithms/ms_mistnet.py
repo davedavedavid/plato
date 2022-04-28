@@ -22,8 +22,8 @@ class Algorithm(ms_fedavg.Algorithm):
         epsilon: If epsilon is not None, local differential privacy should be
                 applied to the features extracted.
         """
-        for image4, annotation, input_size, mosaic_flag in dataset:
-            print('image4: ', image4, image4.shape, flush=True)
+        #for image4, annotation, input_size, mosaic_flag in dataset:
+        #    print('image4: ', image4, image4.shape, flush=True)
         tic = time.perf_counter()
 
         feature_dataset = []
@@ -51,7 +51,7 @@ class Algorithm(ms_fedavg.Algorithm):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            print("img5:", img, img.shape, flush=True)
+            #print("img5:", img, img.shape, flush=True)
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
