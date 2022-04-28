@@ -714,7 +714,8 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
 
 def preprocess_fn(image, box, config, input_size, device_num):
     """Preprocess data function."""
-    print("image1:", image, flush=True)
+    image1 = np.asarray(image)
+    print("image1:", image1, flush=True)
     config_anchors = config.anchor_scales
     anchors = np.array([list(x) for x in config_anchors])
     max_boxes = config.max_box
@@ -783,8 +784,6 @@ class MultiScaleTrans:
         print("img1:", img, img.shape,anno, input_size, mosaic_flag, self.device_num,flush=True)
         if mosaic_flag[0] == 0:
             img = decode(img)
-        img2 = np.asarray(img)
-        print("img2:", img2, flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
         print("img3:", img, img.shape, flush=True)
         return img, anno, np.array(img.shape[0:2])
