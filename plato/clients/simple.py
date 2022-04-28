@@ -81,8 +81,7 @@ class Client(base.Client):
         else:
             # PyTorch uses samplers when loading data with a data loader
             self.trainset = self.datasource.get_train_set()
-            for image1, annotation, input_size, mosaic_flag in self.trainset:
-                print('image1: ', image1, image1.shape, flush=True)
+
         if not Config().clients.do_test:
             # Set the testset if local testing is needed
             self.testset = self.datasource.get_test_set()
