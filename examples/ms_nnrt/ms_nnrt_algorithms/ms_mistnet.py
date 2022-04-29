@@ -66,9 +66,9 @@ class Algorithm(ms_fedavg.Algorithm):
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
-            print("inputs:", inputs, inputs.shape, flush=True)
+            #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            inputs = np.zeros((1, 12, 320, 320))
+            inputs = np.zeros((12, 320, 320))
             inputs = inputs.astype(np.float32)
             print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
