@@ -64,7 +64,7 @@ class Algorithm(ms_fedavg.Algorithm):
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            print("image2:", image, image.shape, flush=True)
+            #print("image2:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
@@ -89,10 +89,10 @@ class Algorithm(ms_fedavg.Algorithm):
                 #     logits = unary_encoding_1b.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
-                if self.trainer.device != 'cpu':
-                    logits = logits.astype('float16')
-                else:
-                    logits = logits.astype('float32')
+                # if self.trainer.device != 'cpu':
+                #     logits = logits.astype('float16')
+                # else:
+                #     logits = logits.astype('float32')
 
             #for i in np.arange(logits.shape[0]):  # each sample in the batch
             feature_dataset.append((logits[0], annotation_x[:]))
