@@ -522,7 +522,7 @@ def _reshape_data(image, image_size):
 
 def color_distortion(img, hue, sat, val, device_num):
     """Color distortion."""
-    print("hue, sat, val1: ", hue, sat, val, flush=True)
+    #print("hue, sat, val1: ", hue, sat, val, flush=True)
     hue = _rand(-hue, hue)
     sat = _rand(1, sat) if _rand() < .5 else 1 / _rand(1, sat)
     val = _rand(1, val) if _rand() < .5 else 1 / _rand(1, val)
@@ -700,24 +700,20 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
     image = new_image
-    image2 = np.asarray(image)
-    print("image2:", image2, flush=True)
-    #if flip:
-    #    image = filp_pil_image(image)
-    #    image3 = np.asarray(image)
-    #    print("image3:", image3, flush=True)
+    #image2 = np.asarray(image)
+    #print("image2:", image2, flush=True)
+    if flip:
+       image = filp_pil_image(image)
     image = np.array(image)
     image = convert_gray_to_color(image)
-    print("image4:", image,image.shape, flush=True)
+    #print("image4:", image,image.shape, flush=True)
     image_data = color_distortion(image, hue, sat, val, device_num)
-    print("image5:", image_data, image_data.shape, flush=True)
+    #print("image5:", image_data, image_data.shape, flush=True)
     return image_data, box_data
 
 
 def preprocess_fn(image, box, config, input_size, device_num):
     """Preprocess data function."""
-    image1 = np.asarray(image)
-    print("image1:", image1, flush=True)
     config_anchors = config.anchor_scales
     anchors = np.array([list(x) for x in config_anchors])
     max_boxes = config.max_box
@@ -783,11 +779,9 @@ class MultiScaleTrans:
         return seed_list
 
     def __call__(self, img, anno, input_size, mosaic_flag):
-        print("img1:", img, img.shape,anno, input_size, mosaic_flag, self.device_num,flush=True)
         if mosaic_flag[0] == 0:
             img = decode(img)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
-        print("img3:", img, img.shape, flush=True)
         return img, anno, np.array(img.shape[0:2])
 
 
