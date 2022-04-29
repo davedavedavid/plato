@@ -522,10 +522,11 @@ def _reshape_data(image, image_size):
 
 def color_distortion(img, hue, sat, val, device_num):
     """Color distortion."""
+    print("hue, sat, val1: ", hue, sat, val, flush=True)
     hue = _rand(-hue, hue)
     sat = _rand(1, sat) if _rand() < .5 else 1 / _rand(1, sat)
     val = _rand(1, val) if _rand() < .5 else 1 / _rand(1, val)
-    print("hue, sat, val: ", hue, sat, val, flush=True)
+    print("hue, sat, val2: ", hue, sat, val, flush=True)
     if device_num != 1:
         cv2.setNumThreads(1)
     x = cv2.cvtColor(img, cv2.COLOR_RGB2HSV_FULL)
