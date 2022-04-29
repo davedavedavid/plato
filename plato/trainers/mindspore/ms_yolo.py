@@ -217,7 +217,7 @@ class Trainer():
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
-            #print("data: ", data, flush=True)
+            print("data: ", data, flush=True)
             logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
@@ -231,7 +231,7 @@ class Trainer():
             input_shape = Tensor(data["input_shape"][0], ms.float32)
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
-            print("---logits----: ", logits, logits.shape, flush=True)
+            #print("---logits----: ", logits, logits.shape, flush=True)
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
