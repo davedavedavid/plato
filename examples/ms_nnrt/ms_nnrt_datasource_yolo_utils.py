@@ -122,11 +122,13 @@ class COCOYoloDataset:
         indices = [index] + [random.randint(0, len(self.img_ids) - 1) for _ in range(3)]
         print('indices: ', indices)
         for i, img_ids_index in enumerate(indices):
+            print('i: ', i)
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = np.array(img)
+            print('img: ', img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left
