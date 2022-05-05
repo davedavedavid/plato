@@ -52,12 +52,14 @@ class Algorithm(ms_fedavg.Algorithm):
             img_hight = input_size[0]
             img_wight = input_size[1]
             print("img:", img, img.shape, flush=True)
+            print("anno:", anno, anno.shape, flush=True)
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
             print("image:", image, image.shape, flush=True)
+            print("annotation2:", annotation, annotation.shape, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-
+            print("annotation3:", annotation, annotation.shape, flush=True)
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
                             size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
