@@ -33,7 +33,7 @@ class ConfigYOLOV5:
     multi_scale = [[320, 320], [352, 352], [384, 384], [416, 416], [448, 448],
                    [480, 480], [512, 512], [544, 544], [576, 576], [608, 608],
                    [640, 640], [672, 672], [704, 704], [736, 736], [768, 768]]
-    num_classes = 3 #80
+    num_classes = 80
     max_box = 150
 
     # confidence under ignore_threshold means no object when training
