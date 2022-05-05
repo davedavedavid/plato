@@ -117,7 +117,7 @@ class COCOYoloDataset:
         s = 384
         self.mosaic_border = [-s // 2, -s // 2]
         print('self.mosaic_border: ', self.mosaic_border)
-        yc, xc = [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
+        yc, xc =551, 432# [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
         print('yc, xc: ', yc, xc)
         indices = [index] + [random.randint(0, len(self.img_ids) - 1) for _ in range(3)]
         print('indices: ', indices)
@@ -127,10 +127,12 @@ class COCOYoloDataset:
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = np.array(img)
+            print('img: ', img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left
                 img4 = np.full((s * 2, s * 2, img.shape[2]), 128, dtype=np.uint8)  # base image with 4 tiles
+                print('img4: ', img4)
                 x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc  # xmin, ymin, xmax, ymax (large image)
                 x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h  # xmin, ymin, xmax, ymax (small image)
             elif i == 1:  # top right
