@@ -116,8 +116,11 @@ class COCOYoloDataset:
         labels4 = []
         s = 384
         self.mosaic_border = [-s // 2, -s // 2]
+        print('self.mosaic_border: ', self.mosaic_border)
         yc, xc = [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
+        print('yc, xc: ', yc, xc)
         indices = [index] + [random.randint(0, len(self.img_ids) - 1) for _ in range(3)]
+        print('indices: ', indices)
         for i, img_ids_index in enumerate(indices):
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
