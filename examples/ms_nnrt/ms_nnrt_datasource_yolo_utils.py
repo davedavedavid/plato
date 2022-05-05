@@ -733,6 +733,52 @@ def reshape_fn(image, img_id, config):
     image, ori_image_shape = _reshape_data(image, image_size=input_size)
     return image, ori_image_shape, img_id
 
+def normalize(img, mean, std, pad_channel=False, dtype="float32"):
+    """
+    Normalize the image between [0, 1] with respect to mean and standard deviation.
+    Args:
+        img (numpy.ndarray): Image array of shape CHW to be normalized.
+        mean (list): List of mean values for each channel, w.r.t channel order.
+        std (list): List of standard deviations for each channel, w.r.t. channel order.
+        pad_channel (bool): Whether to pad a extra channel with value zero.
+        dtype (str): Output datatype of normalize, only worked when pad_channel is True. (default is "float32")
+    Returns:
+        img (numpy.ndarray), Normalized image.
+    """
+    #if not is_numpy(img):
+    #    raise TypeError("img should be NumPy image. Got {}.".format(type(img)))
+
+    if img.ndim != 3:
+        raise TypeError('img dimension should be 3. Got {}.'.format(img.ndim))
+
+    if np.issubdtype(img.dtype, np.integer):
+        raise NotImplementedError("Unsupported image datatype: [{}], pls execute [ToTensor] before [Normalize]."
+                                  .format(img.dtype))
+
+    num_channels = img.shape[0]  # shape is (C, H, W)
+
+    if len(mean) != len(std):
+        raise ValueError("Length of mean and std must be equal.")
+    # if length equal to 1, adjust the mean and std arrays to have the correct
+    # number of channels (replicate the values)
+    if len(mean) == 1:
+        mean = [mean[0]] * num_channels
+        std = [std[0]] * num_channels
+    elif len(mean) != num_channels:
+        raise ValueError("Length of mean and std must both be 1 or equal to the number of channels({0})."
+                         .format(num_channels))
+
+    mean = np.array(mean, dtype=img.dtype)
+    std = np.array(std, dtype=img.dtype)
+
+    image = (img - mean[:, None, None]) / std[:, None, None]
+    if pad_channel:
+        zeros = np.zeros([1, image.shape[1], image.shape[2]], dtype=np.float32)
+        image = np.concatenate((image, zeros), axis=0)
+        if dtype == "float16":
+            image = image.astype(np.float16)
+    return image
+
 def decode(img):
     """
     Decode the input image to PIL image format in RGB mode.

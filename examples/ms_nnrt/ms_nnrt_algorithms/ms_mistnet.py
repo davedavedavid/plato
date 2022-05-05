@@ -4,7 +4,7 @@ import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
 from plato.config import Config
 from plato.utils import unary_encoding_1b
-from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
+from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox,normalize
 from examples.ms_nnrt.config import ConfigYOLOV5
 
 
@@ -62,7 +62,8 @@ class Algorithm(ms_fedavg.Algorithm):
                             size]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
-            image = (image - mean) / std
+            #image = (image - mean) / std
+            image = normalize(image, mean, std)
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
