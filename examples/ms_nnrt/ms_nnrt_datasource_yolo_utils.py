@@ -127,12 +127,10 @@ class COCOYoloDataset:
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = np.array(img)
-            print('img: ', img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left
                 img4 = np.full((s * 2, s * 2, img.shape[2]), 128, dtype=np.uint8)  # base image with 4 tiles
-                print('img4: ', img4)
                 x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc  # xmin, ymin, xmax, ymax (large image)
                 x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h  # xmin, ymin, xmax, ymax (small image)
             elif i == 1:  # top right
@@ -192,7 +190,7 @@ class COCOYoloDataset:
             labels4 = np.concatenate(labels4, 0)
             np.clip(labels4[:, :4], 0, 2 * s, out=labels4[:, :4])  # use with random_perspective
         flag = np.array([1])
-        #print('img4: ', img4, img4.shape, flush=True)
+        print('img4: ', img4, img4.shape, flush=True)
         return img4, labels4, input_size, flag
 
     def __getitem__(self, index):
