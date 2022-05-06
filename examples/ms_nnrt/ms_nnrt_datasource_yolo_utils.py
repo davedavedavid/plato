@@ -124,6 +124,7 @@ class COCOYoloDataset:
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             #img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = cv2.imread(os.path.join(self.root, img_path))
+            img = img[:, :, ::-1]
             img = np.array(img)
             h, w = img.shape[:2]
 
