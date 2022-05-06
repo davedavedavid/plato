@@ -34,16 +34,16 @@ class Server(fedavg.Server):
     async def process_reports(self):
         """Process the features extracted by the client and perform server-side training."""
         features = [features for (__, features) in self.updates]
-        #print("feature ", features, len(features), flush=True)
+        print("feature ",  len(features), flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []
         #for feature in feature_dataset:
         if hasattr(Config().trainer, 'use_mindspore'):
             if len(features)>1:
-                feature_dataset_tensor = features[0]
-            else:
                 feature_dataset_tensor = features
+            else:
+                feature_dataset_tensor = features[0]
             #print("feature_dataset_tensor ", feature_dataset_tensor, len(feature_dataset_tensor), flush=True)
         else:
             feature_dataset = list(chain.from_iterable(features))
