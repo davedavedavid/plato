@@ -34,7 +34,7 @@ class Server(fedavg.Server):
     async def process_reports(self):
         """Process the features extracted by the client and perform server-side training."""
         features = [features for (__, features) in self.updates]
-        print("features: ", features, len(features), flush=True)
+        #print("features: ", features, len(features), flush=True)
         # Faster way to deep flatten a list of lists compared to list comprehension
 		# convert feature dataset from numpy to torch tensor
         feature_dataset_tensor = []

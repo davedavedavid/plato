@@ -116,18 +116,18 @@ class COCOYoloDataset:
         labels4 = []
         s = 384
         self.mosaic_border = [-s // 2, -s // 2]
-        yc, xc =535,431# [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
+        yc, xc = [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
         indices = [index] + [random.randint(0, len(self.img_ids) - 1) for _ in range(3)]
         for i, img_ids_index in enumerate(indices):
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
             img_path = coco.loadImgs(img_id)[0]["file_name"]
-            img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
+            #img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
+            #img = np.array(img)
+            #print("img: ", img, img.shape, flush=True)
+            img = cv2.imread(os.path.join(self.root, img_path))
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img = np.array(img)
-            print("img: ", img, img.shape, flush=True)
-            img1 = cv2.imread(os.path.join(self.root, img_path))
-            print("img1: ", img1, img1.shape, flush=True)
-            #img = img[:, :, ::-1]
             h, w = img.shape[:2]
 
             if i == 0:  # top left
@@ -212,7 +212,7 @@ class COCOYoloDataset:
 
         input_size = [640, 640]
         #print('random.random() < 0.5: ', random.random(), random.random() < 0.5, flush=True)
-        if self.mosaic:# and random.random() < 0.5:
+        if self.mosaic and random.random() < 0.5:
             return self._mosaic_preprocess(index, input_size)
         img = np.fromfile(os.path.join(self.root, img_path), dtype='int8')
         ann_ids = coco.getAnnIds(imgIds=img_id)
