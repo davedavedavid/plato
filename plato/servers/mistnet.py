@@ -40,7 +40,7 @@ class Server(fedavg.Server):
         feature_dataset_tensor = []
         #for feature in feature_dataset:
         if hasattr(Config().trainer, 'use_mindspore'):
-            if len(features)>1:
+            if len(features)==1:
                 feature_dataset_tensor = features
             else:
                 feature_dataset_tensor = features[0]
