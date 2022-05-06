@@ -150,7 +150,8 @@ class COCOYoloDataset:
                 print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
 
             img4[y1a:y2a, x1a:x2a] = img[y1b:y2b, x1b:x2b]  # img4[ymin:ymax, xmin:xmax]
-
+            print('x1a, y1a, x2a, y2a: ', x1a, y1a, x2a, y2a)
+            print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
             padw = x1a - x1b
             padh = y1a - y1b
 
