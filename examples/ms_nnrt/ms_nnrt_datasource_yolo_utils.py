@@ -129,7 +129,7 @@ class COCOYoloDataset:
             img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             print('os.path.join(self.root, img_path): ', os.path.join(self.root, img_path))
             img = np.array(img)
-            cv2.imwrite("/home/huawei/tt/data/1/COCO/coco128/train2017/im.jpg", img)
+            cv2.imwrite("/home/data/home/huawei/tt/data/1/COCO/coco128/train2017/im.jpg", img)
             print('img: ', img)
             h, w = img.shape[:2]
 
