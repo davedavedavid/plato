@@ -116,20 +116,15 @@ class COCOYoloDataset:
         labels4 = []
         s = 384
         self.mosaic_border = [-s // 2, -s // 2]
-        print('self.mosaic_border: ', self.mosaic_border)
-        yc, xc =551, 432# [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
-        print('yc, xc: ', yc, xc)
+        yc, xc = [int(random.uniform(-x, 2 * s + x)) for x in self.mosaic_border]
         indices = [index] + [random.randint(0, len(self.img_ids) - 1) for _ in range(3)]
-        print('indices: ', indices)
         for i, img_ids_index in enumerate(indices):
-            print('i, img_ids_index: ', i, img_ids_index)
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             #img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = cv2.imread(os.path.join(self.root, img_path))
             img = np.array(img)
-            print('img: ', img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left
@@ -193,7 +188,7 @@ class COCOYoloDataset:
             labels4 = np.concatenate(labels4, 0)
             np.clip(labels4[:, :4], 0, 2 * s, out=labels4[:, :4])  # use with random_perspective
         flag = np.array([1])
-        print('img4: ', img4, img4.shape, flush=True)
+        #print('img4: ', img4, img4.shape, flush=True)
         return img4, labels4, input_size, flag
 
     def __getitem__(self, index):
