@@ -126,8 +126,8 @@ class COCOYoloDataset:
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
             img_path = coco.loadImgs(img_id)[0]["file_name"]
-            #img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
-            img = Image.open(os.path.join(self.root, img_path))
+            img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
+            print('os.path.join(self.root, img_path): ', os.path.join(self.root, img_path))
             img = np.array(img)
             print('img: ', img)
             h, w = img.shape[:2]
@@ -136,23 +136,18 @@ class COCOYoloDataset:
                 img4 = np.full((s * 2, s * 2, img.shape[2]), 128, dtype=np.uint8)  # base image with 4 tiles
                 x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc  # xmin, ymin, xmax, ymax (large image)
                 x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h  # xmin, ymin, xmax, ymax (small image)
-                print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
             elif i == 1:  # top right
                 x1a, y1a, x2a, y2a = xc, max(yc - h, 0), min(xc + w, s * 2), yc
                 x1b, y1b, x2b, y2b = 0, h - (y2a - y1a), min(w, x2a - x1a), h
-                print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
             elif i == 2:  # bottom left
                 x1a, y1a, x2a, y2a = max(xc - w, 0), yc, xc, min(s * 2, yc + h)
                 x1b, y1b, x2b, y2b = w - (x2a - x1a), 0, w, min(y2a - y1a, h)
-                print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
             elif i == 3:  # bottom right
                 x1a, y1a, x2a, y2a = xc, yc, min(xc + w, s * 2), min(s * 2, yc + h)
                 x1b, y1b, x2b, y2b = 0, 0, min(w, x2a - x1a), min(y2a - y1a, h)
-                print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
 
             img4[y1a:y2a, x1a:x2a] = img[y1b:y2b, x1b:x2b]  # img4[ymin:ymax, xmin:xmax]
-            print('x1a, y1a, x2a, y2a: ', x1a, y1a, x2a, y2a)
-            print('x1b, y1b, x2b, y2b: ', x1b, y1b, x2b, y2b)
+
             padw = x1a - x1b
             padh = y1a - y1b
 
