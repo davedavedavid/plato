@@ -63,6 +63,7 @@ class Algorithm(fedavg.Algorithm):
         #print('trainset: ', len(trainset), flush=True)
         for i in range(len(trainset)):
             image = trainset[i][0]
+            print('image: ', image, image.shape, flush=True)
             annotation = trainset[i][1][0]
             batch_y_true_0 = trainset[i][1][1]
             batch_y_true_1=trainset[i][1][2]
