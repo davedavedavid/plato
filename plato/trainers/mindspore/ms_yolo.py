@@ -213,11 +213,26 @@ class Trainer():
 
         feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
+        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
+            print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
+            print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
+            print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
+            print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
+
         feature_dataset = feature_dataset.repeat(args.max_epoch)
+
+        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
+            print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
+            print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
+            print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
+            print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
+
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
-            #print("data: ", data, flush=True)
+            print("data: ", data, flush=True)
             logits = Tensor(data["image"], ms.float32)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
