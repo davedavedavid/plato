@@ -122,12 +122,12 @@ class COCOYoloDataset:
             coco = self.coco
             img_id = self.img_ids[img_ids_index]
             img_path = coco.loadImgs(img_id)[0]["file_name"]
-            #img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
-            #img = np.array(img)
-            #print("img: ", img, img.shape, flush=True)
-            img = cv2.imread(os.path.join(self.root, img_path))
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = np.array(img)
+            #print("img: ", img, img.shape, flush=True)
+            # img = cv2.imread(os.path.join(self.root, img_path))
+            # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            # img = np.array(img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left

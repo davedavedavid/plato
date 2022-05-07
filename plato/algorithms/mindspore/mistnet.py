@@ -77,16 +77,18 @@ class Algorithm(fedavg.Algorithm):
                   batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape
 
     def train(self, trainset, *args):
+        print('trainset: ', len(trainset), flush=True)
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         data_size = len(trainset)
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
-        # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-        #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
-        #     print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
-        #     print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
-        #     print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
-        #     print('----img_hight,img_width,input_shape-----: ', img_hight,img_width,input_shape, flush=True)
+        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
+                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
+            #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
+            print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
+            print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
+            print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
+            print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
         self.trainer.train(dataset, data_size)
 
 
