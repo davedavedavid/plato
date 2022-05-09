@@ -87,7 +87,6 @@ class Algorithm(fedavg.Algorithm):
         device_num = 1
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
-        batch_size = Config.per_batch_size
         dataset = dataset.batch(Config().trainer.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                         drop_remainder=True)
 
