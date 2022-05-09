@@ -67,8 +67,9 @@ class Algorithm(ms_fedavg.Algorithm):
             # mean = np.array(mean, dtype=image.dtype)
             # std = np.array(std, dtype=image.dtype)
             # image = (image - mean[:, None, None]) / std[:, None, None]
+            print("image1:", image, image.shape, flush=True)
             image = (image-128)/128
-            print("image:", image, image.shape, flush=True)
+            print("image2:", image, image.shape, flush=True)
             #image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             ds = concatenate(image)
