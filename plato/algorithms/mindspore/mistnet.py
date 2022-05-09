@@ -61,7 +61,7 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
         #print('trainset: ', len(trainset), flush=True)
-        for i in range(len(trainset)):
+        for i in range(len(trainset)): #[(image,[.....])()()]
             image = trainset[i][0]
             #print('image: ', image, image.shape, flush=True)
             annotation = trainset[i][1][0]
