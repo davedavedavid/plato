@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
-#from plato.trainers.mindspore import basic
+from plato.config import Config
 ms.set_seed(1)
 
 class Trainer():
@@ -57,7 +57,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
+            #parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -73,9 +73,9 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=1,
-                                help='Max epoch num to train the model. Default: 320')
-            parser.add_argument('--warmup_epochs', default=0, type=float, help='Warmup epochs. Default: 0')
+            #parser.add_argument('--max_epoch', type=int, default=1,
+            #                    help='Max epoch num to train the model. Default: 320')
+            parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
                                 help='Weight decay factor. Default: 0.0005')
             parser.add_argument('--momentum', type=float, default=0.9, help='Momentum. Default: 0.9')
@@ -239,7 +239,7 @@ class Trainer():
             if i % args.log_interval == 0:
                 time_used = time.time() - t_end
                 epoch = int(i / args.steps_per_epoch)
-                fps = args.per_batch_size * (i - old_progress) * args.group_size / time_used
+                fps = Config.per_batch_size * (i - old_progress) * args.group_size / time_used
                 if args.rank == 0:
                     args.logger.info(
                         'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))
