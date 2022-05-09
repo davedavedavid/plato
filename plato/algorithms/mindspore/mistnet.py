@@ -100,7 +100,7 @@ class Algorithm(fedavg.Algorithm):
         #     print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
         #     print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
         #     print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
-        self.trainer.train(dataset, data_size, per_batch_size)
+        self.trainer.train(dataset, data_size, per_batch_size, max_epoch)
 
 
 

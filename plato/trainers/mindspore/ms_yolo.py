@@ -49,7 +49,7 @@ class Trainer():
         """
         self.client_id = client_id
 
-    def train(self, dataset, data_size=None, per_batch_size=None, cloud_args=None):
+    def train(self, dataset, data_size=None, per_batch_size=None, max_epoch=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -120,8 +120,8 @@ class Trainer():
                             args_dict[key] = val
                 return args
             args = merge_args(args, cloud_args)
-            if args.lr_scheduler == 'cosine_annealing' and args.max_epoch > args.T_max:
-                args.T_max = args.max_epoch
+            if args.lr_scheduler == 'cosine_annealing' and max_epoch > args.T_max:
+                args.T_max = max_epoch
 
             args.lr_epochs = list(map(int, args.lr_epochs.split(',')))
 
@@ -190,7 +190,7 @@ class Trainer():
 
         if args.rank_save_ckpt_flag:
             # checkpoint save
-            ckpt_max_num = args.max_epoch * args.steps_per_epoch // args.ckpt_interval
+            ckpt_max_num = max_epoch * args.steps_per_epoch // args.ckpt_interval
             ckpt_config = CheckpointConfig(save_checkpoint_steps=args.ckpt_interval,
                                             keep_checkpoint_max=ckpt_max_num)
             save_ckpt_path = os.path.join(args.outputs_dir, 'ckpt_' + str(args.rank) + '/')
@@ -208,7 +208,6 @@ class Trainer():
         t_end = time.time()
 
         data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
             #print("i: ", i, flush=True)
             logits = Tensor(data["image"], ms.float32)
