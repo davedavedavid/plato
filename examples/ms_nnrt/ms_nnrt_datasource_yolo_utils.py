@@ -124,10 +124,6 @@ class COCOYoloDataset:
             img_path = coco.loadImgs(img_id)[0]["file_name"]
             img = Image.open(os.path.join(self.root, img_path)).convert("RGB")
             img = np.array(img)
-            #print("img: ", img, img.shape, flush=True)
-            # img = cv2.imread(os.path.join(self.root, img_path))
-            # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            # img = np.array(img)
             h, w = img.shape[:2]
 
             if i == 0:  # top left
@@ -544,9 +540,7 @@ def color_distortion(img, hue, sat, val, device_num):
     x[x < 0] = 0
     x = x * 255.
     x = x.astype(np.uint8)
-    print('xxxxxxxxxxx',x, x.shape, np.max(x))
     image_data = cv2.cvtColor(x, cv2.COLOR_HSV2RGB_FULL)
-    print('x22222222',image_data, image_data.shape, np.max(image_data))
     return image_data
 
 

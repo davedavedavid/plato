@@ -51,8 +51,8 @@ class Algorithm(ms_fedavg.Algorithm):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            print("img:", img, img.shape, flush=True)
-            print("max:", np.max(img))
+            #print("img:", img, img.shape, flush=True)
+            #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
@@ -68,22 +68,16 @@ class Algorithm(ms_fedavg.Algorithm):
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
-
-            # image = (image - mean[:, None, None]) / std[:, None, None]
-            # print("image1:", image, image.shape, flush=True)
-            # image = (image-128)/128
-            # print("image2:", image, image.shape, flush=True)
-            # print("image1:", image, image.shape, flush=True)
             image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            print("image1:", image, image.shape, flush=True)
+            #print("image1:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.zeros((12, 320, 320))
             #inputs = inputs.astype(np.float32)
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             #print("logits: ", logits, logits.shape, flush=True)

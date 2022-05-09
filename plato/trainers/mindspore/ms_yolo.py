@@ -57,7 +57,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
+            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -73,7 +73,7 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=10,
+            parser.add_argument('--max_epoch', type=int, default=200,
                                 help='Max epoch num to train the model. Default: 320')
             parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
@@ -213,16 +213,7 @@ class Trainer():
 
         feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                                 drop_remainder=True)
-        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
-            print('image1-----: ', image,image.shape, flush=True)
-
         feature_dataset = feature_dataset.repeat(args.max_epoch)
-
-        for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-                  batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in feature_dataset:
-            print('image2-----: ', image,image.shape, flush=True)
-
         data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
