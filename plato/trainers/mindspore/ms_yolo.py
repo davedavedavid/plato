@@ -239,7 +239,7 @@ class Trainer():
             if i % args.log_interval == 0:
                 time_used = time.time() - t_end
                 epoch = int(i / args.steps_per_epoch)
-                fps = Config.per_batch_size * (i - old_progress) * args.group_size / time_used
+                fps = Config().trainer.per_batch_size * (i - old_progress) * args.group_size / time_used
                 if args.rank == 0:
                     args.logger.info(
                         'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))
