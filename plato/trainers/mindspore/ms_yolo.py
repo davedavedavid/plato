@@ -179,7 +179,7 @@ class Trainer():
             config.resize_rate = args.resize_rate
 
         #data_size = 296 #len(trainset[0])
-        args.steps_per_epoch = int(data_size / args.per_batch_size / args.group_size)
+        args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)
 
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
