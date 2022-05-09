@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
-from plato.config import Config
+
 ms.set_seed(1)
 
 class Trainer():
@@ -49,7 +49,7 @@ class Trainer():
         """
         self.client_id = client_id
 
-    def train(self, dataset, data_size=None, cut_layer=None, cloud_args=None):
+    def train(self, dataset, data_size=None, per_batch_size=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -239,7 +239,7 @@ class Trainer():
             if i % args.log_interval == 0:
                 time_used = time.time() - t_end
                 epoch = int(i / args.steps_per_epoch)
-                fps = Config().trainer.per_batch_size * (i - old_progress) * args.group_size / time_used
+                fps = per_batch_size * (i - old_progress) * args.group_size / time_used
                 if args.rank == 0:
                     args.logger.info(
                         'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))

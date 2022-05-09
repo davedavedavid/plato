@@ -87,10 +87,12 @@ class Algorithm(fedavg.Algorithm):
         device_num = 1
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
-        dataset = dataset.batch(Config().trainer.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
+        per_batch_size = Config().trainer.per_batch_size
+        max_epoch = Config().trainer.max_epoch
+        dataset = dataset.batch(per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                         drop_remainder=True)
 
-        dataset = dataset.repeat(Config().trainer.max_epoch)
+        dataset = dataset.repeat(max_epoch)
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
         #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
         #     #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
@@ -98,7 +100,7 @@ class Algorithm(fedavg.Algorithm):
         #     print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
         #     print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
         #     print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
-        self.trainer.train(dataset, data_size)
+        self.trainer.train(dataset, data_size, per_batch_size)
 
 
 
