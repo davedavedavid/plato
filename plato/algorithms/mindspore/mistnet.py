@@ -78,7 +78,7 @@ class Algorithm(fedavg.Algorithm):
                   batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape
 
     def train(self, trainset, *args):
-        #print('trainset: ', len(trainset), flush=True)
+        print('trainset: ', len(trainset), flush=True)
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         data_size = len(trainset)
@@ -90,8 +90,8 @@ class Algorithm(fedavg.Algorithm):
         dataset = dataset.batch(per_batch_size=1, num_parallel_workers=min(4, num_parallel_workers),
                                         drop_remainder=True)
 
-        dataset = dataset.repeat(max_epoch=1)
-
+        dataset = dataset.repeat(max_epoch=2)
+        print('dataset: ', len(dataset), flush=True)
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
         #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
         #     #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
