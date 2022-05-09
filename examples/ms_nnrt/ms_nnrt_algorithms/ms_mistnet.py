@@ -62,11 +62,12 @@ class Algorithm(ms_fedavg.Algorithm):
 
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight,
                             size]
+            image = np.array(image, dtype='float32')
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
-            # mean = np.array(mean, dtype=image.dtype)
-            # std = np.array(std, dtype=image.dtype)
-            image = np.array(image, dtype='float32')
+            mean = np.array(mean, dtype=image.dtype)
+            std = np.array(std, dtype=image.dtype)
+
             # image = (image - mean[:, None, None]) / std[:, None, None]
             # print("image1:", image, image.shape, flush=True)
             # image = (image-128)/128
