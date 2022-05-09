@@ -207,14 +207,7 @@ class Trainer():
         old_progress = -1
         t_end = time.time()
 
-        device_num = 1
-        cores = multiprocessing.cpu_count()
-        num_parallel_workers = int(cores / device_num)
-
-        feature_dataset = dataset.batch(args.per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
-                                                drop_remainder=True)
-        feature_dataset = feature_dataset.repeat(args.max_epoch)
-        data_loader = feature_dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         #for epoch in range(args.max_epoch):
         for i, data in enumerate(data_loader):
             print("i: ", i, flush=True)
@@ -230,7 +223,7 @@ class Trainer():
             img_width = int(data["img_width"][0])
             input_shape = Tensor(data["input_shape"][0], ms.float32)
             print("logits: ", logits, logits.shape, flush=True)
-            print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
+            #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
             #print("---logits----: ", logits, logits.shape, flush=True)
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,

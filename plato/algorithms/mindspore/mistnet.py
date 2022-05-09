@@ -15,7 +15,7 @@ import mindspore.dataset as ds
 
 from plato.utils import unary_encoding
 from plato.algorithms.mindspore import fedavg
-
+import multiprocessing
 
 class Algorithm(fedavg.Algorithm):
     """The PyTorch-based MistNet algorithm, used by both the client and the
@@ -83,6 +83,15 @@ class Algorithm(fedavg.Algorithm):
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         data_size = len(trainset)
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
+        device_num = 1
+        cores = multiprocessing.cpu_count()
+        num_parallel_workers = int(cores / device_num)
+
+        dataset = dataset.batch(per_batch_size=1, num_parallel_workers=min(4, num_parallel_workers),
+                                        drop_remainder=True)
+
+        dataset = dataset.repeat(max_epoch=1)
+
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
         #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
         #     #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
