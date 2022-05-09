@@ -544,9 +544,9 @@ def color_distortion(img, hue, sat, val, device_num):
     x[x < 0] = 0
     x = x * 255.
     x = x.astype(np.uint8)
-    print('xxxxxxxxxxx', np.max(x))
+    print('xxxxxxxxxxx',x, x.shape, np.max(x))
     image_data = cv2.cvtColor(x, cv2.COLOR_HSV2RGB_FULL)
-    print('x22222222', np.max(image_data))
+    print('x22222222',image_data, image_data.shape, np.max(image_data))
     return image_data
 
 
