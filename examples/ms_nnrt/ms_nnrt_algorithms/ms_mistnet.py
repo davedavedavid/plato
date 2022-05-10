@@ -51,7 +51,7 @@ class Algorithm(ms_fedavg.Algorithm):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            #print("img:", img, img.shape, flush=True)
+            print("img:", img, img.shape, flush=True)
             #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
             #input_size = [img_hight, img_wight]
