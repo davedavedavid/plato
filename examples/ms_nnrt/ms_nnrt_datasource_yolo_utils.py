@@ -586,7 +586,6 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
             # box_data should have at least one box
             new_ar = float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
             scale = _rand(0.5, 2)
-            print("scale: ", scale, flush=True)
             if new_ar < 1:
                 nh = int(scale * input_h)
                 nw = int(nh * new_ar)
@@ -615,7 +614,6 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
 def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
                                 image_h, flip, box, box_data, allow_outside_center, max_boxes):
     """Calculate correct boxes."""
-    print("candidates, box:", candidates, box, flush=True)
     while candidates:
         if len(candidates) > 1:
             # ignore default candidate which do not crop
@@ -628,27 +626,21 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
         t_box[:, [1, 3]] = t_box[:, [1, 3]] * float(nh) / float(image_h) + dy
         if flip:
             t_box[:, [0, 2]] = input_w - t_box[:, [2, 0]]
-            print("t_box1:", t_box, flush=True)
         if allow_outside_center:
             pass
         else:
             t_box = t_box[np.logical_and((t_box[:, 0] + t_box[:, 2])/2. >= 0., (t_box[:, 1] + t_box[:, 3])/2. >= 0.)]
             t_box = t_box[np.logical_and((t_box[:, 0] + t_box[:, 2]) / 2. <= input_w,
                                          (t_box[:, 1] + t_box[:, 3]) / 2. <= input_h)]
-            print("t_box2:", t_box, flush=True)
         # recorrect x, y for case x,y < 0 reset to zero, after dx and dy, some box can smaller than zero
         t_box[:, 0:2][t_box[:, 0:2] < 0] = 0
-        print("t_box3:", t_box, flush=True)
         # recorrect w,h not higher than input size
         t_box[:, 2][t_box[:, 2] > input_w] = input_w
         t_box[:, 3][t_box[:, 3] > input_h] = input_h
-        print("t_box4:", t_box, flush=True)
         box_w = t_box[:, 2] - t_box[:, 0]
         box_h = t_box[:, 3] - t_box[:, 1]
-        print("t_box5:", t_box, flush=True)
         # discard invalid box: w or h smaller than 1 pixel
         t_box = t_box[np.logical_and(box_w > 1, box_h > 1)]
-        print("allow_outside_center, t_box:", allow_outside_center, t_box, flush=True)
         if t_box.shape[0] > 0:
             # break if number of find t_box
             box_data[: len(t_box)] = t_box
@@ -729,7 +721,6 @@ def preprocess_fn(image, box, config, input_size, device_num):
     image, anno = _data_aug(image, box, jitter=jitter, hue=hue, sat=sat, val=val,
                             image_input_size=input_size, max_boxes=max_boxes,
                             num_classes=num_classes, anchors=anchors, device_num=device_num)
-    print("-----anno-----: ", anno, flush=True)
     return image, anno
 
 
