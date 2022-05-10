@@ -722,6 +722,7 @@ def preprocess_fn(image, box, config, input_size, device_num):
     hue = config.hue
     sat = config.saturation
     val = config.value
+    print("----------: ", box, jitter, hue, sat, val, input_size, max_boxes, num_classes, anchors, device_num, flush=True)
     image, anno = _data_aug(image, box, jitter=jitter, hue=hue, sat=sat, val=val,
                             image_input_size=input_size, max_boxes=max_boxes,
                             num_classes=num_classes, anchors=anchors, device_num=device_num)
