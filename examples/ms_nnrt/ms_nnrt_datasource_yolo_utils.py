@@ -615,6 +615,7 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
 def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
                                 image_h, flip, box, box_data, allow_outside_center, max_boxes):
     """Calculate correct boxes."""
+    print("candidates, box:", candidates, box, flush=True)
     while candidates:
         if len(candidates) > 1:
             # ignore default candidate which do not crop
@@ -644,7 +645,7 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
         box_h = t_box[:, 3] - t_box[:, 1]
         # discard invalid box: w or h smaller than 1 pixel
         t_box = t_box[np.logical_and(box_w > 1, box_h > 1)]
-
+        print("allow_outside_center, t_box:", allow_outside_center, t_box, flush=True)
         if t_box.shape[0] > 0:
             # break if number of find t_box
             box_data[: len(t_box)] = t_box
@@ -665,7 +666,6 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
 
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
-    print("image:", image, image.size, flush=True)
     image_w, image_h = image.size
     input_h, input_w = image_input_size
 
