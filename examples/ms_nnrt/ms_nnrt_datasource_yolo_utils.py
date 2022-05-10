@@ -586,6 +586,7 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
             # box_data should have at least one box
             new_ar = float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
             scale = _rand(0.5, 2)
+            print("scale: ", scale, flush=True)
             if new_ar < 1:
                 nh = int(scale * input_h)
                 nw = int(nh * new_ar)
@@ -641,6 +642,7 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
         box_h = t_box[:, 3] - t_box[:, 1]
         # discard invalid box: w or h smaller than 1 pixel
         t_box = t_box[np.logical_and(box_w > 1, box_h > 1)]
+        print("t_box: ", t_box, flush=True)
         if t_box.shape[0] > 0:
             # break if number of find t_box
             box_data[: len(t_box)] = t_box
