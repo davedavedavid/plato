@@ -208,8 +208,8 @@ class COCOYoloDataset:
 
         input_size = [640, 640]
         #print('random.random() < 0.5: ', random.random(), random.random() < 0.5, flush=True)
-        if self.mosaic: #and random.random() < 0.5:
-            return self._mosaic_preprocess(index, input_size)
+        #if self.mosaic: #and random.random() < 0.5:
+        #    return self._mosaic_preprocess(index, input_size)
         img = np.fromfile(os.path.join(self.root, img_path), dtype='int8')
         ann_ids = coco.getAnnIds(imgIds=img_id)
         target = coco.loadAnns(ann_ids)
