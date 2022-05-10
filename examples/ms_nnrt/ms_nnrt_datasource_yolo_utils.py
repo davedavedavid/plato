@@ -586,7 +586,7 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
             # box_data should have at least one box
             new_ar = float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
             scale = _rand(0.5, 2)
-
+            print("scale: ", scale, flush=True)
             if new_ar < 1:
                 nh = int(scale * input_h)
                 nw = int(nh * new_ar)

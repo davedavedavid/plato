@@ -47,6 +47,7 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):
+        np.random.seed(1)
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
             img_hight = input_size[0]
