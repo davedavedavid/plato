@@ -672,7 +672,7 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     np.random.shuffle(box)
     if len(box) > max_boxes:
         box = box[:max_boxes]
-    flip = _rand() < .5
+    flip = 1 # _rand() < .5
     box_data = np.zeros((max_boxes, 5))
 
     candidates = _choose_candidate_by_constraints(use_constraints=False,
@@ -722,10 +722,11 @@ def preprocess_fn(image, box, config, input_size, device_num):
     hue = config.hue
     sat = config.saturation
     val = config.value
-    print("----------: ", box, jitter, hue, sat, val, input_size, max_boxes, num_classes, anchors, device_num, flush=True)
+
     image, anno = _data_aug(image, box, jitter=jitter, hue=hue, sat=sat, val=val,
                             image_input_size=input_size, max_boxes=max_boxes,
                             num_classes=num_classes, anchors=anchors, device_num=device_num)
+    print("-----anno-----: ", anno, flush=True)
     return image, anno
 
 
