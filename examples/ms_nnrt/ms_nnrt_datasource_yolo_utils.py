@@ -665,7 +665,7 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
 
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
-
+    print("image:", image, image.shape, flush=True)
     image_w, image_h = image.size
     input_h, input_w = image_input_size
 
