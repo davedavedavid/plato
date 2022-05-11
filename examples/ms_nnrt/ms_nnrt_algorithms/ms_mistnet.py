@@ -52,13 +52,13 @@ class Algorithm(ms_fedavg.Algorithm):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            #print("img:", img, img.shape, flush=True)
+            print("img:", img, img.shape, flush=True)
             #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            #print("img:", image, image.shape, flush=True)
+            print("img:", image, image.shape, flush=True)
             #print("annotation1: ", annotation, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
@@ -80,7 +80,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.zeros((12, 320, 320))
             #inputs = inputs.astype(np.float32)
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             #print("logits: ", logits, logits.shape, flush=True)
