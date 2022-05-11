@@ -31,7 +31,7 @@ class Algorithm(ms_fedavg.Algorithm):
         _randomize = getattr(self.trainer, "randomize", None)
 
         features_shape = self.features_shape()
-
+        np.random.seed(5)
         config = ConfigYOLOV5()
         device_num = 1
         distributed_sampler = DistributedSampler(len(dataset), device_num, rank=None, shuffle=True)
@@ -47,7 +47,7 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):
-        np.random.seed(5)
+        #np.random.seed(5)
         for img, anno, input_size, mosaic_flag in dataset:
             np.array(anno)
             img_hight = input_size[0]
