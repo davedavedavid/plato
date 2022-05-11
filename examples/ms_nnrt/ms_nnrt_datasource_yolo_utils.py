@@ -584,9 +584,9 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
 
         for _ in range(max_trial):
             # box_data should have at least one box
-            new_ar =0.5# float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
-            scale = 1 # _rand(0.5, 2)
-            print("scale: ", scale, flush=True)
+            new_ar = float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
+            scale = _rand(0.5, 2)
+            #print("scale: ", scale, flush=True)
             if new_ar < 1:
                 nh = int(scale * input_h)
                 nw = int(nh * new_ar)
@@ -616,11 +616,11 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
                                 image_h, flip, box, box_data, allow_outside_center, max_boxes):
     """Calculate correct boxes."""
     while candidates:
-        print("candidates:", candidates, flush=True)
+        #print("candidates:", candidates, flush=True)
         if len(candidates) > 1:
             # ignore default candidate which do not crop
-            #candidate = candidates.pop(np.random.randint(1, len(candidates)))
-            candidate = candidates.pop(1)
+            candidate = candidates.pop(np.random.randint(1, len(candidates)))
+            #candidate = candidates.pop(1)
         else:
             candidate = candidates.pop(np.random.randint(0, len(candidates)))
         dx, dy, nw, nh = candidate
@@ -692,26 +692,22 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
                                                       box_data=box_data,
                                                       allow_outside_center=True,
                                                       max_boxes=max_boxes)
-    print("candidate:", candidate, flush=True)
+    #print("candidate:", candidate, flush=True)
     dx, dy, nw, nh = candidate
-    interp = 0 #get_interp_method(interp=10)
-    print("image0:", np.asarray(image), interp, flush=True)
+    interp = get_interp_method(interp=10)
+    #print("image0:", np.asarray(image), interp, flush=True)
     image = image.resize((nw, nh), pil_image_reshape(interp))
-    print("image1:", nw, nh, np.asarray(image), flush=True)
+    #print("image1:", nw, nh, np.asarray(image), flush=True)
     # place image, gray color as back graoud
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
     image = new_image
     #image2 = np.asarray(image)
-    print("image2:", np.asarray(image), flush=True)
     if flip:
        image = filp_pil_image(image)
     image = np.array(image)
-    print("image3:", image, flush=True)
     image = convert_gray_to_color(image)
-    print("image4:", image,image.shape, flush=True)
     image_data = color_distortion(image, hue, sat, val, device_num)
-    print("image5:", image_data, image_data.shape, flush=True)
     return image_data, box_data
 
 
