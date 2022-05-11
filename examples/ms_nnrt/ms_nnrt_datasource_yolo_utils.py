@@ -692,20 +692,23 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
                                                       max_boxes=max_boxes)
     dx, dy, nw, nh = candidate
     interp = get_interp_method(interp=10)
+    print("image0:", image, interp, flush=True)
     image = image.resize((nw, nh), pil_image_reshape(interp))
+    print("image1:", image, flush=True)
     # place image, gray color as back graoud
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
     image = new_image
     #image2 = np.asarray(image)
-    #print("image2:", image2, flush=True)
+    print("image2:", image, flush=True)
     if flip:
        image = filp_pil_image(image)
     image = np.array(image)
+    print("image3:", image, flush=True)
     image = convert_gray_to_color(image)
-    #print("image4:", image,image.shape, flush=True)
+    print("image4:", image,image.shape, flush=True)
     image_data = color_distortion(image, hue, sat, val, device_num)
-    #print("image5:", image_data, image_data.shape, flush=True)
+    print("image5:", image_data, image_data.shape, flush=True)
     return image_data, box_data
 
 
