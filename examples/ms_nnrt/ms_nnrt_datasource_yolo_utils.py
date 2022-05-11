@@ -211,6 +211,7 @@ class COCOYoloDataset:
         #if self.mosaic: #and random.random() < 0.5:
         #    return self._mosaic_preprocess(index, input_size)
         img = np.fromfile(os.path.join(self.root, img_path), dtype='int8')
+        print('os.path.join(self.root, img_path): ', os.path.join(self.root, img_path), flush=True)
         ann_ids = coco.getAnnIds(imgIds=img_id)
         target = coco.loadAnns(ann_ids)
         # filter crowd annotations
@@ -780,15 +781,15 @@ class MultiScaleTrans:
 
     def __call__(self, img, anno, input_size, mosaic_flag):
         print("img1:", img, img.shape, flush=True)
-        np.save("/home/data/home/huawei/tt/img1.npy", img)
+        np.save("/home/huawei/tt/img1.npy", img)
         if mosaic_flag[0] == 0:
             img = decode(img)
             print("img2:", np.array(img), flush=True)
-            np.save("/home/data/home/huawei/tt/img2.npy",img)
+            np.save("/home/huawei/tt/img2.npy",img)
         #print("________________", np.random.rand(), flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
         print("img3:", img, flush=True)
-        np.save("/home/data/home/huawei/tt/img3.npy", img)
+        np.save("/home/huawei/tt/img3.npy", img)
         return img, anno, np.array(img.shape[0:2])
 
 
