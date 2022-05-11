@@ -642,7 +642,7 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
         box_h = t_box[:, 3] - t_box[:, 1]
         # discard invalid box: w or h smaller than 1 pixel
         t_box = t_box[np.logical_and(box_w > 1, box_h > 1)]
-        print("t_box: ", t_box, flush=True)
+        #print("t_box: ", t_box, flush=True)
         if t_box.shape[0] > 0:
             # break if number of find t_box
             box_data[: len(t_box)] = t_box
@@ -779,7 +779,7 @@ class MultiScaleTrans:
     def __call__(self, img, anno, input_size, mosaic_flag):
         if mosaic_flag[0] == 0:
             img = decode(img)
-        print("________________", np.random.rand(), flush=True)
+        #print("________________", np.random.rand(), flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
         return img, anno, np.array(img.shape[0:2])
 
