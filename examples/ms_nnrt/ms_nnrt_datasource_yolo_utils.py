@@ -616,9 +616,11 @@ def _correct_bbox_by_candidates(candidates, input_w, input_h, image_w,
                                 image_h, flip, box, box_data, allow_outside_center, max_boxes):
     """Calculate correct boxes."""
     while candidates:
+        print("candidates:", candidates, flush=True)
         if len(candidates) > 1:
             # ignore default candidate which do not crop
-            candidate = candidates.pop(np.random.randint(1, len(candidates)))
+            #candidate = candidates.pop(np.random.randint(1, len(candidates)))
+            candidate = candidates.pop(1)
         else:
             candidate = candidates.pop(np.random.randint(0, len(candidates)))
         dx, dy, nw, nh = candidate
