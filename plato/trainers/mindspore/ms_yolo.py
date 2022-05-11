@@ -73,7 +73,7 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=2,
+            parser.add_argument('--max_epoch', type=int, default=200,
                                 help='Max epoch num to train the model. Default: 320')
             parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
@@ -210,13 +210,9 @@ class Trainer():
         data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
         for i, data in enumerate(data_loader):
             #print("i: ", i, flush=True)
-            print("data[image]: ", data["image"], data["image"].shape, flush=True)
             logits = Tensor(data["image"], ms.float32)
-            print("logits: ", logits, logits.shape, flush=True)
             # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
-            print("data[batch_y_true_0]: ", data["batch_y_true_0"], data["batch_y_true_0"].shape, flush=True)
             batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
-            print("batch_y_true_0: ", batch_y_true_0, batch_y_true_0.shape, flush=True)
             batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float32)
             batch_y_true_2 = Tensor(data["batch_y_true_2"], ms.float32)
             batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)

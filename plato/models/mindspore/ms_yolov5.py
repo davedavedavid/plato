@@ -13,15 +13,15 @@ class Model(nn.Cell):
 
         self.network_to = YOLOv5Backbone_to()
 
-        self.yolo_network = YOLOV5s(is_training=True)
+        self.network_from = YOLOV5s(is_training=True)
 
     def load_model_train(self, args, lr):
-        default_recurisive_init(self.yolo_network)
+        default_recurisive_init(self.network_from)
         #model_dir = Config().params['pretrained_model_dir']
         #model_name = Config().trainer.model_name
         #print("model_dir: ", model_dir, flush=True)
-        load_yolov5_params(args, self.yolo_network)
-        self.network_from = YoloWithLossCell(self.yolo_network)
+        load_yolov5_params(args, self.network_from)
+        self.network_from = YoloWithLossCell(self.network_from)
 
         opt = Momentum(params=get_param_groups(self.network_from),
                        learning_rate=Tensor(lr),
