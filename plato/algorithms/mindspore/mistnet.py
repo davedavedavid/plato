@@ -16,7 +16,7 @@ import mindspore.dataset as ds
 from plato.utils import unary_encoding
 from plato.algorithms.mindspore import fedavg
 import multiprocessing
-from plato.config import Config
+import numpy as np
 
 class Algorithm(fedavg.Algorithm):
     """The PyTorch-based MistNet algorithm, used by both the client and the
@@ -62,7 +62,8 @@ class Algorithm(fedavg.Algorithm):
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
         #print('trainset: ', len(trainset), flush=True)
-        for i in range(len(trainset)): #[(image,[.....])()()]
+
+        for i in range(len(trainset)): #[[image,[]],[]]
             image = trainset[i][0]
             #print('image: ', image, image.shape, flush=True)
             annotation = trainset[i][1][0]
@@ -78,8 +79,10 @@ class Algorithm(fedavg.Algorithm):
             yield image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
                   batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape
 
-    def train(self, trainset, *args):
+    def train(self, trainset_, *args):
         #print('trainset: ', trainset, len(trainset), flush=True)
+        trainset = np.load('/home/huawei/tt/mzoo_data.npy')
+        print('trainset: ', trainset, len(trainset), flush=True)
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         data_size = len(trainset)
