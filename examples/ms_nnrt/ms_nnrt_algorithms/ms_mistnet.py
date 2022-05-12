@@ -57,7 +57,7 @@ class Algorithm(ms_fedavg.Algorithm):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            print("img1:", img, img.shape, flush=True)
+            #print("img1:", img, img.shape, flush=True)
             #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
             #input_size = [img_hight, img_wight]
@@ -76,7 +76,8 @@ class Algorithm(ms_fedavg.Algorithm):
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
-            image = (image - mean) / std
+            #image = (image - mean) / std
+            image = (img - mean[:, None, None]) / std[:, None, None]
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
