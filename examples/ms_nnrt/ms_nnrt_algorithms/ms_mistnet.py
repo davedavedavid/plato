@@ -1,4 +1,5 @@
 import logging
+import random
 import time
 import numpy as np
 from examples.ms_nnrt.ms_nnrt_algorithms import ms_fedavg
@@ -6,7 +7,7 @@ from plato.config import Config
 from plato.utils import unary_encoding_1b
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 from examples.ms_nnrt.config import ConfigYOLOV5
-
+import random
 
 class Algorithm(ms_fedavg.Algorithm):
     """The NNRT-based MistNet algorithm, used by both the client and the
@@ -48,6 +49,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
         # for i in range(5):
         np.random.seed(5)
+        random.seed(1)
         for img, anno, input_size, mosaic_flag in dataset:
             #print("np.random.rand(): ", np.random.rand(), flush=True)
             np.array(anno)
