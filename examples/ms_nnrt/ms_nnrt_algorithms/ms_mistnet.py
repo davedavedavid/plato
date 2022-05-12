@@ -70,13 +70,12 @@ class Algorithm(ms_fedavg.Algorithm):
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
-            img = Image.fromarray(image)
-            label_data_draw = ImageDraw.Draw(
-                img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
-            for bbox in gt_box3:
-                label_data_draw.rectangle((bbox[0]*640, bbox[1]*640, (bbox[0]+bbox[2])*640, (bbox[1]+bbox[3])*640), fill=None,
-                                          outline=0, width=5)
-            img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test1.jpg")
+            # img = Image.fromarray(image)
+            # label_data_draw = ImageDraw.Draw(img)
+            # for bbox in gt_box3:
+            #     label_data_draw.rectangle((bbox[0]*640, bbox[1]*640, (bbox[0]+bbox[2])*640, (bbox[1]+bbox[3])*640), fill=None,
+            #                               outline=0, width=5)
+            # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test1.jpg")
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
             image = np.array(image, dtype='float32')
@@ -85,6 +84,14 @@ class Algorithm(ms_fedavg.Algorithm):
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
             image = (image - mean) / std
+            image = image.astype("uint8")
+            img = Image.fromarray(image)
+            label_data_draw = ImageDraw.Draw(img)
+            for bbox in gt_box3:
+                label_data_draw.rectangle(
+                    (bbox[0] * 640, bbox[1] * 640, (bbox[0] + bbox[2]) * 640, (bbox[1] + bbox[3]) * 640), fill=None,
+                    outline=0, width=5)
+            img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
