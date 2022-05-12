@@ -68,7 +68,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #                           outline=0, width=5)
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-            print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
             # img = Image.fromarray(image)
             # label_data_draw = ImageDraw.Draw(img)
@@ -84,26 +84,26 @@ class Algorithm(ms_fedavg.Algorithm):
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
             image = (image - mean) / std
-            image = image.astype("uint8")
-            img = Image.fromarray(image)
-            label_data_draw = ImageDraw.Draw(img)
-            for bbox in gt_box3:
-                label_data_draw.rectangle(
-                    (bbox[0] * 640, bbox[1] * 640, (bbox[0] + bbox[2]) * 640, (bbox[1] + bbox[3]) * 640), fill=None,
-                    outline=0, width=5)
-            img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
+            # image = image.astype("uint8")
+            # img = Image.fromarray(image)
+            # label_data_draw = ImageDraw.Draw(img)
+            # for bbox in gt_box3:
+            #     label_data_draw.rectangle(
+            #         (bbox[0] * 640, bbox[1] * 640, (bbox[0] + bbox[2]) * 640, (bbox[1] + bbox[3]) * 640), fill=None,
+            #         outline=0, width=5)
+            # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            #inputs = np.zeros((12, 320, 320))
-            #inputs = inputs.astype(np.float32)
-            #print("inputs: ", inputs, inputs.shape, flush=True)
+            inputs = np.ones((12, 320, 320))
+            inputs = inputs.astype(np.float32)
+            print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            #print("logits: ", logits, logits.shape, flush=True)
+            print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/test_logits.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
