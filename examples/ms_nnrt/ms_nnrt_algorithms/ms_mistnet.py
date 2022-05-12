@@ -61,12 +61,14 @@ class Algorithm(ms_fedavg.Algorithm):
                                                         mosaic_flag=mosaic_flag)
             #print("img2:", image, image.shape, flush=True)
             print("annotation1: ", annotation, flush=True)
-            label_data_draw = ImageDraw.Draw(image)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
+            img = Image.fromarray(image)
+            label_data_draw = ImageDraw.Draw(img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
+
             font = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
             for bbox in annotation:
                 label_data_draw.rectangle((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]), fill=None,
                                       outline=0, width=5)
-            image.save("/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
+            img.save("/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
