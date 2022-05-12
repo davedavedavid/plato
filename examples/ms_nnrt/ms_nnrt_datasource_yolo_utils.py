@@ -587,7 +587,7 @@ def _choose_candidate_by_constraints(max_trial, input_w, input_h, image_w, image
             # box_data should have at least one box
             new_ar = float(input_w) / float(input_h) * _rand(1 - jitter, 1 + jitter) / _rand(1 - jitter, 1 + jitter)
             scale = _rand(0.5, 2)
-            #print("scale: ", scale, flush=True)
+            print("scale: ", scale, flush=True)
             if new_ar < 1:
                 nh = int(scale * input_h)
                 nw = int(nh * new_ar)
@@ -698,7 +698,7 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     interp = get_interp_method(interp=10)
     #print("image0:", np.asarray(image), interp, flush=True)
     image = image.resize((nw, nh), pil_image_reshape(interp))
-    #print("image1:", nw, nh, np.asarray(image), flush=True)
+    print("image1:", nw, nh, np.asarray(image), flush=True)
     # place image, gray color as back graoud
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
