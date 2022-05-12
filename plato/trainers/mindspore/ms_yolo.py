@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
-
+import mindspore
 ms.set_seed(1)
 
 class Trainer():
@@ -226,6 +226,7 @@ class Trainer():
             # input_shape = Tensor(data["input_shape"], ms.float32)
             #print("logits: ", logits, logits.shape, flush=True)
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
+            print(mindspore.__version__)
             print("---logits----: ", logits, logits.shape, flush=True)
 
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
