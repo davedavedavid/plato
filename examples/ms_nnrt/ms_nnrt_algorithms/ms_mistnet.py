@@ -63,8 +63,6 @@ class Algorithm(ms_fedavg.Algorithm):
             print("annotation1: ", annotation, flush=True)
             img = Image.fromarray(image)
             label_data_draw = ImageDraw.Draw(img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
-
-            font = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
             for bbox in annotation:
                 label_data_draw.rectangle((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]), fill=None,
                                       outline=0, width=5)
