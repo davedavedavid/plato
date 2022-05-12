@@ -66,7 +66,7 @@ class Algorithm(ms_fedavg.Algorithm):
             for bbox in annotation:
                 label_data_draw.rectangle((bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]), fill=None,
                                       outline=0, width=5)
-            img.save("/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
+            img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
