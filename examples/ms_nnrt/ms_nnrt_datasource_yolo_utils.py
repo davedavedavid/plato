@@ -780,10 +780,13 @@ class MultiScaleTrans:
         return seed_list
 
     def __call__(self, img, anno, input_size, mosaic_flag):
+        print("img1:", np.array(img), flush=True)
         if mosaic_flag[0] == 0:
             img = decode(img)
+            print("img2:", img, flush=True)
         #print("________________", np.random.rand(), flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
+        print("img3:", img, flush=True)
         return img, anno, np.array(img.shape[0:2])
 
 
