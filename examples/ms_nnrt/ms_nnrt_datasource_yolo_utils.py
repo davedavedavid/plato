@@ -696,9 +696,9 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
     #print("candidate:", candidate, flush=True)
     dx, dy, nw, nh = candidate
     interp = get_interp_method(interp=10)
-    print("image0:", np.asarray(image), interp, flush=True)
+    #print("image0:", np.asarray(image), interp, flush=True)
     image = image.resize((nw, nh), pil_image_reshape(interp))
-    print("image1:", nw, nh, np.asarray(image), flush=True)
+    #print("image1:", nw, nh, np.asarray(image), flush=True)
     # place image, gray color as back graoud
     new_image = Image.new('RGB', (input_w, input_h), (128, 128, 128))
     new_image.paste(image, (dx, dy))
@@ -780,13 +780,13 @@ class MultiScaleTrans:
         return seed_list
 
     def __call__(self, img, anno, input_size, mosaic_flag):
-        print("img1:", np.array(img), flush=True)
+        #print("img1:", np.array(img), flush=True)
         if mosaic_flag[0] == 0:
             img = decode(img)
-            print("img2:", np.array(img), flush=True)
+            #print("img2:", np.array(img), flush=True)
         #print("________________", np.random.rand(), flush=True)
         img, anno = preprocess_fn(img, anno, self.config, input_size, self.device_num)
-        print("img3:", img, flush=True)
+        #print("img3:", img, flush=True)
         return img, anno, np.array(img.shape[0:2])
 
 

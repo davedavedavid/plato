@@ -49,8 +49,8 @@ class Algorithm(ms_fedavg.Algorithm):
 
         # for i in range(5):
         np.random.seed(5)
-        random.seed(1)
-        print("random.randint(0, 4): ", random.randint(0, 4), flush=True)
+        #random.seed(1)
+        #print("random.randint(0, 4): ", random.randint(0, 4), flush=True)
         for img, anno, input_size, mosaic_flag in dataset:
             #print("np.random.rand(): ", np.random.rand(), flush=True)
             np.array(anno)
@@ -92,7 +92,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
-
+            #random.seed(1)
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
                 # logits = unary_encoding_1b.encode(logits)
