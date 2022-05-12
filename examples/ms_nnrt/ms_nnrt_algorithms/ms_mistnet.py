@@ -50,7 +50,6 @@ class Algorithm(ms_fedavg.Algorithm):
         # for i in range(5):
         np.random.seed(5)
         random.seed(1)
-        random.randint(0, 4)
         print("random.randint(0, 4): ", random.randint(0, 4), flush=True)
         for img, anno, input_size, mosaic_flag in dataset:
             #print("np.random.rand(): ", np.random.rand(), flush=True)
