@@ -23,8 +23,8 @@ class Algorithm(ms_fedavg.Algorithm):
         epsilon: If epsilon is not None, local differential privacy should be
                 applied to the features extracted.
         """
-        #for image4, annotation, input_size, mosaic_flag in dataset:
-        #    print('image4: ', image4, image4.shape, flush=True)
+        np.random.seed(5)
+        random.seed(1)
         tic = time.perf_counter()
 
         feature_dataset = []
@@ -48,11 +48,12 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):
-        np.random.seed(5)
+        #np.random.seed(5)
         #random.seed(1)
         #print("random.randint(0, 4): ", random.randint(0, 4), flush=True)
         for img, anno, input_size, mosaic_flag in dataset:
             #print("np.random.rand(): ", np.random.rand(), flush=True)
+
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
@@ -92,7 +93,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
-            #random.seed(1)
+
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
                 # logits = unary_encoding_1b.encode(logits)
