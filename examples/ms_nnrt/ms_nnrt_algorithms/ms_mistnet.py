@@ -60,7 +60,7 @@ class Algorithm(ms_fedavg.Algorithm):
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
             #print("img2:", image, image.shape, flush=True)
-            print("annotation1: ", annotation, flush=True)
+            #print("annotation1: ", annotation, flush=True)
             img = Image.fromarray(image)
             label_data_draw = ImageDraw.Draw(img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
             for bbox in annotation:
@@ -68,7 +68,7 @@ class Algorithm(ms_fedavg.Algorithm):
                                       outline=0, width=5)
             img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-            #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
