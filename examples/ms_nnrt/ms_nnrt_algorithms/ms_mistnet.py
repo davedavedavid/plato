@@ -48,12 +48,7 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):
-        #np.random.seed(5)
-        #random.seed(1)
-        #print("random.randint(0, 4): ", random.randint(0, 4), flush=True)
         for img, anno, input_size, mosaic_flag in dataset:
-            #print("np.random.rand(): ", np.random.rand(), flush=True)
-
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
@@ -63,8 +58,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            print("img2:", image, image.shape, flush=True)
-            #print("annotation1: ", annotation, flush=True)
+            #print("img2:", image, image.shape, flush=True)
+            print("annotation1: ", annotation, flush=True)
             annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
             #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
@@ -77,7 +72,7 @@ class Algorithm(ms_fedavg.Algorithm):
             std = np.array(std, dtype=image.dtype)
             image = (image - mean) / std
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            print("img3:", image, image.shape, flush=True)
+            #print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             #print("inputs:", inputs, inputs.shape, flush=True)
