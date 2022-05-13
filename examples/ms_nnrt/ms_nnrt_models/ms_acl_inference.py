@@ -76,10 +76,3 @@ class Inference(object):
 
         return output
 
-# if __name__ == '__main__':
-#     import numpy as np
-#     data = np.load("./img.npy", allow_pickle=True)
-#     temp = Inference(0,"/home/huawei/tt/sedna/examples/federated_learning/yolov5_coco128_mistnet/network_f.om", 320, 320)
-#     result= temp.forward(data)
-#     print('\n=====================result:=========================')
-#     print(result[:10])
