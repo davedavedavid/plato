@@ -67,11 +67,11 @@ class Inference(object):
 
     def forward(self, input_img):
         """ Pass the input image to model class for inference. """
-        print("input_img: ", input_img)
+        print("input_img: ", input_img, flush=True)
         img_device, img_buffer_size = self._transfer_to_device(input_img)
 
         output = self.model_process.run(img_device, img_buffer_size)
-        print(output[:10])
+        print(output[:10], flush=True)
         acl.rt.free(img_device)
 
         return output
