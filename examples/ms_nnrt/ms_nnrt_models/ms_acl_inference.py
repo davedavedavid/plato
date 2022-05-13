@@ -67,17 +67,19 @@ class Inference(object):
 
     def forward(self, input_img):
         """ Pass the input image to model class for inference. """
+        print("input_img: ", input_img)
         img_device, img_buffer_size = self._transfer_to_device(input_img)
 
         output = self.model_process.run(img_device, img_buffer_size)
-
+        print(output[:10])
         acl.rt.free(img_device)
 
         return output
-if __name__ == '__main__':
-    import numpy as np
-    data = np.load("./img.npy", allow_pickle=True)
-    temp = Inference(0,"/home/huawei/tt/sedna/examples/federated_learning/yolov5_coco128_mistnet/network_f.om", 320, 320)
-    result= temp.forward(data)
-    print('\n=====================result:=========================')
-    print(result[:10]) 
+
+# if __name__ == '__main__':
+#     import numpy as np
+#     data = np.load("./img.npy", allow_pickle=True)
+#     temp = Inference(0,"/home/huawei/tt/sedna/examples/federated_learning/yolov5_coco128_mistnet/network_f.om", 320, 320)
+#     result= temp.forward(data)
+#     print('\n=====================result:=========================')
+#     print(result[:10])
