@@ -74,5 +74,5 @@ class Inference(object):
         print(output[:10], flush=True)
         acl.rt.free(img_device)
 
-        return output
 
+        return output
