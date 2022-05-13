@@ -16,10 +16,12 @@ class Model(nn.Cell):
         self.network_from = YOLOV5s(is_training=True)
 
     def load_model_train(self, args, lr):
+        default_recurisive_init(self.network_to)
         default_recurisive_init(self.network_from)
         #model_dir = Config().params['pretrained_model_dir']
         #model_name = Config().trainer.model_name
         #print("model_dir: ", model_dir, flush=True)
+        load_yolov5_params(args, self.network_to)
         load_yolov5_params(args, self.network_from)
         self.network_from = YoloWithLossCell(self.network_from)
 
