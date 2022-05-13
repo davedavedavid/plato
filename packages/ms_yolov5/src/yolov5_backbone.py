@@ -185,14 +185,14 @@ class YOLOv5Backbone_to(nn.Cell):
         """construct method"""
         #img_hight = P.Shape()(x)[2] * 2
         #img_width = P.Shape()(x)[3] * 2
-        input_shape = F.shape(x)[2:4]
-        input_shape = F.cast(self.tenser_to_array(input_shape) * 2, ms.float32)
+        #input_shape = F.shape(x)[2:4]
+        #input_shape = F.cast(self.tenser_to_array(input_shape) * 2, ms.float32)
 
         fcs = self.focusv2(x)
         cv1 = self.conv1(fcs)
         bcsp1 = self.C31(cv1)
         cv2 = self.conv2(bcsp1)
-        return cv2, input_shape
+        return cv2 #, input_shape
 
 class YOLOv5Backbone_from(nn.Cell):
 
