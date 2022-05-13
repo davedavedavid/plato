@@ -181,7 +181,7 @@ class YOLOv5Backbone_to(nn.Cell):
         self.C31 = C3(64, 64, n=1)
         self.conv2 = Conv(64, 128, k=3, s=2)
 
-    def construct(self, x, input_shape):
+    def construct(self, x):
         """construct method"""
         #img_hight = P.Shape()(x)[2] * 2
         #img_width = P.Shape()(x)[3] * 2
