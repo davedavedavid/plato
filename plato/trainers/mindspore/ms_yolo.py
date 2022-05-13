@@ -31,6 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
+
 import mindspore
 ms.set_seed(1)
 
@@ -228,8 +229,8 @@ class Trainer():
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
             #print(mindspore.__version__)
             #print("---logits----: ", logits, logits.shape, flush=True)
-
-            loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+            cv2 = network_t.forward_to(logits)
+            loss = network_t.forward_from(cv2, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())
 
