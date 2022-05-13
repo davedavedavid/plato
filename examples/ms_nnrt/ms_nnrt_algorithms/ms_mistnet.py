@@ -98,8 +98,8 @@ class Algorithm(ms_fedavg.Algorithm):
             inputs = ds.astype(np.float32)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            inputs = np.ones((12, 320, 320))
-            inputs = inputs.astype(np.float32)
+            #inputs = np.ones((12, 320, 320))
+            #inputs = inputs.astype(np.float32)
             print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
