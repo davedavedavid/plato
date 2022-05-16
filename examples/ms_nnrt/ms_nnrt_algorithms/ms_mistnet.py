@@ -49,8 +49,8 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):[[][]]
-        #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/ann_data.npy", allow_pickle=True)
-        for img, anno, input_size, mosaic_flag in dataset:
+        inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
+        for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
@@ -80,6 +80,7 @@ class Algorithm(ms_fedavg.Algorithm):
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
             image = np.array(image, dtype='float32')
+            image = inp[index]
             #print("img3:", image, image.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_Normalize_2.npy", image)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
@@ -99,7 +100,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
-            logits = np.expand_dims(inputs, axis=0)
+            inputs = np.expand_dims(inputs, axis=0)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
@@ -107,9 +108,9 @@ class Algorithm(ms_fedavg.Algorithm):
             #inputs = inputs.astype(np.float32)
             #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = inp[index][0]
-            #logits = self.model.forward(inputs)
-            #logits = np.reshape(logits, features_shape)
-            print("logits: ", logits, logits.shape, flush=True)
+            logits = self.model.forward(inputs)
+            logits = np.reshape(logits, features_shape)
+            #print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
