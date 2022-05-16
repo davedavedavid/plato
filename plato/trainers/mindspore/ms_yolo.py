@@ -31,7 +31,7 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
-
+import numpy as np
 import mindspore
 ms.set_seed(1)
 
@@ -209,6 +209,7 @@ class Trainer():
         t_end = time.time()
 
         data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
+        cv_data= []
         for i, data in enumerate(data_loader):
             #print("i: ", i, flush=True)
             logits = Tensor(data["image"], ms.float32)
@@ -222,6 +223,13 @@ class Trainer():
             img_hight = int(data["img_hight"][0])
             img_width = int(data["img_width"][0])
             input_shape = Tensor(data["input_shape"][0], ms.float32)
+
+            ann=[data["image"], data['batch_y_true_0'], data['batch_y_true_1'], data['batch_y_true_2'], data['batch_gt_box0'], data['batch_gt_box1'], data['batch_gt_box2'], img_hight, img_width, input_shape.asnumpy()]
+            cv_data.append(ann)
+            np.save("/pretrained/ec_data.npy", np.array(cv_data))
+
+
+
             # img_hight = int(data["img_hight"])
             # img_width = int(data["img_width"])
             # input_shape = Tensor(data["input_shape"], ms.float32)
