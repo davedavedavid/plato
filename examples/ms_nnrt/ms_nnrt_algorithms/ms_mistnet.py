@@ -96,7 +96,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #         (bbox[0] * 640, bbox[1] * 640, (bbox[0] + bbox[2]) * 640, (bbox[1] + bbox[3]) * 640), fill=None,
             #         outline=0, width=5)
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
-            #image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
+            image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("img3:", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
