@@ -1,6 +1,6 @@
 import acl
 
-from examples.ms_nnrt.ms_nnrt_models.ms_constant import ACL_MEMCPY_HOST_TO_DEVICE, ACL_MEM_MALLOC_NORMAL_ONLY
+from examples.ms_nnrt.ms_nnrt_models.ms_constant import ACL_MEMCPY_HOST_TO_DEVICE
 from examples.ms_nnrt.ms_nnrt_models.ms_acl_model import Model
 from examples.ms_nnrt.ms_nnrt_models.ms_acl_util import check_ret
 
@@ -57,8 +57,7 @@ class Inference(object):
         """ Transfer input image from host to devicd. """
         img_ptr = acl.util.numpy_to_ptr(input_img)
         img_buffer_size = input_img.itemsize * input_img.size  # get byte size
-        #img_device, ret = acl.media.dvpp_malloc(img_buffer_size)
-        img_device, ret = acl.rt.malloc(img_buffer_size, ACL_MEM_MALLOC_NORMAL_ONLY)
+        img_device, ret = acl.media.dvpp_malloc(img_buffer_size)
         check_ret("acl.media.dvpp_malloc", ret)
         ret = acl.rt.memcpy(img_device, img_buffer_size, img_ptr,
                             img_buffer_size, ACL_MEMCPY_HOST_TO_DEVICE)
@@ -68,11 +67,9 @@ class Inference(object):
 
     def forward(self, input_img):
         """ Pass the input image to model class for inference. """
-        print("input_img: ", input_img, flush=True)
         img_device, img_buffer_size = self._transfer_to_device(input_img)
 
         output = self.model_process.run(img_device, img_buffer_size)
-        print(output[:10], flush=True)
         acl.rt.free(img_device)
 
 

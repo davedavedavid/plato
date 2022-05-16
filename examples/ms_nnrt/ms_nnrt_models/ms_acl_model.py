@@ -69,8 +69,6 @@ class Model(object):
         print("self.model_path: ", self.model_path, flush=True)
         self._gen_input_dataset(input_buffer, input_size)
         self.forward()
-        ret = acl.rt.synchronize_stream(self.stream)
-        check_ret("acl.rt.synchronize_stream", ret)
         result = self._get_result(self.output_data)
 
         return result

@@ -100,13 +100,13 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
-            inputs = inputs.astype(np.float32)
+            #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
+            #inputs = inputs.astype(np.float32)
             print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
-            #np.save("/home/data/test_logits.npy", logits)
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
