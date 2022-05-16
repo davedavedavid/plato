@@ -49,7 +49,7 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         # for i in range(5):[[][]]
-        inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
+        #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
@@ -80,14 +80,15 @@ class Algorithm(ms_fedavg.Algorithm):
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
             image = np.array(image, dtype='float32')
-            image = inp[index]
+            image = image/255.
+            #image = inp[index]
             #print("img3:", image, image.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_Normalize_2.npy", image)
-            mean = [m * 255 for m in [0.485, 0.456, 0.406]]
-            std = [s * 255 for s in [0.229, 0.224, 0.225]]
-            mean = np.array(mean, dtype=image.dtype)
-            std = np.array(std, dtype=image.dtype)
-            image = (image - mean) / std
+                #mean = [m * 255 for m in [0.485, 0.456, 0.406]]
+                #std = [s * 255 for s in [0.229, 0.224, 0.225]]
+                #mean = np.array(mean, dtype=image.dtype)
+                #std = np.array(std, dtype=image.dtype)
+                #image = (image - mean) / std
             # image = image.astype("uint8")
             # img = Image.fromarray(image)
             # label_data_draw = ImageDraw.Draw(img)
