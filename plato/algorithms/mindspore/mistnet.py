@@ -92,8 +92,8 @@ class Algorithm(fedavg.Algorithm):
         num_parallel_workers = int(cores / device_num)
         per_batch_size = 1#Config().trainer.per_batch_size
         max_epoch =200# Config().trainer.max_epoch
-        #dataset = dataset.batch(per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
-        #                                drop_remainder=True)
+        dataset = dataset.batch(per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
+                                        drop_remainder=True)
 
         dataset = dataset.repeat(max_epoch)
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
