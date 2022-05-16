@@ -236,8 +236,8 @@ class Trainer():
             #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
             #print(mindspore.__version__)
             #print("---logits----: ", logits, logits.shape, flush=True)
-            #cv2 = network_t.forward_to(logits)
-            loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+            #cv2 = network_t.forward_to(logits)   network_t.forward_from
+            loss = network_t(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())
 
