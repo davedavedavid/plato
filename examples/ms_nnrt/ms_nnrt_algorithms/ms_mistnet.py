@@ -100,8 +100,9 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            #inputs = inputs.astype(np.float32)
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            inputs = np.load("/home/data/home/huawei/tt/sedna/plato/examples/ms_nnrt/img.npy",allow_pickle=True)
+            inputs = inputs.astype(np.float32)
+            print("inputs1: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
