@@ -66,7 +66,6 @@ class Model(object):
         self.output_data = dataset
 
     def run(self, input_buffer, input_size):
-        print("self.model_path: ", self.model_path, flush=True)
         self._gen_input_dataset(input_buffer, input_size)
         self.forward()
         result = self._get_result(self.output_data)
