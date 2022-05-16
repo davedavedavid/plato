@@ -79,6 +79,7 @@ class Algorithm(ms_fedavg.Algorithm):
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
             image = np.array(image, dtype='float32')
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_Normalize_2.npy", image)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
@@ -106,7 +107,7 @@ class Algorithm(ms_fedavg.Algorithm):
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
-            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
+            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
