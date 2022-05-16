@@ -48,8 +48,9 @@ class Algorithm(ms_fedavg.Algorithm):
                                      images[..., ::2, 1::2], images[..., 1::2, 1::2]), axis=0)
             return images
 
-        # for i in range(5):
-        for img, anno, input_size, mosaic_flag in dataset:
+        # for i in range(5):[[][]]
+        inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/ann_data.npy", allow_pickle=True)
+        for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
@@ -102,10 +103,10 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
-            #inputs = inp[0][0]
-            inputs = inputs.astype(np.float32)
-            print("inputs: ", inputs, inputs.shape, flush=True)
+
+            #inputs = inputs.astype(np.float32)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
+            inputs = inp[index][0]
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             print("logits: ", logits, logits.shape, flush=True)
