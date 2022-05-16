@@ -102,7 +102,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
+            inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/ann_data.npy",allow_pickle=True)
+            inputs = inp[0][0]
             inputs = inputs.astype(np.float32)
             print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
@@ -129,7 +130,8 @@ class Algorithm(ms_fedavg.Algorithm):
                 #     logits = logits.astype('float32')
 
             #for i in np.arange(logits.shape[0]):  # each sample in the batch
-            feature_dataset.append((logits[0], annotation_x[:]))
+            #feature_dataset.append((logits[0], annotation_x[:]))
+            feature_dataset.append((logits[0], inp[0][1:]))
             #print("feature_dataset: ", feature_dataset, len(feature_dataset), flush=True)
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
