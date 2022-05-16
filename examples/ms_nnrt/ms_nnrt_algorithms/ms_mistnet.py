@@ -102,8 +102,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
-            #inputs = inputs.astype(np.float32)
+            inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy",allow_pickle=True)
+            inputs = inputs.astype(np.float32)
             print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
