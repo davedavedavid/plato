@@ -226,6 +226,7 @@ class Trainer():
 
             ann=[data["image"], data['batch_y_true_0'], data['batch_y_true_1'], data['batch_y_true_2'], data['batch_gt_box0'], data['batch_gt_box1'], data['batch_gt_box2'], img_hight, img_width, input_shape.asnumpy()]
             cv_data.append(ann)
+            print("______: ", os.getcwd())
             np.save("./ec_data.npy", np.array(cv_data))
 
 
