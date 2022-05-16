@@ -22,7 +22,6 @@ class Model(object):
         self.input_data = None
         self.output_data = None
         self.model_desc = None
-        print("self.model_path: ", self.model_path, flush=True)
         self.init_resource()
 
     def __del__(self):
