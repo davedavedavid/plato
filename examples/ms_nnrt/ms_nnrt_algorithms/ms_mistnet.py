@@ -50,6 +50,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
         # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
+        edge_data = []
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
@@ -104,7 +105,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-
+            edge_data.append(inputs)
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_data.npy", edge_data)
             #inputs = inputs.astype(np.float32)
             #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = inp[index][0]

@@ -220,9 +220,9 @@ class Trainer():
             batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)
             batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float32)
             batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
-            img_hight = int(data["img_hight"])
-            img_width = int(data["img_width"])
-            input_shape = Tensor(data["input_shape"], ms.float32)
+            img_hight = int(data["img_hight"][0])
+            img_width = int(data["img_width"][0])
+            input_shape = Tensor(data["input_shape"][0], ms.float32)
 
             #ann=[data["image"], data['batch_y_true_0'], data['batch_y_true_1'], data['batch_y_true_2'], data['batch_gt_box0'], data['batch_gt_box1'], data['batch_gt_box2'], img_hight, img_width, input_shape.asnumpy()]
             #cv_data.append(ann)
