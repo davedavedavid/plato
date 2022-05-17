@@ -52,6 +52,7 @@ class Algorithm(ms_fedavg.Algorithm):
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         #edge_data = []
         for i in range(200):
+            print("-----i------", i)
             for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
                 np.array(anno)
                 img_hight = input_size[0]
