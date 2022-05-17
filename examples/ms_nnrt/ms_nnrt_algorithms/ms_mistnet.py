@@ -106,9 +106,9 @@ class Algorithm(ms_fedavg.Algorithm):
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
             #edge_data.append(inputs)
-            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_data.npy", edge_data)
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/inputs.npy", inputs)
             #inputs = inputs.astype(np.float32)
-            inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
+            #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
             print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = inp[index][0]
             logits = self.model.forward(inputs)
