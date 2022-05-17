@@ -110,11 +110,11 @@ class Algorithm(ms_fedavg.Algorithm):
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/inputs.npy", inputs)
             #inputs = inputs.astype(np.float32)
             #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
-            print("inputs: ", inputs, inputs.shape, flush=True)
+            #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = inp[index][0]
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            print("logits: ", logits, logits.shape, flush=True)
+            #print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
