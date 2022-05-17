@@ -81,8 +81,8 @@ class Algorithm(ms_fedavg.Algorithm):
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test1.jpg")
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
-            image = np.array(image, dtype='float32')
             image = dd[index][0]
+            image = np.array(image, dtype='float32')
             #print("img3:", image, image.shape, flush=True)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
