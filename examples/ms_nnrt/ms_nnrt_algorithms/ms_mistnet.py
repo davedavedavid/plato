@@ -51,7 +51,7 @@ class Algorithm(ms_fedavg.Algorithm):
         # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         #edge_data = []
-        #dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/new_data.npy", allow_pickle=True)
+        dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/new_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
@@ -103,7 +103,7 @@ class Algorithm(ms_fedavg.Algorithm):
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("imgage_con", image, image.shape, flush=True)
             #image = dd[index][0]
-            #annotation_x = dd[index][1:]
+            annotation_x = dd[index][1:]
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
