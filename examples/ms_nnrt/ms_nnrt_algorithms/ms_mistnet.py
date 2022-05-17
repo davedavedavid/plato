@@ -115,12 +115,12 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = dd[index][0]
             if index==1:
-                #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward.npy", inputs)
+                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward.npy", inputs)
                 print("inputs: ", inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             if index == 1:
-                #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward.npy", logits)
+                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward.npy", logits)
                 print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
