@@ -83,7 +83,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
             image = np.array(image, dtype='float32')
             #image = inp[index]
-            #print("img3:", image, image.shape, flush=True)
+            print("img3:", image, image.shape, flush=True)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
@@ -99,12 +99,12 @@ class Algorithm(ms_fedavg.Algorithm):
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("img4", image, image.shape, flush=True)
-            image = dd[index][0]
-            annotation_x = dd[index][1:]
+            #image = dd[index][0]
+            #annotation_x = dd[index][1:]
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
-            #print("inputs:", inputs, inputs.shape, flush=True)
+            print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
             #edge_data.append(inputs)

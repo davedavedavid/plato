@@ -110,7 +110,6 @@ class Model(object):
             "TODO: The unpack size depends on the cutlayer parameter. "
             result = struct.unpack("{:d}f".format(int(infer_output_size / 4)),
                                    bytearray(result))  # this is the ouput size
-            print("result: ", np.array(result[:10], dtype=np.float32), flush=True)
             output.append(result)
             ret = acl.rt.free_host(output_host)
             check_ret("acl.rt.free_host", ret)
