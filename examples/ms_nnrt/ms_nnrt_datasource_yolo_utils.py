@@ -773,7 +773,7 @@ class MultiScaleTrans:
 
     def generate_seed_list(self, init_seed=1234, seed_num=int(1e6), seed_range=(1, 1000)):
         seed_list = []
-        random.seed(init_seed)
+        #random.seed(init_seed)
         for _ in range(seed_num):
             seed = random.randint(seed_range[0], seed_range[1])
             seed_list.append(seed)
