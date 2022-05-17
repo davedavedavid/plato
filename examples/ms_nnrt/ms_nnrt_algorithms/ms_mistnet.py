@@ -88,10 +88,8 @@ class Algorithm(ms_fedavg.Algorithm):
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
-            image_mean = (image - mean)
+            image = (image - mean)/ std
             #print("image_mean:", image_mean, image_mean.shape, flush=True)
-            image = image_mean / std
-            #print("img4_std:", image, image.shape, flush=True)
             # image = image.astype("uint8")
             # img = Image.fromarray(image)
             # label_data_draw = ImageDraw.Draw(img)
@@ -115,9 +113,11 @@ class Algorithm(ms_fedavg.Algorithm):
             #inputs = inputs.astype(np.float32)
             #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
             #print("inputs: ", inputs, inputs.shape, flush=True)
-            #inputs = inp[index][0]
+            inputs = dd[index][1]
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward.npy", inputs)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward.npy", logits)
             #print("logits: ", logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
