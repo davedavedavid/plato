@@ -100,7 +100,7 @@ class Algorithm(ms_fedavg.Algorithm):
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("imgage_con", image, image.shape, flush=True)
-            #image = dd[index][0]
+            image = dd[index][0]
             annotation_x = dd[index][1:]
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
@@ -113,7 +113,7 @@ class Algorithm(ms_fedavg.Algorithm):
             #inputs = inputs.astype(np.float32)
             #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
             #print("inputs: ", inputs, inputs.shape, flush=True)
-            inputs = dd[index][0]
+            #inputs = dd[index][0]
             if index==1:
                 np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward.npy", inputs)
             logits = self.model.forward(inputs)
