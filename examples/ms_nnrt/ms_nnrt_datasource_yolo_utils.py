@@ -695,7 +695,7 @@ def _data_aug(image, box, jitter, hue, sat, val, image_input_size, max_boxes,
                                                       max_boxes=max_boxes)
     #print("candidate:", candidate, flush=True)
     dx, dy, nw, nh = candidate
-    interp = get_interp_method(interp=10)
+    interp = 1 #get_interp_method(interp=10)
     #print("image0:", np.asarray(image), interp, flush=True)
     image = image.resize((nw, nh), pil_image_reshape(interp))
     #print("image1:", nw, nh, np.asarray(image), flush=True)
