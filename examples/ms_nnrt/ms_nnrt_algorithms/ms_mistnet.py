@@ -51,7 +51,7 @@ class Algorithm(ms_fedavg.Algorithm):
         # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         #edge_data = []
-
+        dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/new_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
@@ -84,7 +84,8 @@ class Algorithm(ms_fedavg.Algorithm):
             image = np.array(image, dtype='float32')
             #image = inp[index]
             #print("img3:", image, image.shape, flush=True)
-            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_Normalize_2.npy", image)
+            image = dd[index][0]
+            annotation_x = dd[index][1:]
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
@@ -144,6 +145,7 @@ class Algorithm(ms_fedavg.Algorithm):
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
         print('-----feature_dataset-----: ', len(feature_dataset), flush=True)
+        #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/temp_data.npy", feature_dataset)
         return feature_dataset
 
     def features_shape(self):
