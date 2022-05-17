@@ -51,7 +51,7 @@ class Algorithm(ms_fedavg.Algorithm):
         # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         #edge_data = []
-        dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/before_normalize_new_data.npy", allow_pickle=True)
+        dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/after_normalize_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
@@ -81,7 +81,7 @@ class Algorithm(ms_fedavg.Algorithm):
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test1.jpg")
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
-            image = dd[index][0]
+            #image = dd[index][0]
             image = np.array(image, dtype='float32')
             #print("img3:", image, image.shape, flush=True)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
@@ -100,7 +100,7 @@ class Algorithm(ms_fedavg.Algorithm):
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
             #print("imgage_con", image, image.shape, flush=True)
-            #image = dd[index][0]
+            image = dd[index][0]
             annotation_x = dd[index][1:]
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
@@ -115,13 +115,13 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = dd[index][0]
             if index==1:
-                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward.npy", inputs)
-                print("inputs: ", inputs, inputs.shape, flush=True)
+                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward_norm.npy", inputs)
+                print("inputs: ", inputs[0][0], inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
             if index == 1:
-                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward.npy", logits)
-                print("logits: ", logits, logits.shape, flush=True)
+                np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward_norm.npy", logits)
+                print("logits: ", logits[0][0], logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
             annotation_x[0] = np.expand_dims(annotation_x[0],
