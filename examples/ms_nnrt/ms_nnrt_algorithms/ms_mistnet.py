@@ -50,18 +50,18 @@ class Algorithm(ms_fedavg.Algorithm):
 
         # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
-        edge_data = []
+        #edge_data = []
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
-            #print("img1:", img, img.shape, flush=True)
+            print("img1:", img, img.shape, flush=True)
             #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
             #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            #print("img2:", image, image.shape, flush=True)
+            print("img2:", image, image.shape, flush=True)
             #print("annotation1: ", annotation, flush=True)
             # img = Image.fromarray(image)
             # label_data_draw = ImageDraw.Draw(img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
@@ -82,7 +82,7 @@ class Algorithm(ms_fedavg.Algorithm):
 
             image = np.array(image, dtype='float32')
             #image = inp[index]
-            #print("img3:", image, image.shape, flush=True)
+            print("img3:", image, image.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_Normalize_2.npy", image)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
@@ -98,15 +98,15 @@ class Algorithm(ms_fedavg.Algorithm):
             #         outline=0, width=5)
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            #print("img3:", image, image.shape, flush=True)
+            print("img4", image, image.shape, flush=True)
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            edge_data.append(inputs)
-            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_data.npy", edge_data)
+            #edge_data.append(inputs)
+            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_data.npy", edge_data)
             #inputs = inputs.astype(np.float32)
             #print("inputs: ", inputs, inputs.shape, flush=True)
             #inputs = inp[index][0]
