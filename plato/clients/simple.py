@@ -78,12 +78,10 @@ class Client(base.Client):
             # MindSpore requires samplers to be used while constructing
             # the dataset
             self.trainset = self.datasource.get_train_set(self.sampler)
-            #print('self.trainset: ', self.trainset, flush=True)
         else:
             # PyTorch uses samplers when loading data with a data loader
             self.trainset = self.datasource.get_train_set()
-            #for image2, annotation, input_size, mosaic_flag in self.trainset:
-            #    print('image2: ', image2, image2.shape, flush=True)
+
         if not Config().clients.do_test:
             # Set the testset if local testing is needed
             self.testset = self.datasource.get_test_set()

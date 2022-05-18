@@ -16,7 +16,7 @@ import mindspore.dataset as ds
 from plato.utils import unary_encoding
 from plato.algorithms.mindspore import fedavg
 import multiprocessing
-import numpy as np
+from plato.config import Config
 
 class Algorithm(fedavg.Algorithm):
     """The PyTorch-based MistNet algorithm, used by both the client and the
@@ -81,8 +81,6 @@ class Algorithm(fedavg.Algorithm):
 
     def train(self, trainset, *args):
         #print('trainset: ', trainset, len(trainset), flush=True)
-        #trainset = np.load('/home/data/pretrained/mzoo_data.npy', allow_pickle=True)
-        #print('trainset: ', trainset, len(trainset), flush=True)
         column_out_names = ["image", "annotation", "batch_y_true_0", "batch_y_true_1", "batch_y_true_2",
                              "batch_gt_box0","batch_gt_box1", "batch_gt_box2", "img_hight", "img_width", "input_shape"]
         data_size = len(trainset)
@@ -90,12 +88,12 @@ class Algorithm(fedavg.Algorithm):
         device_num = 1
         cores = multiprocessing.cpu_count()
         num_parallel_workers = int(cores / device_num)
-        per_batch_size = 1#Config().trainer.per_batch_size
-        max_epoch =200# Config().trainer.max_epoch
+        per_batch_size = Config().trainer.per_batch_size
+        max_epoch = Config().trainer.max_epoch
         dataset = dataset.batch(per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
                                         drop_remainder=True)
 
-        #dataset = dataset.repeat(max_epoch)
+        dataset = dataset.repeat(max_epoch)
         # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
         #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
         #     #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)

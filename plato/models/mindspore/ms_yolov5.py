@@ -38,6 +38,6 @@ class Model(nn.Cell):
         logits = self.network_to(x)
         return logits
 
-    def forward_from(self, *args): # *args = batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,batch_gt_box2, img_hight, img_width, input_shape
+    def forward_from(self, *args):
         loss = self.network_from(*args)
         return loss

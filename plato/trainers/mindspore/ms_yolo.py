@@ -30,8 +30,6 @@ from packages.ms_yolov5.src.logger import get_logger
 from packages.ms_yolov5.src.util import AverageMeter
 from packages.ms_yolov5.src.config import ConfigYOLOV5
 from packages.ms_yolov5.src.lr_scheduler import get_lr
-import numpy as np
-import mindspore
 ms.set_seed(1)
 
 class Trainer():
@@ -57,7 +55,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=1, type=int, help='Batch size for Training. Default: 8')
+            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -159,7 +157,6 @@ class Trainer():
 
         args = parse_args(cloud_args)
         loss_meter = AverageMeter('loss')
-        #print('loss_meter', loss_meter, trainset, flush=True)
         context.reset_auto_parallel_context()
         parallel_mode = ParallelMode.STAND_ALONE
         degree = 1
@@ -178,9 +175,8 @@ class Trainer():
         if args.resize_rate:
             config.resize_rate = args.resize_rate
 
-        #data_size = 296 #len(trainset[0])
-        args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
-
+        #args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
+        args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model
@@ -208,7 +204,6 @@ class Trainer():
         t_end = time.time()
 
         data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        #cv_data= []
         for i, data in enumerate(data_loader):
             #print("i: ", i, flush=True)
             logits = Tensor(data["image"], ms.float32)
@@ -223,19 +218,7 @@ class Trainer():
             img_width = int(data["img_width"][0])
             input_shape = Tensor(data["input_shape"][0], ms.float32)
 
-            #ann=[data["image"], data['batch_y_true_0'], data['batch_y_true_1'], data['batch_y_true_2'], data['batch_gt_box0'], data['batch_gt_box1'], data['batch_gt_box2'], img_hight, img_width, input_shape.asnumpy()]
-            #cv_data.append(ann)
-            #print("______: ", os.getcwd())
-            #np.save("./ec_data.npy", np.array(cv_data))
 
-            # img_hight = int(data["img_hight"])
-            # img_width = int(data["img_width"])
-            # input_shape = Tensor(data["input_shape"], ms.float32)
-            #print("logits: ", logits, logits.shape, flush=True)
-            #print("batch_y_true_0: ", batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1, batch_gt_box2, flush=True)
-            #print(mindspore.__version__)
-            #print("---logits----: ", logits, logits.shape, flush=True)
-            #cv2 = network_t.forward_to(logits)
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())

@@ -55,8 +55,11 @@ class Inference(object):
 
     def _transfer_to_device(self, input_img):
         """ Transfer input image from host to devicd. """
+        '''
+        如何使用acl.util.numpy_to_ptr() and acl.util.numpy_contiguous_to_ptr()参考下面网址：
+        https://support.huaweicloud.com/aclpythondevg-cann502alpha2infer/atlaspyapi_07_0043.html
         #img_ptr = acl.util.numpy_to_ptr(input_img)
-        print("---------: ", input_img.flags)
+        '''
         img_ptr,_ = acl.util.numpy_contiguous_to_ptr(input_img)
         img_buffer_size = input_img.itemsize * input_img.size  # get byte size
         img_device, ret = acl.media.dvpp_malloc(img_buffer_size)
@@ -73,6 +76,5 @@ class Inference(object):
 
         output = self.model_process.run(img_device, img_buffer_size)
         acl.rt.free(img_device)
-
 
         return output

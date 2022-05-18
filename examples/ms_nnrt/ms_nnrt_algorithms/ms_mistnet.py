@@ -7,8 +7,6 @@ from plato.config import Config
 from plato.utils import unary_encoding_1b
 from examples.ms_nnrt.ms_nnrt_datasource_yolo_utils import DistributedSampler, MultiScaleTrans, PreprocessTrueBox
 from examples.ms_nnrt.config import ConfigYOLOV5
-import random
-from PIL import Image, ImageOps, ImageDraw, ImageFont
 
 class Algorithm(ms_fedavg.Algorithm):
     """The NNRT-based MistNet algorithm, used by both the client and the
@@ -24,8 +22,6 @@ class Algorithm(ms_fedavg.Algorithm):
         epsilon: If epsilon is not None, local differential privacy should be
                 applied to the features extracted.
         """
-        np.random.seed(5)
-        random.seed(1)
         tic = time.perf_counter()
 
         feature_dataset = []
@@ -48,78 +44,31 @@ class Algorithm(ms_fedavg.Algorithm):
                                      images[..., ::2, 1::2], images[..., 1::2, 1::2]), axis=0)
             return images
 
-        #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
-        #edge_forward_data = []
-        #dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/after_normalize_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             img_hight = input_size[0]
             img_wight = input_size[1]
-            #print("img1:", img, img.shape, flush=True)
-            #print("anno:", anno, flush=True)
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
-            #print("img2:", image, image.shape, flush=True)
-            #print("annotation1: ", annotation, flush=True)
-            # img = Image.fromarray(image)
-            # label_data_draw = ImageDraw.Draw(img)  # need enter command "fc-list" to choose one ttf filefont = ImageFont.truetype("DejaVuSansMono.ttf", 50, encoding='utf-8')
-            # for bbox in annotation:
-            #     label_data_draw.rectangle((bbox[0], bbox[1], bbox[2], bbox[3]), fill=None,
-            #                           outline=0, width=5)
-            # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test.jpg")
-            annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
-            #print("annotation2, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3: ", annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
 
-            # img = Image.fromarray(image)
-            # label_data_draw = ImageDraw.Draw(img)
-            # for bbox in gt_box3:
-            #     label_data_draw.rectangle((bbox[0]*640, bbox[1]*640, (bbox[0]+bbox[2])*640, (bbox[1]+bbox[3])*640), fill=None,
-            #                               outline=0, width=5)
-            # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test1.jpg")
+            annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3 = PreprocessTrueBox_(annotation, size)
+
             annotation_x = [annotation, bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, img_hight, img_wight, size]
 
-            #image = dd[index][0]
             image = np.array(image, dtype='float32')
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
             std = np.array(std, dtype=image.dtype)
             image = (image - mean)/ std
-            #print("image_mean:", image_mean, image_mean.shape, flush=True)
-            # image = image.astype("uint8")
-            # img = Image.fromarray(image)
-            # label_data_draw = ImageDraw.Draw(img)
-            # for bbox in gt_box3:
-            #     label_data_draw.rectangle(
-            #         (bbox[0] * 640, bbox[1] * 640, (bbox[0] + bbox[2]) * 640, (bbox[1] + bbox[3]) * 640), fill=None,
-            #         outline=0, width=5)
-            # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            #image = dd[index][0]
-            #annotation_x = dd[index][1:]
             ds = concatenate(image)
             inputs = ds.astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
-            #inputs = np.ones((1,12, 320, 320))
-            #edge_data.append(inputs)
-            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_inputs.npy", edge_data)
-            #inputs = inputs.astype(np.float32)
-            #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
-            #print("inputs: ", inputs, inputs.shape, flush=True)
-            #inputs = dd[index][0]
-            # if index==1:
-            #     np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/before_forward_norm.npy", inputs)
-            #     print("inputs: ", inputs[0][0], inputs, inputs.shape, flush=True)
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
-            # if index == 1:
-            #     np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/after_forward_norm.npy", logits)
-            #     print("logits: ", logits[0][0], logits, logits.shape, flush=True)
-            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
-            #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
-            #edge_forward_data.append(logits)
-            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_forward_inputs.npy", edge_forward_data)
+
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
             if epsilon is not None:
@@ -139,15 +88,12 @@ class Algorithm(ms_fedavg.Algorithm):
 
             #for i in np.arange(logits.shape[0]):  # each sample in the batch
             feature_dataset.append((logits[0], annotation_x[:]))
-            #feature_dataset.append((logits[0], inp[0][1:]))
-            #print("feature_dataset: ", feature_dataset, len(feature_dataset), flush=True)
         toc = time.perf_counter()
         logging.info("[Client #%d] Features extracted from %s examples.",
                      self.client_id, len(feature_dataset))
         logging.info("[Client #{}] Time used: {:.2f} seconds.".format(
             self.client_id, toc - tic))
         print('-----feature_dataset-----: ', len(feature_dataset), flush=True)
-        #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/temp_data.npy", feature_dataset)
         return feature_dataset
 
     def features_shape(self):
