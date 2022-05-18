@@ -49,7 +49,7 @@ class Algorithm(ms_fedavg.Algorithm):
             return images
 
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
-        edge_data = []
+        edge_forward_data = []
         #dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/after_normalize_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
             img_hight = input_size[0]
@@ -118,6 +118,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #     print("logits: ", logits[0][0], logits, logits.shape, flush=True)
             #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/test_logits_2.npy", logits)
             #print("input_data: ", bbox1, bbox2, bbox3, gt_box1, gt_box2, gt_box3, flush=True)
+            edge_forward_data.append(logits)
+            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_forward_inputs.npy", edge_forward_data)
             annotation_x[0] = np.expand_dims(annotation_x[0],
                                              axis=0)  # add batch axis to make sure self.train.randomize correct
             if epsilon is not None:
