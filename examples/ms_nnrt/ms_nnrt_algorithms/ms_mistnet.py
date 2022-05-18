@@ -40,7 +40,7 @@ class Algorithm(ms_fedavg.Algorithm):
         dataset.size = len(distributed_sampler)
         config.dataset_size = len(dataset)
         multi_scale_trans = MultiScaleTrans(config, device_num)
-        dataset.transforms = multi_scale_trans
+        #dataset.transforms = multi_scale_trans
         PreprocessTrueBox_ = PreprocessTrueBox(config)
 
         def concatenate(images):
@@ -48,18 +48,14 @@ class Algorithm(ms_fedavg.Algorithm):
                                      images[..., ::2, 1::2], images[..., 1::2, 1::2]), axis=0)
             return images
 
-        # for i in range(5):[[][]]
         #inp = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/image4.npy", allow_pickle=True)
         edge_data = []
         #dd = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/after_normalize_data.npy", allow_pickle=True)
         for index, (img, anno, input_size, mosaic_flag) in enumerate(dataset):
-            np.array(anno)
             img_hight = input_size[0]
             img_wight = input_size[1]
             #print("img1:", img, img.shape, flush=True)
-            #print("max:", np.max(img))
             #print("anno:", anno, flush=True)
-            #input_size = [img_hight, img_wight]
             image, annotation, size = multi_scale_trans(img=img, anno=np.array(anno), input_size=input_size,
                                                         mosaic_flag=mosaic_flag)
             #print("img2:", image, image.shape, flush=True)
@@ -83,7 +79,6 @@ class Algorithm(ms_fedavg.Algorithm):
 
             #image = dd[index][0]
             image = np.array(image, dtype='float32')
-            #print("img3:", image, image.shape, flush=True)
             mean = [m * 255 for m in [0.485, 0.456, 0.406]]
             std = [s * 255 for s in [0.229, 0.224, 0.225]]
             mean = np.array(mean, dtype=image.dtype)
@@ -99,7 +94,6 @@ class Algorithm(ms_fedavg.Algorithm):
             #         outline=0, width=5)
             # img.save("/home/data/home/huawei/tt/data/1/COCO/coco128/annotations/test2.jpg")
             image = image.swapaxes(1, 2).swapaxes(0, 1)  # HWC->HCW->CHW    CV.HWC2CHW  or images.transpose((2,0,1))
-            #print("imgage_con", image, image.shape, flush=True)
             #image = dd[index][0]
             #annotation_x = dd[index][1:]
             ds = concatenate(image)
@@ -108,8 +102,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #print("inputs:", inputs, inputs.shape, flush=True)
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             #inputs = np.ones((1,12, 320, 320))
-            edge_data.append(inputs)
-            np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_inputs.npy", edge_data)
+            #edge_data.append(inputs)
+            #np.save("/home/data/home/huawei/tt/data/1/COCO/coco128/edge_inputs.npy", edge_data)
             #inputs = inputs.astype(np.float32)
             #inputs = np.load("/home/data/home/huawei/tt/data/1/COCO/coco128/img.npy", allow_pickle=True)
             #print("inputs: ", inputs, inputs.shape, flush=True)

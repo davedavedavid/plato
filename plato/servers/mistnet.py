@@ -38,7 +38,7 @@ class Server(fedavg.Server):
         # Faster way to deep flatten a list of lists compared to list comprehension
 		# convert feature dataset from numpy to torch tensor
         #296-->[[(),(),()]]
-        #1--->[(A,[])]        [[()()]]
+        #1--->[(A,[])]
         feature_dataset_tensor = []
         #for feature in feature_dataset:
         if hasattr(Config().trainer, 'use_mindspore'):

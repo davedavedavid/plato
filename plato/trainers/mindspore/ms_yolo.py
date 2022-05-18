@@ -17,11 +17,10 @@ import os
 import time
 import argparse
 import datetime
-import multiprocessing
 import mindspore as ms
 import mindspore.dataset as ds
 from mindspore.context import ParallelMode
-from mindspore.nn.optim.momentum import Momentum
+
 from mindspore import Tensor
 from mindspore import context
 from mindspore.communication.management import init, get_rank, get_group_size
