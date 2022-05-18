@@ -55,7 +55,9 @@ class Inference(object):
 
     def _transfer_to_device(self, input_img):
         """ Transfer input image from host to devicd. """
-        img_ptr = acl.util.numpy_to_ptr(input_img)
+        #img_ptr = acl.util.numpy_to_ptr(input_img)
+        print("---------: ", input_img.flags)
+        img_ptr = acl.util.numpy_contiguous_to_ptr(input_img)
         img_buffer_size = input_img.itemsize * input_img.size  # get byte size
         img_device, ret = acl.media.dvpp_malloc(img_buffer_size)
         check_ret("acl.media.dvpp_malloc", ret)
