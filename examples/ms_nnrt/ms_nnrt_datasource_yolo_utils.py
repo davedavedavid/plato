@@ -189,6 +189,8 @@ class COCOYoloDataset:
             labels4 = np.concatenate(labels4, 0)
             np.clip(labels4[:, :4], 0, 2 * s, out=labels4[:, :4])  # use with random_perspective
         flag = np.array([1])
+        if index == 295:
+            self.curr_epoch +=1
         return img4, labels4, input_size, flag
 
     def __getitem__(self, index):
