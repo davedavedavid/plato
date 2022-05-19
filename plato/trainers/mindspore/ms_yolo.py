@@ -176,7 +176,7 @@ class Trainer():
             config.resize_rate = args.resize_rate
 
         #args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
-        args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)
+        args.steps_per_epoch = 37# int(data_size / per_batch_size / args.group_size)
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model
