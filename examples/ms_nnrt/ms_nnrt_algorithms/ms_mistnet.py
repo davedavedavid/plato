@@ -74,11 +74,11 @@ class Algorithm(ms_fedavg.Algorithm):
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
                 logits = unary_encoding_1b.encode(logits)
-                # if callable(_randomize):
-                #      logits = self.trainer.randomize(logits, annotation_x[0], epsilon=1)
+                if callable(_randomize):
+                    logits = self.trainer.randomize(logits, annotation_x[0], epsilon)
                 #      print('----epsilon----', epsilon, flush=True)
-                # else:
-                logits = unary_encoding_1b.randomize(logits, epsilon)
+                else:
+                    logits = unary_encoding_1b.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 # if self.trainer.device != 'cpu':
