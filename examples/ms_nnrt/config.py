@@ -34,7 +34,7 @@ class ConfigYOLOV5:
                    [480, 480], [512, 512], [544, 544], [576, 576], [608, 608],
                    [640, 640], [672, 672], [704, 704], [736, 736], [768, 768]]
     num_classes = 3 #80
-    max_box = 10
+    max_box = 30
     label_smooth = 0
     label_smooth_factor = 0.1
 
