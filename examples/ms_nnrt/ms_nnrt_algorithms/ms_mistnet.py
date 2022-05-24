@@ -76,11 +76,11 @@ class Algorithm(ms_fedavg.Algorithm):
                 logits = unary_encoding_1b.encode(logits)
                 #print('----logits1----', logits, flush=True)
                 #print('----annotation_x[0]----', annotation_x[0],annotation_x[0].shape, flush=True)
-                if callable(_randomize):
-                    logits = self.trainer.randomize(logits, annotation_x[0], epsilon)
-                    #print('----logits2----', logits, flush=True)
-                else:
-                    logits = unary_encoding_1b.randomize(logits, epsilon)
+                # if callable(_randomize):
+                #     logits = self.trainer.randomize(logits, annotation_x[0], epsilon)
+                #     #print('----logits2----', logits, flush=True)
+                # else:
+                #     logits = unary_encoding_1b.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 # if self.trainer.device != 'cpu':
