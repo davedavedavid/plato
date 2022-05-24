@@ -63,10 +63,13 @@ class Trainer(base.Trainer):
         # x2 = min(x + 0.5 * w + 3, size[0])
         # y1 = max(y - 0.5 * h - 3, 0)
         # y2 = min(y + 0.5 * h + 3, size[1])
-
-        x1 = round(x1/640 * size[0])
-        x2 = round(x2/640 * size[0])
-        y1 = round(y1/640 * size[1])
-        y2 = round(y2/640 * size[1])
+        # x1 = round(x1/640 * size[0])
+        # x2 = round(x2/640 * size[0])
+        # y1 = round(y1/640 * size[1])
+        # y2 = round(y2/640 * size[1])
+        x1 = max(round(x1/640 * size[0])-3, 0)
+        x2 = min(round(x2/640 * size[0])+3, size[0])
+        y1 = max(round(y1/640 * size[1])-3, 0)
+        y2 = min(round(y2/640 * size[1])+3, size[1])
 
         return (int(x1), int(y1), int(x2), int(y2))
