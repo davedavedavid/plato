@@ -189,7 +189,7 @@ class COCOYoloDataset:
             labels4 = np.concatenate(labels4, 0)
             np.clip(labels4[:, :4], 0, 2 * s, out=labels4[:, :4])  # use with random_perspective
         flag = np.array([1])
-        if index == 295:
+        if index == 1:
             self.curr_epoch +=1
         return img4, labels4, input_size, flag
 
@@ -243,7 +243,7 @@ class COCOYoloDataset:
             # tmp [x_min y_min x_max y_max, label]
             out_target.append(tmp)
         flag = np.array([0])
-        if index == 295:
+        if index == 1:
             self.curr_epoch +=1
         return img, out_target, input_size, flag
 
