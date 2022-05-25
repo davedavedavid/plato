@@ -35,7 +35,7 @@ class Trainer(base.Trainer):
         The object detection unary encoding method.
         """
         assert isinstance(bit_array, np.ndarray)
-        img = unary_encoding.symmetric_unary_encoding(bit_array, epsilon)
+        img = unary_encoding.symmetric_unary_encoding(bit_array, 1)
         label = unary_encoding.symmetric_unary_encoding(bit_array, epsilon)
         targets_new = copy.deepcopy(targets)
         # print("targets_new: ", targets_new, flush=True)
@@ -65,9 +65,9 @@ class Trainer(base.Trainer):
         y1 = max(y - 0.5 * h - 3, 0)
         y2 = min(y + 0.5 * h + 3, size[1])
 
-        x1 = round(x1 * size[0])
-        x2 = round(x2 * size[0])
-        y1 = round(y1 * size[1])
-        y2 = round(y2 * size[1])
+        x1 = round(x1 * size[0])      #######实际情况中-3，+3应该在此进行，也可以尝试其他值如，3，4，5
+        x2 = round(x2 * size[0])      #+3
+        y1 = round(y1 * size[1])      #-3
+        y2 = round(y2 * size[1])      #+3
 
         return (int(x1), int(y1), int(x2), int(y2))

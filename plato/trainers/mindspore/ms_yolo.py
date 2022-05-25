@@ -94,7 +94,7 @@ class Trainer():
             parser.add_argument('--is_distributed', type=int, default=0,
                                 help='Distribute train or not, 1 for yes, 0 for no. Default: 1')
             parser.add_argument('--rank', type=int, default=0, help='Local rank of distributed. Default: 0')
-            parser.add_argument('--group_size', type=int, default=10, help='World size of device. Default: 1')
+            parser.add_argument('--group_size', type=int, default=20, help='World size of device. Default: 1')
             # roma obs
             parser.add_argument('--train_url', type=str, default="", help='train url')
             # profiler init
@@ -175,8 +175,8 @@ class Trainer():
         if args.resize_rate:
             config.resize_rate = args.resize_rate
 
-        args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
-        #args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)   #296*5/8/5=37 #296*5(aug)*40(repeat)=59200
+        #args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
+        args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)   #296*5/8/5=37 #296*5(aug)*40(repeat)=59200
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model
