@@ -37,11 +37,11 @@ class Trainer(base.Trainer):
         label = unary_encoding_1b.symmetric_unary_encoding(bit_array, epsilon)
         targets_new = copy.deepcopy(targets)  #[1,10,5]
         # print("targets_new: ", targets_new, flush=True)
-        print("targets_new.shape:", targets_new, targets_new.shape, flush=True)
+        #print("targets_new.shape:", targets_new, targets_new.shape, flush=True)
         #targets_new = targets_new.transpose(0, 2, 1)
         for i in range(targets_new.shape[1]):
             box = self.convert(bit_array.shape[2:], targets_new[0][i])
-            print("box:", box, flush=True)
+            #print("box:", box, flush=True)
             img[:, :, box[0]:box[2],
                 box[1]:box[3]] = label[:, :, box[0]:box[2], box[1]:box[3]]
         # print("img: ", img, flush=True)
@@ -68,9 +68,9 @@ class Trainer(base.Trainer):
         # x2 = round(x2/640 * size[0])
         # y1 = round(y1/640 * size[1])
         # y2 = round(y2/640 * size[1])
-        x1 = max(round(x1/640 * size[0])-3, 0)
-        x2 = min(round(x2/640 * size[0])+3, size[0])
-        y1 = max(round(y1/640 * size[1])-3, 0)
-        y2 = min(round(y2/640 * size[1])+3, size[1])
+        x1 = max(round(x1/640 * size[0]), 0)
+        x2 = min(round(x2/640 * size[0]), size[0])
+        y1 = max(round(y1/640 * size[1]), 0)
+        y2 = min(round(y2/640 * size[1]), size[1])
 
         return (int(x1), int(y1), int(x2), int(y2))
