@@ -2,7 +2,7 @@ import copy
 from typing import Tuple
 import numpy as np
 from plato.trainers import base
-from plato.utils import unary_encoding
+from plato.utils import unary_encoding_1b
 
 
 class Trainer(base.Trainer):
@@ -33,8 +33,8 @@ class Trainer(base.Trainer):
         The object detection unary encoding method.
         """
         assert isinstance(bit_array, np.ndarray)
-        img = unary_encoding.symmetric_unary_encoding(bit_array, 1)
-        label = unary_encoding.symmetric_unary_encoding(bit_array, epsilon)
+        img = unary_encoding_1b.symmetric_unary_encoding(bit_array, 1)
+        label = unary_encoding_1b.symmetric_unary_encoding(bit_array, epsilon)
         targets_new = copy.deepcopy(targets)  #[1,10,5]
         # print("targets_new: ", targets_new, flush=True)
         # print("targets_new.shape:", targets_new.shape, flush=True)
