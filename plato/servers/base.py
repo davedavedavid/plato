@@ -221,29 +221,7 @@ class Server:
             # If no clients are simulated, the client pool for client selection consists of
             # the current set of clients that have contacted the server
             self.clients_pool = list(self.clients)
-        # In asychronous FL, avoid selecting new clients to replace those that are still
-        # training at this time
-        if hasattr(Config().server, 'synchronous') and not Config(
-        ).server.synchronous and self.selected_clients is not None and len(
-                self.reporting_clients) < self.clients_per_round:
-            # If self.selected_clients is None, it implies that it is the first iteration;
-            # If len(self.reporting_clients) == self.clients_per_round, it implies that
-            # all selected clients have already reported.
-            # Except for these two cases, we need to exclude the clients who are still
-            # training.
-            training_client_ids = [
-                self.training_clients[client_id]['id']
-                for client_id in list(self.training_clients.keys())
-            ]
-            selectable_clients = [
-                client for client in self.clients_pool
-                if client not in training_client_ids
-            ]
-            self.selected_clients = self.choose_clients(
-                selectable_clients, len(self.reporting_clients))
-        else:
-            self.selected_clients = self.choose_clients(
-                self.clients_pool, self.clients_per_round)
+
         if len(self.selected_clients) > 0:
             for i, selected_client_id in enumerate(self.selected_clients):
                 if hasattr(Config().clients, 'simulation') and Config(
