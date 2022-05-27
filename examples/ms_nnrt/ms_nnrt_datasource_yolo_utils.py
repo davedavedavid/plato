@@ -92,7 +92,7 @@ class COCOYoloDataset:
         self.filter_crowd_anno = filter_crowd_anno
         self.is_training = is_training
         self.mosaic = True
-        self.epoch_ = 1
+        self.epoch_ = 20
         self.curr_epoch = 0
         # filter images without any annotations
         if remove_images_without_annotations:
