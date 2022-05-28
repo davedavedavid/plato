@@ -47,7 +47,7 @@ class Trainer():
         """
         self.client_id = client_id
 
-    def train(self, dataset, data_size=None, per_batch_size=None, max_epoch=None, cloud_args=None):
+    def train(self, dataset, data_size=None, per_batch_size=None, repeat_epoch=None, group_size=None, cloud_args=None):
         def parse_args(cloud_args=None):
             """Parse train arguments."""
             parser = argparse.ArgumentParser('mindspore coco training')
@@ -71,8 +71,8 @@ class Trainer():
                                 help='Eta_min in cosine_annealing scheduler. Default: 0')
             parser.add_argument('--T_max', type=int, default=300,
                                 help='T-max in cosine_annealing scheduler. Default: 320')
-            parser.add_argument('--max_epoch', type=int, default=200,
-                                help='Max epoch num to train the model. Default: 320')
+            #parser.add_argument('--max_epoch', type=int, default=200,
+            #                    help='Max epoch num to train the model. Default: 320')
             parser.add_argument('--warmup_epochs', default=4, type=float, help='Warmup epochs. Default: 0')
             parser.add_argument('--weight_decay', type=float, default=0.0005,
                                 help='Weight decay factor. Default: 0.0005')
@@ -91,10 +91,8 @@ class Trainer():
             parser.add_argument('--is_save_on_master', type=int, default=1,
                                 help='Save ckpt on master or all rank, 1 for master, 0 for all ranks. Default: 1')
             # distributed related
-            parser.add_argument('--is_distributed', type=int, default=0,
-                                help='Distribute train or not, 1 for yes, 0 for no. Default: 1')
             parser.add_argument('--rank', type=int, default=0, help='Local rank of distributed. Default: 0')
-            parser.add_argument('--group_size', type=int, default=1, help='World size of device. Default: 1')
+            #parser.add_argument('--group_size', type=int, default=5, help='World size of device. Default: 1')
             # roma obs
             parser.add_argument('--train_url', type=str, default="", help='train url')
             # profiler init
@@ -118,22 +116,14 @@ class Trainer():
                             args_dict[key] = val
                 return args
             args = merge_args(args, cloud_args)
-            if args.lr_scheduler == 'cosine_annealing' and max_epoch > args.T_max:
-                args.T_max = max_epoch
+            if args.lr_scheduler == 'cosine_annealing' and repeat_epoch > args.T_max:
+                args.T_max = repeat_epoch
 
             args.lr_epochs = list(map(int, args.lr_epochs.split(',')))
 
             devid = int(os.getenv('DEVICE_ID', '0'))
             context.set_context(mode=context.GRAPH_MODE, enable_auto_mixed_precision=True,
                                 device_target=args.device_target, save_graphs=False, device_id=devid)
-            # init distributed
-            if args.is_distributed:
-                if args.device_target == "Ascend":
-                    init()
-                else:
-                    init("nccl")
-                args.rank = get_rank()
-                args.group_size = get_group_size()
 
             # select for master rank save ckpt or all rank save, compatible for model parallel
             args.rank_save_ckpt_flag = 0
@@ -160,9 +150,6 @@ class Trainer():
         context.reset_auto_parallel_context()
         parallel_mode = ParallelMode.STAND_ALONE
         degree = 1
-        if args.is_distributed:
-            parallel_mode = ParallelMode.DATA_PARALLEL
-            degree = get_group_size()
         context.set_auto_parallel_context(parallel_mode=parallel_mode, gradients_mean=True, device_num=degree)
 
         config = ConfigYOLOV5()
@@ -175,8 +162,7 @@ class Trainer():
         if args.resize_rate:
             config.resize_rate = args.resize_rate
 
-        #args.steps_per_epoch = 2 #int(data_size / per_batch_size / args.group_size)
-        args.steps_per_epoch = int(data_size / per_batch_size / args.group_size)   #296*5/8/5=37 #296*5(aug)*40(repeat)=59200
+        args.steps_per_epoch = int(data_size / per_batch_size / group_size)   #296*5/8/5=37 #296*5(aug)*40(repeat)=59200
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model
@@ -186,7 +172,7 @@ class Trainer():
 
         if args.rank_save_ckpt_flag:
             # checkpoint save
-            ckpt_max_num = max_epoch * args.steps_per_epoch // args.ckpt_interval
+            ckpt_max_num = repeat_epoch * args.steps_per_epoch // args.ckpt_interval
             ckpt_config = CheckpointConfig(save_checkpoint_steps=args.ckpt_interval,
                                             keep_checkpoint_max=ckpt_max_num)
             save_ckpt_path = os.path.join(args.outputs_dir, 'ckpt_' + str(args.rank) + '/')
@@ -218,7 +204,6 @@ class Trainer():
             img_width = int(data["img_width"][0])
             input_shape = Tensor(data["input_shape"][0], ms.float32)
 
-
             loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
                              batch_gt_box2, img_hight, img_width, input_shape)
             loss_meter.update(loss.asnumpy())
@@ -232,7 +217,7 @@ class Trainer():
             if i % args.log_interval == 0:
                 time_used = time.time() - t_end
                 epoch = int(i / args.steps_per_epoch)
-                fps = per_batch_size * (i - old_progress) * args.group_size / time_used
+                fps = per_batch_size * (i - old_progress) * group_size / time_used
                 if args.rank == 0:
                     args.logger.info(
                         'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))

@@ -61,11 +61,8 @@ class Algorithm(fedavg.Algorithm):
     @staticmethod
     def dataset_generator(trainset):
         """The generator used to produce a suitable Dataset for the MineSpore trainer."""
-        #print('trainset: ', len(trainset), flush=True)
-
         for i in range(len(trainset)): #[[image,[]],[]]
             image = trainset[i][0]
-            #print('image: ', image, image.shape, flush=True)
             annotation = trainset[i][1][0]
             batch_y_true_0 = trainset[i][1][1]
             batch_y_true_1=trainset[i][1][2]
@@ -85,23 +82,16 @@ class Algorithm(fedavg.Algorithm):
         data_size = len(trainset)
         print('------data_size----: ', data_size, flush=True)
         dataset= ds.GeneratorDataset(source=list(Algorithm.dataset_generator(trainset)), column_names=column_out_names)
-        device_num = 1
-        cores = multiprocessing.cpu_count()
-        num_parallel_workers = int(cores / device_num)
-        per_batch_size = Config().trainer.per_batch_size
-        max_epoch = 200 #Config().trainer.max_epoch
-        dataset = dataset.batch(per_batch_size, num_parallel_workers=min(4, num_parallel_workers),
-                                        drop_remainder=True)
 
-        dataset = dataset.repeat(max_epoch)
-        # for image,annotation, batch_y_true_0,batch_y_true_1,batch_y_true_2,batch_gt_box0,\
-        #           batch_gt_box1,batch_gt_box2,img_hight,img_width,input_shape in dataset:
-        #     #print('----image-----: ',image, image.shape, annotation, annotation.shape, flush=True)
-        #     print('----batch_y_true_0-----: ', batch_y_true_0,batch_y_true_0.shape, flush=True)
-        #     print('----batch_gt_box0-----: ', batch_gt_box0, batch_gt_box0.shape, flush=True)
-        #     print('----batch_gt_box1-----: ', batch_gt_box1, batch_gt_box1.shape, flush=True)
-        #     print('----batch_gt_box2-----: ', batch_gt_box2,batch_gt_box2.shape, flush=True)
-        self.trainer.train(dataset, data_size, per_batch_size, max_epoch)
+        num_parallel_workers = 1
+        per_batch_size = Config().trainer.per_batch_size
+        repeat_epoch = Config().trainer.repeat_epoch
+        group_size = Config().trainer.group_size
+        dataset = dataset.batch(per_batch_size, num_parallel_workers= num_parallel_workers,
+                                        drop_remainder=True)
+        dataset = dataset.repeat(repeat_epoch)
+
+        self.trainer.train(dataset, data_size, per_batch_size, repeat_epoch, group_size)
 
 
 

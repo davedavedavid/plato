@@ -68,9 +68,8 @@ class Algorithm(ms_fedavg.Algorithm):
             #  1*12*320*320 input   logits: 1 * 128 *80 *80
             logits = self.model.forward(inputs)
             logits = np.reshape(logits, features_shape)
+            annotation_x[0] = np.expand_dims(annotation_x[0],axis=0)  # add batch axis to make sure self.train.randomize correct
 
-            annotation_x[0] = np.expand_dims(annotation_x[0],
-                                             axis=0)  # add batch axis to make sure self.train.randomize correct
             if epsilon is not None:
                 logging.info("epsilon is %d.", epsilon)
                 #logits = unary_encoding_1b.encode(logits)
@@ -78,7 +77,7 @@ class Algorithm(ms_fedavg.Algorithm):
                 #     logits = self.trainer.randomize(logits, annotation_x[0], epsilon)
                 #     #print('----logits2----', logits, flush=True)
                 # else:
-                #logits = unary_encoding_1b.randomize(logits, epsilon)
+                logits = unary_encoding_1b.randomize(logits, epsilon)
                     # Pytorch is currently not supported on A500 and we cannot convert
                     # numpy array to tensor
                 # if self.trainer.device != 'cpu':

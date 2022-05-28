@@ -5,7 +5,7 @@ from packages.ms_yolov5.src.util import AverageMeter, get_param_groups
 from mindspore.nn.optim.momentum import Momentum
 from mindspore import Tensor
 import mindspore.nn as nn
-from plato.config import Config
+
 
 class Model(nn.Cell):
     def __init__(self, args=None):
