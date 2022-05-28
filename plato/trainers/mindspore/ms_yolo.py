@@ -55,7 +55,7 @@ class Trainer():
             parser.add_argument('--device_target', type=str, default='Ascend',
                                 help='device where the code will be implemented.')
             # dataset related
-            parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
+            #parser.add_argument('--per_batch_size', default=8, type=int, help='Batch size for Training. Default: 8')
             # network related
             parser.add_argument('--resume_yolov5', default='/home/data/pretrained/YoloV5_for_MindSpore_0-300_274800.ckpt', type=str,
                                 help='The ckpt file of YOLOv5, which used to fine tune. Default: ""')
@@ -163,6 +163,7 @@ class Trainer():
             config.resize_rate = args.resize_rate
 
         args.steps_per_epoch = int(data_size / per_batch_size / group_size)   #296*5/8/5=37 #296*5(aug)*40(repeat)=59200
+        args.max_epoch = repeat_epoch * group_size
         if not args.ckpt_interval:
             args.ckpt_interval = args.steps_per_epoch
         network_t = self.model

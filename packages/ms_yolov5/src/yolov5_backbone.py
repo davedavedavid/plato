@@ -18,7 +18,6 @@ import mindspore.nn as nn
 from mindspore.ops import operations as P
 from mindspore.ops import functional as F
 from mindspore import Tensor
-#from . import unary_encoding
 
 
 class Concat(nn.Cell):
