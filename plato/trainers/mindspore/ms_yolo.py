@@ -194,7 +194,7 @@ class Trainer():
         for j in range(200):
             print("j: ", j, flush=True)
             for i, data in enumerate(data_loader):
-                i = j * 37 + i
+                #i = j * 37 + i
                 logits = Tensor(data["image"], ms.float32)
                 # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
                 batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
