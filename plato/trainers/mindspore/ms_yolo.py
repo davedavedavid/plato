@@ -192,7 +192,7 @@ class Trainer():
 
         data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=200)
         for j in range(200):
-            #print("j: ", j, flush=True)
+            print("j: ", j, flush=True)
             for i, data in enumerate(data_loader):
                 #i = j * 37 + i
                 logits = Tensor(data["image"], ms.float32)
