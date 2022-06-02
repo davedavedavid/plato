@@ -190,46 +190,46 @@ class Trainer():
         old_progress = -1
         t_end = time.time()
 
-        data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=1)
-        #for j in range(200):
+        data_loader = dataset.create_dict_iterator(output_numpy=True, num_epochs=200)
+        for j in range(200):
             #print("j: ", j, flush=True)
-        for i, data in enumerate(data_loader):
-            #i = j * 37 + i
-            logits = Tensor(data["image"], ms.float32)
-            # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
-            batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
-            batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float32)
-            batch_y_true_2 = Tensor(data["batch_y_true_2"], ms.float32)
-            batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)
-            batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float32)
-            batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
-            img_hight = int(data["img_hight"][0])
-            img_width = int(data["img_width"][0])
-            input_shape = Tensor(data["input_shape"][0], ms.float32)
+            for i, data in enumerate(data_loader):
+                #i = j * 37 + i
+                logits = Tensor(data["image"], ms.float32)
+                # annotation = Tensor.from_numpy(data["annotation"], ms.float16)
+                batch_y_true_0 = Tensor(data["batch_y_true_0"], ms.float32)
+                batch_y_true_1 = Tensor(data["batch_y_true_1"], ms.float32)
+                batch_y_true_2 = Tensor(data["batch_y_true_2"], ms.float32)
+                batch_gt_box0 = Tensor(data["batch_gt_box0"], ms.float32)
+                batch_gt_box1 = Tensor(data["batch_gt_box1"], ms.float32)
+                batch_gt_box2 = Tensor(data["batch_gt_box2"], ms.float32)
+                img_hight = int(data["img_hight"][0])
+                img_width = int(data["img_width"][0])
+                input_shape = Tensor(data["input_shape"][0], ms.float32)
 
-            loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
-                             batch_gt_box2, img_hight, img_width, input_shape)
-            loss_meter.update(loss.asnumpy())
+                loss = network_t.forward_from(logits, batch_y_true_0, batch_y_true_1, batch_y_true_2, batch_gt_box0, batch_gt_box1,
+                                 batch_gt_box2, img_hight, img_width, input_shape)
+                loss_meter.update(loss.asnumpy())
+                i = j * 37 + i
+                if args.rank_save_ckpt_flag:
+                    # ckpt progress
+                    cb_params.cur_step_num = i + 1  # current step number
+                    cb_params.batch_num = i + 2
+                    ckpt_cb.step_end(run_context)
 
-            if args.rank_save_ckpt_flag:
-                # ckpt progress
-                cb_params.cur_step_num = i + 1  # current step number
-                cb_params.batch_num = i + 2
-                ckpt_cb.step_end(run_context)
+                if i % args.log_interval == 0:
+                    time_used = time.time() - t_end
+                    epoch = int(i / args.steps_per_epoch)
+                    fps = per_batch_size * (i - old_progress) * group_size / time_used
+                    if args.rank == 0:
+                        args.logger.info(
+                            'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))
+                    t_end = time.time()
+                    loss_meter.reset()
+                    old_progress = i
 
-            if i % args.log_interval == 0:
-                time_used = time.time() - t_end
-                epoch = int(i / args.steps_per_epoch)
-                fps = per_batch_size * (i - old_progress) * group_size / time_used
-                if args.rank == 0:
-                    args.logger.info(
-                        'epoch[{}], iter[{}], {}, fps:{:.2f} imgs/sec, lr:{}'.format(epoch, i, loss_meter, fps, lr[i]))
-                t_end = time.time()
-                loss_meter.reset()
-                old_progress = i
-
-            if (i + 1) % args.steps_per_epoch == 0 and args.rank_save_ckpt_flag:
-                cb_params.cur_epoch_num += 1
+                if (i + 1) % args.steps_per_epoch == 0 and args.rank_save_ckpt_flag:
+                    cb_params.cur_epoch_num += 1
 
         args.logger.info('==========end training===============')
 
